@@ -12,12 +12,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static assets (index.html, styles.css, client.js, etc.) directly from the flat root directory
+// Serve static assets natively from the flat root directory
 app.use(express.static(__dirname));
 
 /**
  * JWT Authentication Middleware
- * Validates incoming Authorization Bearer headers to protect sensitive user and system operations.
+ * Validates incoming Authorization Bearer headers to protect user workflows and dashboard pipelines.
  */
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -42,13 +42,13 @@ const authenticateToken = (req, res, next) => {
 
 /**
  * Handle User Registration
- * Hashes passwords via bcryptjs with 10 explicit cryptographic salt rounds.
+ * Encrypts user credentials securely using bcryptjs with 10 cryptographic salt rounds.
  */
 app.post('/api/auth/register', async (req, res) => {
   const { name, email, password } = req.body;
   
   if (!name || !email || !password) {
-    return res.status(400).json({ message: 'All registration parameters are mandatory.' });
+    return res.status(400).json({ message: 'All registration fields are mandatory.' });
   }
 
   try {
@@ -72,8 +72,8 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 /**
- * Handle User Sign In Login Verification
- * Dispatches short-lived secure JWT authorizations upon successful verification.
+ * Handle User Sign In
+ * Validates credentials and generates a 24-hour cryptographic security token.
  */
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -85,16 +85,15 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
-      return res.status(400).json({ message: 'Account credentials not located in our system.' });
+      return res.status(400).json({ message: 'Account credentials not found in our system.' });
     }
 
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Incorrect credentials password sequence.' });
+      return res.status(400).json({ message: 'Incorrect password sequence.' });
     }
 
-    // Generate cryptographic validation signature token valid for exactly 24 Hours
     const token = jwt.sign(
       { id: user.id, role: user.role, name: user.name },
       process.env.JWT_SECRET,
@@ -115,8 +114,8 @@ app.post('/api/auth/login', async (req, res) => {
 // =========================================================================
 
 /**
- * Fetch All Cyber Cafe & Tech Services
- * Public access route used to dynamically fill cards into your frontend view layouts.
+ * Fetch All Available Solutions & Services
+ * Pulls sorted workflow profiles directly out of the database to populate frontend data cards.
  */
 app.get('/api/services', async (req, res) => {
   try {
@@ -132,14 +131,14 @@ app.get('/api/services', async (req, res) => {
 // =========================================================================
 
 /**
- * Submit New Client Job Request Entry
- * Protected customer pipeline channel processing transaction variables securely.
+ * Submit New Client Request Entry
+ * Creates a new processing task entry bound to the logged-in client profile.
  */
 app.post('/api/requests', authenticateToken, async (req, res) => {
   const { serviceId, details } = req.body;
 
   if (!serviceId || !details) {
-    return res.status(400).json({ message: 'Service identification indicator and specifications are required.' });
+    return res.status(400).json({ message: 'Service id and execution details are required.' });
   }
 
   try {
@@ -154,14 +153,13 @@ app.post('/api/requests', authenticateToken, async (req, res) => {
 });
 
 /**
- * Dashboard Pipeline Information Retrieval
- * Polymorphic API: Evaluates privileges to output system-wide operational metrics to admins or restricted pipeline tables to customers.
+ * Get Dashboard Request Metrics
+ * Outputs system-wide analytics logs to verified Admins, or filtered personal order arrays to Customers.
  */
 app.get('/api/requests/dashboard', authenticateToken, async (req, res) => {
   try {
     let result;
     if (req.user.role === 'admin') {
-      // Global View Admin Level Access Query
       result = await db.query(
         `SELECT r.id, r.details, r.status, r.created_at, s.title, s.price, u.name as customer_name, u.email as customer_email 
          FROM requests r 
@@ -170,7 +168,6 @@ app.get('/api/requests/dashboard', authenticateToken, async (req, res) => {
          ORDER BY r.created_at DESC`
       );
     } else {
-      // Restricted View Customer Level Access Query
       result = await db.query(
         `SELECT r.id, r.details, r.status, r.created_at, s.title, s.price 
          FROM requests r 
@@ -182,13 +179,13 @@ app.get('/api/requests/dashboard', authenticateToken, async (req, res) => {
     }
     return res.json({ role: req.user.role, requests: result.rows });
   } catch (err) {
-    return res.status(500).json({ error: 'Error logging pipeline structure metrics.' });
+    return res.status(500).json({ error: 'Error pulling active dashboard request metrics.' });
   }
 });
 
 /**
  * Update Existing Assignment Status State
- * Route strictly hard-locked to verified Admin identities.
+ * Locked strictly to administrative team credentials.
  */
 app.put('/api/requests/:id', authenticateToken, async (req, res) => {
   if (req.user.role !== 'admin') {
@@ -214,13 +211,25 @@ app.put('/api/requests/:id', authenticateToken, async (req, res) => {
     
     return res.json({ message: 'Request pipeline state adjusted successfully.' });
   } catch (err) {
-    return res.status(500).json({ error: 'Error executing modifications on live PostgreSQL record sets.' });
+    return res.status(500).json({ error: 'Error executing status adjustments on live records.' });
   }
 });
 
 // =========================================================================
-// 4. MULTI-PAGE VIEW STATIC ROUTING OVERRIDES
+// 4. MULTI-PAGE SECURE VIEW STATIC ROUTING
 // =========================================================================
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'signup.html'));
+});
+
+app.get('/reset', (req, res) => {
+  res.sendFile(path.join(__dirname, 'reset.html'));
+});
 
 app.get('/services', (req, res) => {
   res.sendFile(path.join(__dirname, 'services.html'));
@@ -234,7 +243,7 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// Primary fallback route directing any unspecified connection profiles to the Landing System Home root element
+// Default fallback route mapping all raw incoming requests back to the Core Landing View
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -243,4 +252,4 @@ app.get('*', (req, res) => {
 // 5. SERVER RUNTIME INITIALIZATION
 // =========================================================================
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`[JoyTech Production Instance Running On Port: ${PORT}]`));
+app.listen(PORT, () => console.log(`[JoyTech Solutions Production Instance Running On Port: ${PORT}]`));
