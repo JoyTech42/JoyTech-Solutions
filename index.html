@@ -3,66 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JoyTech Cyber | Premium E-Services & IT Cafe</title>
+  <title>JoyTech Cyber | Home</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <nav class="navbar">
-    <div class="logo">JoyTech Cyber</div>
+    <a href="/" class="logo">JoyTech Cyber</a>
     <div class="nav-links">
-      <a href="#services-section">Services</a>
+      <a href="/">Home</a>
+      <a href="/services">Services</a>
+      <a href="/contact">Contact</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()">🌓 Mode</button>
       <div id="auth-zone">
         <button class="btn" onclick="openModal('login-modal')">Sign In</button>
-        <button class="btn btn-accent" onclick="openModal('register-modal')">Register</button>
       </div>
     </div>
   </nav>
 
-  <header class="hero">
-    <h1>Your Remote Digital Cyber Cafe</h1>
-    <p>File KRA returns, apply for passports, access eCitizen services, and order document processing securely online.</p>
-    <a href="#services-section" class="btn btn-accent">Order a Service</a>
-  </header>
-
-  <section id="services-section" class="container">
-    <h2 class="section-title">On-Demand Digital Services</h2>
-    <div id="services-grid" class="grid"></div>
-  </section>
+  <main class="container">
+    <header class="hero">
+      <h1>Your Remote Cyber Cafe & Tech Hub</h1>
+      <p>Instant, secure handling of your KRA returns, eCitizen forms, professional printing, and technical support requests.</p>
+      <a href="/services" class="btn btn-accent">View On-Demand Catalog</a>
+    </header>
+  </main>
 
   <div id="login-modal" class="modal">
     <div class="modal-content">
-      <h2>Secure Portal Access</h2>
+      <h2 class="mb-4">Secure Client Login</h2>
       <form id="login-form">
-        <input type="email" id="login-email" placeholder="Email Address" required>
-        <input type="password" id="login-password" placeholder="Password" required>
+        <div class="form-group"><input type="email" id="login-email" placeholder="Email Address" required></div>
+        <div class="form-group"><input type="password" id="login-password" placeholder="Password" required></div>
         <button type="submit" class="btn btn-accent w-100">Sign In</button>
       </form>
       <span class="close" onclick="closeModal('login-modal')">Close Window</span>
-    </div>
-  </div>
-
-  <div id="register-modal" class="modal">
-    <div class="modal-content">
-      <h2>Create Customer Account</h2>
-      <form id="register-form">
-        <input type="text" id="reg-name" placeholder="Full Name" required>
-        <input type="email" id="reg-email" placeholder="Email Address" required>
-        <input type="password" id="reg-password" placeholder="Create Password" required>
-        <button type="submit" class="btn btn-accent w-100">Register Account</button>
-      </form>
-      <span class="close" onclick="closeModal('register-modal')">Close Window</span>
-    </div>
-  </div>
-
-  <div id="order-modal" class="modal">
-    <div class="modal-content">
-      <h2 id="order-title">Submit Cyber Request</h2>
-      <form id="order-form">
-        <input type="hidden" id="order-service-id">
-        <textarea id="order-details" placeholder="Provide specific instructions (e.g., KRA PIN number, Passport application tracking number, upload instructions)..." required></textarea>
-        <button type="submit" class="btn btn-accent w-100">Submit Instructions</button>
-      </form>
-      <span class="close" onclick="closeModal('order-modal')">Cancel</span>
     </div>
   </div>
 
