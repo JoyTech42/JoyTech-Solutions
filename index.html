@@ -3,39 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BizServices | Professional Solutions</title>
+  <title>JoyTech Solutions | Enterprise ICT Services</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
   <nav class="navbar">
-    <div class="logo">BizServices</div>
+    <div class="logo">JoyTech Solutions</div>
     <div class="nav-links">
-      <a href="#services">Services</a>
+      <a href="#services">ICT Services</a>
       <a href="#about">About</a>
       <div id="auth-zone">
-        <button onclick="showModal('login-modal')">Login</button>
+        <button class="btn-login" onclick="showModal('login-modal')">Client Portal</button>
       </div>
     </div>
   </nav>
 
   <header class="hero">
-    <h1>Scale Your Enterprise Operations</h1>
-    <p>High-tier business infrastructure, engineering, and consulting services.</p>
-    <a href="#services" class="btn">Explore Services</a>
+    <h1>Scale Your Enterprise ICT Infrastructure</h1>
+    <p>High-tier systems engineering, managed IT support, cloud solutions, and cybersecurity implementations.</p>
+    <a href="#services" class="btn-hero">Explore Capabilities</a>
   </header>
 
-  <section id="services" class="services-grid">
-    </section>
+  <section id="services" class="services-section">
+    <h2 class="section-title">Our Core Competencies</h2>
+    <div class="services-grid">
+      
+      <div class="service-card">
+        <h3>Managed IT Infrastructure</h3>
+        <p>End-to-end network architecture, server maintenance, proactive monitoring, and 24/7 technical support.</p>
+        <div class="price">$1,200/mo</div>
+      </div>
+
+      <div class="service-card">
+        <h3>Cybersecurity Architecture</h3>
+        <p>Advanced penetration testing, next-gen firewall implementation, and compliance security audits.</p>
+        <div class="price">$2,500/opt</div>
+      </div>
+
+      <div class="service-card">
+        <h3>Cloud Infrastructure & DevOps</h3>
+        <p>Seamless migrations to modern cloud platforms with automated zero-downtime CI/CD workflows.</p>
+        <div class="price">$3,200/proj</div>
+      </div>
+
+    </div>
+  </section>
 
   <div id="login-modal" class="modal">
     <div class="modal-content">
       <h2>Account Login</h2>
       <form id="login-form">
-        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="email" id="login-email" placeholder="Corporate Email Address" required>
         <input type="password" id="login-password" placeholder="Password" required>
-        <button type="submit">Sign In</button>
+        <button type="submit">Secure Sign In</button>
       </form>
-      <button class="close-btn" onclick="hideModal('login-modal')">Close</button>
+      <button class="close-btn" onclick="hideModal('login-modal')">Cancel & Close</button>
     </div>
   </div>
 
