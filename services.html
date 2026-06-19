@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our E-Services | JoyTech Cyber</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="logo">JoyTech Cyber</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/services">Services</a>
+      <a href="/contact">Contact</a>
+      <button class="theme-toggle-btn" onclick="toggleTheme()">🌓 Mode</button>
+      <div id="auth-zone">
+        <button class="btn" onclick="openModal('login-modal')">Sign In</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h2 class="mb-4" style="color: var(--text-dark);">Digital Cyber Services</h2>
+    <div id="services-grid" class="grid"></div>
+  </main>
+
+  <div id="order-modal" class="modal">
+    <div class="modal-content">
+      <h2 id="order-title" class="mb-4">Submit Instructions</h2>
+      <form id="order-form">
+        <input type="hidden" id="order-service-id">
+        <div class="form-group">
+          <textarea id="order-details" placeholder="Provide KRA PIN, full description, or reference numbers for processing..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-accent w-100">Submit Request</button>
+      </form>
+      <span class="close" onclick="closeModal('order-modal')">Cancel</span>
+    </div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>
