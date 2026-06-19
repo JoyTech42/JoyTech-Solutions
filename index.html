@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BizServices | Professional Solutions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">BizServices</div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <div id="auth-zone">
+        <button onclick="showModal('login-modal')">Login</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Scale Your Enterprise Operations</h1>
+    <p>High-tier business infrastructure, engineering, and consulting services.</p>
+    <a href="#services" class="btn">Explore Services</a>
+  </header>
+
+  <section id="services" class="services-grid">
+    </section>
+
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <h2>Account Login</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+      </form>
+      <button class="close-btn" onclick="hideModal('login-modal')">Close</button>
+    </div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>
