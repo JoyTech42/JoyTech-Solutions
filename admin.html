@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JoyTech Admin Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoyTech Solutions | Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-white p-8">
-    <div id="authGate" class="max-w-md mx-auto bg-slate-900 p-6 rounded-xl border border-slate-800">
+<body class="bg-slate-950 text-white min-h-screen p-8">
+    
+    <div id="authGate" class="max-w-md mx-auto bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-xl">
         <h2 class="text-xl font-bold mb-4">Dashboard Authorization</h2>
-        <input type="password" id="adminPasswordInput" class="w-full bg-slate-950 p-2 mb-4 rounded border border-slate-800" placeholder="Password">
-        <button onclick="loginToDashboard()" class="w-full bg-blue-600 p-2 rounded">Login Now</button>
+        <input type="password" id="adminPasswordInput" class="w-full bg-slate-950 p-3 mb-4 rounded-xl border border-slate-700 text-sm focus:border-blue-500 outline-none" placeholder="Enter admin password">
+        <button onclick="loginToDashboard()" class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-xl font-bold text-sm transition">Login to Dashboard</button>
     </div>
 
-    <div id="dashboardWidgets" class="hidden">
-        <h2 class="text-2xl font-bold mb-6">Customer Requests</h2>
-        <div id="messagesTableBody" class="space-y-2"></div>
+    <div id="dashboardWidgets" class="hidden space-y-6">
+        <h2 class="text-2xl font-bold">Customer Requests</h2>
+        <div id="messagesTableBody" class="grid gap-4"></div>
     </div>
 
     <script>
@@ -22,6 +24,7 @@
             const password = document.getElementById('adminPasswordInput').value;
             
             try {
+                // Attempt to fetch stats to verify password and DB connection
                 const res = await fetch('/api/admin/stats', { 
                     headers: { 'x-admin-password': password }
                 });
@@ -29,23 +32,26 @@
                 const data = await res.json();
 
                 if (res.ok) {
+                    // Success
                     document.getElementById('authGate').classList.add('hidden');
                     document.getElementById('dashboardWidgets').classList.remove('hidden');
-                    // Load data
+                    
+                    // Fetch actual messages
                     const msgRes = await fetch('/api/messages', { headers: { 'x-admin-password': password }});
                     const msgs = await msgRes.json();
+                    
                     document.getElementById('messagesTableBody').innerHTML = msgs.map(m => `
-                        <div class="p-4 bg-slate-900 rounded border border-slate-800">
-                            <p class="font-bold">${m.name} - <span class="text-blue-400">${m.service}</span></p>
-                            <p class="text-sm text-slate-400">${m.message}</p>
+                        <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800">
+                            <p class="font-bold text-white">${m.name} (<span class="text-blue-400">${m.service}</span>)</p>
+                            <p class="text-sm text-slate-400 mt-2">${m.message}</p>
                         </div>
                     `).join('');
                 } else {
-                    // THIS WILL NOW SHOW THE REAL ERROR
+                    // This now shows the ACTUAL error (e.g., "DB Error: relation 'messages' does not exist")
                     alert("Error: " + (data.error || "Login Failed. Password is not correct."));
                 }
             } catch (err) {
-                alert("Connection failed: " + err.message);
+                alert("Connection Failed. Please check your internet or Render logs.");
             }
         }
     </script>
