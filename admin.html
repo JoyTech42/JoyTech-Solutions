@@ -20,21 +20,32 @@
     <script>
         async function loginToDashboard() {
             const password = document.getElementById('adminPasswordInput').value;
-            const res = await fetch('/api/admin/stats', { headers: { 'x-admin-password': password }});
             
-            if (res.ok) {
-                document.getElementById('authGate').classList.add('hidden');
-                document.getElementById('dashboardWidgets').classList.remove('hidden');
+            try {
+                const res = await fetch('/api/admin/stats', { 
+                    headers: { 'x-admin-password': password }
+                });
                 
-                const msgs = await fetch('/api/messages', { headers: { 'x-admin-password': password }}).then(r => r.json());
-                document.getElementById('messagesTableBody').innerHTML = msgs.map(m => `
-                    <div class="p-4 bg-slate-900 rounded border border-slate-800">
-                        <p class="font-bold">${m.name} - <span class="text-blue-400">${m.service}</span></p>
-                        <p class="text-sm text-slate-400">${m.message}</p>
-                    </div>
-                `).join('');
-            } else {
-                alert("Login Failed. Password is not correct.");
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById('authGate').classList.add('hidden');
+                    document.getElementById('dashboardWidgets').classList.remove('hidden');
+                    // Load data
+                    const msgRes = await fetch('/api/messages', { headers: { 'x-admin-password': password }});
+                    const msgs = await msgRes.json();
+                    document.getElementById('messagesTableBody').innerHTML = msgs.map(m => `
+                        <div class="p-4 bg-slate-900 rounded border border-slate-800">
+                            <p class="font-bold">${m.name} - <span class="text-blue-400">${m.service}</span></p>
+                            <p class="text-sm text-slate-400">${m.message}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    // THIS WILL NOW SHOW THE REAL ERROR
+                    alert("Error: " + (data.error || "Login Failed. Password is not correct."));
+                }
+            } catch (err) {
+                alert("Connection failed: " + err.message);
             }
         }
     </script>
