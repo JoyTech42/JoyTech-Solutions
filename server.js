@@ -24,8 +24,6 @@ const checkAdmin = (req, res, next) => {
 };
 
 // --- ROUTES ---
-
-// Stats for dashboard
 app.get('/api/admin/stats', checkAdmin, async (req, res) => {
     try {
         const total = await pool.query('SELECT COUNT(*) FROM quote_requests');
@@ -33,7 +31,6 @@ app.get('/api/admin/stats', checkAdmin, async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Get all entries
 app.get('/api/messages', checkAdmin, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM quote_requests ORDER BY id DESC');
@@ -41,7 +38,6 @@ app.get('/api/messages', checkAdmin, async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Create new entry
 app.post('/api/requests', checkAdmin, async (req, res) => {
     const { name, email, service, message } = req.body;
     try {
@@ -51,7 +47,6 @@ app.post('/api/requests', checkAdmin, async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Delete entry
 app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
     try {
         await pool.query('DELETE FROM quote_requests WHERE id = $1', [req.params.id]);
@@ -59,4 +54,4 @@ app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-app.listen(PORT, () => console.log(`🚀 Portal active on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 JoyTech System Active: ${PORT}`));
