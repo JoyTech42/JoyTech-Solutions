@@ -1,24 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JoyTech Solutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-200">
-    <nav class="fixed top-0 w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-800 z-50">
-        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="/" class="text-xl font-bold text-white">JoyTech Solutions</a>
-            <div class="flex gap-6"><a href="/" class="text-slate-400 hover:text-blue-400">Home</a><a href="/admin.html" class="text-slate-400 hover:text-blue-400">Admin</a></div>
-        </div>
-    </nav>
-    <div class="pt-24 max-w-5xl mx-auto px-6 text-center">
-        <h1 class="text-5xl font-black text-white mb-6">Innovative Tech Solutions</h1>
-        <p class="text-lg text-slate-400 mb-10">Professional digital services for your business.</p>
+<body class="bg-slate-950 text-slate-200 p-10">
+    <h1 class="text-4xl font-bold mb-4">JoyTech Solutions</h1>
+    <p>Professional digital and cyber services.</p>
+    
+    <div class="mt-10">
+        <input id="name" placeholder="Name" class="block w-full bg-slate-900 p-2 mb-2">
+        <input id="service" placeholder="Service" class="block w-full bg-slate-900 p-2 mb-2">
+        <textarea id="msg" placeholder="Message" class="block w-full bg-slate-900 p-2 mb-2"></textarea>
+        <button onclick="submitReq()" class="bg-blue-600 px-4 py-2 rounded">Submit Request</button>
     </div>
-    <a href="https://wa.me/254745806435" target="_blank" class="fixed bottom-8 right-8 bg-green-600 p-4 rounded-full shadow-lg hover:bg-green-500 transition z-50">
-        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12.03 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.49 1.33 5.01l-1.33 4.86 5.01-1.33c1.47.8 3.16 1.22 4.98 1.22 5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.33c-1.57 0-3.11-.42-4.45-1.22l-.32-.19-3.32.88.88-3.32-.19-.32c-.8-1.34-1.22-2.88-1.22-4.45 0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/></svg>
-    </a>
+
+    <script>
+        async function submitReq() {
+            await fetch('/api/requests', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    name: document.getElementById('name').value,
+                    service: document.getElementById('service').value,
+                    message: document.getElementById('msg').value
+                })
+            });
+            alert("Request Sent!");
+        }
+    </script>
 </body>
 </html>
