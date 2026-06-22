@@ -2,108 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyTech Solutions | Admin Portal</title>
+    <title>JoyTech Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-200 font-sans min-h-screen">
+<body class="bg-slate-950 text-white p-8">
+    <div id="authGate" class="max-w-md mx-auto bg-slate-900 p-6 rounded-xl border border-slate-800">
+        <h2 class="text-xl font-bold mb-4">Dashboard Authorization</h2>
+        <input type="password" id="adminPasswordInput" class="w-full bg-slate-950 p-2 mb-4 rounded border border-slate-800" placeholder="Password">
+        <button onclick="loginToDashboard()" class="w-full bg-blue-600 p-2 rounded">Login Now</button>
+    </div>
 
-    <header class="p-6 border-b border-slate-900 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-white">JoyTech <span class="text-blue-500">Solutions Panel</span></h1>
-        <a href="/" class="text-xs bg-slate-900 hover:bg-slate-800 px-4 py-2 rounded-lg border border-slate-800 transition">← Open Main Website</a>
-    </header>
-
-    <main class="max-w-7xl mx-auto p-6 space-y-8">
-        
-        <div id="authGate" class="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-4">
-            <h2 class="text-lg font-bold">Dashboard Authorization</h2>
-            <p class="text-xs text-slate-400">Enter your secret admin password to access business systems.</p>
-            <input type="password" id="adminPasswordInput" placeholder="Enter password" class="bg-slate-950 border border-slate-800 px-4 py-2 rounded-xl text-sm w-64 focus:outline-none focus:border-blue-500">
-            <button onclick="loginToDashboard()" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-xl text-sm font-medium ml-2">Login Now</button>
-        </div>
-
-        <div id="dashboardWidgets" class="hidden grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                <p class="text-[10px] uppercase text-slate-500 font-bold">Total Requests</p>
-                <h3 id="statRequests" class="text-2xl font-black text-white mt-1">0</h3>
-            </div>
-            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                <p class="text-[10px] uppercase text-slate-500 font-bold">Unpaid Items</p>
-                <h3 id="statUnpaid" class="text-2xl font-black text-white mt-1">0</h3>
-            </div>
-            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                <p class="text-[10px] uppercase text-slate-500 font-bold">Live Services</p>
-                <h3 id="statServices" class="text-2xl font-black text-white mt-1">0</h3>
-            </div>
-            <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                <p class="text-[10px] uppercase text-slate-500 font-bold">Shop Tasks Left</p>
-                <h3 id="statTasks" class="text-2xl font-black text-white mt-1">0</h3>
-            </div>
-        </div>
-
-        <div id="dataSection" class="hidden bg-slate-900 p-6 rounded-2xl border border-slate-800">
-            <h2 class="text-sm font-bold mb-4">Customer Requests & Order Tracking</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead>
-                        <tr class="text-slate-500 border-b border-slate-800">
-                            <th class="pb-3">Name</th>
-                            <th class="pb-3">Service</th>
-                            <th class="pb-3">Message</th>
-                            <th class="pb-3">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="messagesTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+    <div id="dashboardWidgets" class="hidden">
+        <h2 class="text-2xl font-bold mb-6">Customer Requests</h2>
+        <div id="messagesTableBody" class="space-y-2"></div>
+    </div>
 
     <script>
-        // Authentication Gatekeeper
         async function loginToDashboard() {
             const password = document.getElementById('adminPasswordInput').value;
+            const res = await fetch('/api/admin/stats', { headers: { 'x-admin-password': password }});
             
-            try {
-                const response = await fetch('/api/admin/stats', {
-                    headers: { 'x-admin-password': password }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('authGate').classList.add('hidden');
-                    document.getElementById('dashboardWidgets').classList.remove('hidden');
-                    document.getElementById('dataSection').classList.remove('hidden');
-                    
-                    // Update stats
-                    document.getElementById('statRequests').textContent = data.totalRequests;
-                    document.getElementById('statUnpaid').textContent = data.pendingPayments;
-                    document.getElementById('statServices').textContent = data.activeServices;
-                    document.getElementById('statTasks').textContent = data.pendingTasks;
-
-                    fetchMessages(password);
-                } else {
-                    alert("Login Failed. Password is not correct.");
-                }
-            } catch (err) {
-                alert("Server error. Check your connection.");
+            if (res.ok) {
+                document.getElementById('authGate').classList.add('hidden');
+                document.getElementById('dashboardWidgets').classList.remove('hidden');
+                
+                const msgs = await fetch('/api/messages', { headers: { 'x-admin-password': password }}).then(r => r.json());
+                document.getElementById('messagesTableBody').innerHTML = msgs.map(m => `
+                    <div class="p-4 bg-slate-900 rounded border border-slate-800">
+                        <p class="font-bold">${m.name} - <span class="text-blue-400">${m.service}</span></p>
+                        <p class="text-sm text-slate-400">${m.message}</p>
+                    </div>
+                `).join('');
+            } else {
+                alert("Login Failed. Password is not correct.");
             }
-        }
-
-        // Fetch Messages
-        async function fetchMessages(password) {
-            const res = await fetch('/api/messages', { headers: { 'x-admin-password': password }});
-            const messages = await res.json();
-            const tbody = document.getElementById('messagesTableBody');
-            
-            tbody.innerHTML = messages.map(m => `
-                <tr class="border-b border-slate-800/50">
-                    <td class="py-4 font-medium text-white">${m.name}</td>
-                    <td class="py-4 text-blue-400">${m.service}</td>
-                    <td class="py-4 text-slate-400">${m.message}</td>
-                    <td class="py-4">${m.status}</td>
-                </tr>
-            `).join('');
         }
     </script>
 </body>
