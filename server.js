@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Secure form submission endpoint maps directly to frontend layout schema
 app.post('/api/quote', async (req, res) => {
   const { name, email, service, message } = req.body;
 
@@ -28,22 +29,25 @@ app.post('/api/quote', async (req, res) => {
     
     return res.status(200).json({ success: true, message: 'Saved successfully!' });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Internal pipeline database error.' });
+    console.error('Database Error:', err);
+    return res.status(500).json({ error: 'Failed to write record to remote Neon cluster database.' });
   }
 });
 
+// Secure admin inbox data pipeline
 app.get('/api/messages', async (req, res) => {
   const passwordInput = req.headers['x-admin-password'];
+  
   if (!passwordInput || passwordInput !== process.env.ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Unauthorized. Wrong password.' });
+    return res.status(401).json({ error: 'Unauthorized. Wrong admin password configuration.' });
   }
+  
   try {
     const result = await pool.query('SELECT * FROM quote_requests ORDER BY submitted_at DESC');
     return res.status(200).json(result.rows);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Could not fetch data.' });
+    console.error('Database Retrieval Error:', err);
+    return res.status(500).json({ error: 'Could not fetch inbox entries from cluster.' });
   }
 });
 
