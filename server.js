@@ -15,37 +15,56 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-// Admin Auth Middleware
-const checkAdminPassword = (req, res, next) => {
-    const incomingPassword = req.headers['x-admin-password'];
-    // Ensures spaces or hidden characters don't break the password match
-    const systemPassword = (process.env.ADMIN_PASSWORD || 'JoyTechAdmin2026').trim();
-
-    if (incomingPassword && incomingPassword.trim() === systemPassword) {
-        return next();
-    }
-    return res.status(401).json({ error: "Password is not correct." });
+// Middleware for Admin Security
+const checkAdmin = (req, res, next) => {
+    const incomingPass = req.headers['x-admin-password'];
+    const adminPass = (process.env.ADMIN_PASSWORD || 'JoyTechAdmin2026').trim();
+    if (incomingPass && incomingPass.trim() === adminPass) return next();
+    return res.status(401).json({ error: "Unauthorized access." });
 };
 
-// Stats Route: Uses quote_requests table
-app.get('/api/admin/stats', checkAdminPassword, async (req, res) => {
+// --- DATA ROUTES ---
+
+// Get Dashboard Stats
+app.get('/api/admin/stats', checkAdmin, async (req, res) => {
     try {
         const total = await pool.query('SELECT COUNT(*) FROM quote_requests');
         res.json({ totalRequests: total.rows[0].count });
     } catch (err) {
-        res.status(500).json({ error: "DB Error: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
-// Messages Route: Uses quote_requests table
-app.get('/api/messages', checkAdminPassword, async (req, res) => {
+// Get Messages (The source of truth from your Neon table)
+app.get('/api/messages', checkAdmin, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM quote_requests ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "DB Error: " + err.message });
+        res.status(500).json({ error: err.message });
     }
 });
 
-app.get('/admin.html', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.listen(PORT, () => console.log(`🚀 JoyTech Solutions Engine active on port: ${PORT}`));
+// Add a New Entry
+app.post('/api/requests', checkAdmin, async (req, res) => {
+    const { name, email, service, message } = req.body;
+    try {
+        await pool.query('INSERT INTO quote_requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
+            [name, email, service, message]);
+        res.status(201).json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Delete an Entry
+app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM quote_requests WHERE id = $1', [req.params.id]);
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.listen(PORT, () => console.log(`🚀 Portal active on port ${PORT}`));
