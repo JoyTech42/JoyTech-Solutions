@@ -3,124 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyTech Admin | Sorted Inbox</title>
+    <title>JoyTech Solutions | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 p-4 md:p-8 font-sans">
-    <div class="max-w-4xl mx-auto space-y-8">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-slate-800 pb-6 gap-4">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">J</div>
+            <span class="text-xl font-bold tracking-tight text-white">JoyTech <span class="text-blue-500 font-normal">Solutions Panel</span></span>
+        </div>
+        <a href="/" class="text-xs px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition text-slate-300">← Open Main Website</a>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+        
+        <div class="bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">JoyTech Solutions Inbox</h1>
-                <p class="text-slate-400 text-sm mt-1">Review, sort, and manage incoming customer requests instantly.</p>
+                <h2 class="text-base font-bold text-white">Dashboard Authorization</h2>
+                <p class="text-slate-400 text-xs mt-0.5">Enter your secret admin password to access customer messages and tools.</p>
             </div>
-            <a href="/" class="text-xs text-slate-400 hover:text-white transition underline self-start sm:self-center">← Back to Homepage</a>
-        </div>
-
-        <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 max-w-md shadow-xl space-y-3">
-            <label class="block text-xs font-bold text-slate-400 tracking-wider uppercase">Admin Authentication</label>
-            <div class="flex gap-3">
-                <input type="password" id="adminPass" placeholder="Enter Environment Password" class="w-full px-4 py-2.5 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500 text-sm transition">
-                <button onclick="loadMessages()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition shrink-0 shadow-md">View Messages</button>
+            <div class="flex w-full sm:w-auto gap-3">
+                <input type="password" id="adminPassword" placeholder="Enter password" class="w-full sm:w-56 px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 text-white">
+                <button onclick="bootDashboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold transition tracking-wide shrink-0">Login Now</button>
             </div>
         </div>
 
-        <div id="errorBox" class="hidden bg-red-900/40 border border-red-500/50 text-red-200 p-4 rounded-xl text-sm"></div>
-
-        <div id="filterBar" class="hidden space-y-3 bg-slate-800/50 p-4 rounded-xl border border-slate-800">
-            <p class="text-xs font-bold text-slate-400 tracking-wider uppercase">Filter Requests by Category:</p>
-            <div class="flex flex-wrap gap-2">
-                <button onclick="filterMessages('All')" class="filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm">All Messages</button>
-                <button onclick="filterMessages('KRA Assistance')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">KRA Tax</button>
-                <button onclick="filterMessages('eCitizen Services')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">eCitizen Portal</button>
-                <button onclick="filterMessages('CV Writing')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">CV Writing</button>
-                <button onclick="filterMessages('Computer Repair & Web Dev')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">Repairs & Web</button>
-                <button onclick="filterMessages('Other Support')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">Other</button>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Requests</p>
+                    <h3 id="statTotal" class="text-2xl font-black text-white mt-1">0</h3>
+                </div>
+                <div class="text-xl p-2 bg-slate-950 rounded-lg">📨</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Unpaid Items</p>
+                    <h3 id="statPendingPay" class="text-2xl font-black text-amber-500 mt-1">0</h3>
+                </div>
+                <div class="text-xl p-2 bg-slate-950 rounded-lg">⏳</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Live Services</p>
+                    <h3 id="statServices" class="text-2xl font-black text-blue-500 mt-1">0</h3>
+                </div>
+                <div class="text-xl p-2 bg-slate-950 rounded-lg">📋</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Shop Tasks Left</p>
+                    <h3 id="statTasks" class="text-2xl font-black text-emerald-500 mt-1">0</h3>
+                </div>
+                <div class="text-xl p-2 bg-slate-950 rounded-lg">📝</div>
             </div>
         </div>
 
-        <div id="messagesList" class="space-y-4">
-            <p class="text-slate-500 italic p-4 bg-slate-800/30 rounded-xl border border-slate-800 border-dashed text-sm">No data streamed. Enter your admin password above to authenticate.</p>
+        <div class="grid lg:grid-cols-3 gap-6">
+            
+            <div class="space-y-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Shop To-Do Notebook</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Track daily offline operations and repairs.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="newTaskText" placeholder="Write a reminder here..." class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-blue-500">
+                        <button onclick="addTask()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 rounded-lg text-xs">+</button>
+                    </div>
+                    <div id="tasksContainer" class="space-y-2 max-h-48 overflow-y-auto text-xs text-slate-500 italic pt-1">
+                        Log in to load your shop reminders notepad.
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider">Services Shown on Site</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Add or remove active service features from your home screen.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <input type="text" id="serviceTitle" placeholder="Service Heading Name" class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-blue-500">
+                        <textarea id="serviceDesc" rows="2" placeholder="Simple service description description details..." class="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-blue-500"></textarea>
+                        <button onclick="addService()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 rounded-lg text-xs uppercase tracking-wider transition">Publish to Main Site</button>
+                    </div>
+                    <div id="servicesContainer" class="space-y-2 pt-2 border-t border-slate-800 max-h-40 overflow-y-auto text-xs text-slate-500 italic"></div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Customer Requests & Order Tracking</h3>
+                        <p class="text-slate-400 text-xs mt-0.5">Search client forms, update workflow states, and review M-Pesa statements.</p>
+                    </div>
+                    <button onclick="downloadCSVSpreadsheet()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-1.5 border border-slate-700 rounded-lg text-xs tracking-wide transition shrink-0">📥 Download Spreadsheet</button>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-3">
+                    <input type="text" id="searchBar" oninput="runInboxFilters()" placeholder="🔍 Type name, service, email to search..." class="sm:col-span-2 w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+                    <select id="filterPayment" onchange="runInboxFilters()" class="w-full px-2 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400 focus:outline-none focus:border-blue-500">
+                        <option value="ALL">All Payment Statuses</option>
+                        <option value="Pending">⏳ Pending Payments</option>
+                        <option value="Paid">💰 Paid Payments</option>
+                    </select>
+                </div>
+
+                <div id="inboxContainer" class="space-y-4 max-h-[550px] overflow-y-auto text-xs text-slate-500 italic py-12 text-center">
+                    Please key in your access password up top to fetch your customer orders.
+                </div>
+            </div>
+
         </div>
-    </div>
+    </main>
 
     <script>
-        let allMessages = []; // Local storage array for filter processing
+        let serverMessagesMemory = []; // Cache list store for hyper-fast interface typing lookup
 
-        async function loadMessages() {
-            const password = document.getElementById('adminPass').value;
-            const errorBox = document.getElementById('errorBox');
-            const container = document.getElementById('messagesList');
-            const filterBar = document.getElementById('filterBar');
-            
-            errorBox.classList.add('hidden');
-            
+        async function bootDashboard() {
+            const password = document.getElementById('adminPassword').value;
+            if(!password) return alert("Please type your admin password first.");
+
             try {
-                const response = await fetch('/api/messages', {
-                    method: 'GET',
-                    headers: { 'X-Admin-Password': password }
-                });
+                const res = await fetch('/api/admin/stats', { headers: { 'x-admin-password': password } });
+                if(!res.ok) throw new Error();
+                const stats = await res.json();
 
-                const data = await response.json();
+                // Assign counters
+                document.getElementById('statTotal').textContent = stats.totalRequests;
+                document.getElementById('statPendingPay').textContent = stats.pendingPayments;
+                document.getElementById('statServices').textContent = stats.activeServices;
+                document.getElementById('statTasks').textContent = stats.pendingTasks;
 
-                if (!response.ok) {
-                    throw new Error(data.error || 'Access denied. Incorrect administrator token.');
-                }
-
-                allMessages = data; 
-                filterBar.classList.remove('hidden'); 
-                displayMessages(allMessages); 
-
-            } catch (err) {
-                errorBox.textContent = err.message;
-                errorBox.classList.remove('hidden');
-                filterBar.classList.add('hidden');
-                container.innerHTML = '<p class="text-red-400 italic text-sm p-4 bg-red-950/20 border border-red-900 rounded-xl">Authentication sequence failed. Check your password and try again.</p>';
+                // Fire list updates
+                loadCustomerInbox();
+                loadTasksReminders();
+                loadLivePortfolioList();
+            } catch {
+                alert("Login Failed. Password is not correct.");
             }
         }
 
-        function filterMessages(category) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                if (btn.textContent.includes(category) || (category === 'All' && btn.textContent === 'All Messages')) {
-                    btn.className = "filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm";
-                } else {
-                    btn.className = "filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700";
-                }
+        // --- CLIENT OPERATIONS CODES ---
+        async function loadCustomerInbox() {
+            const password = document.getElementById('adminPassword').value;
+            const res = await fetch('/api/messages', { headers: { 'x-admin-password': password } });
+            serverMessagesMemory = await res.json();
+            runInboxFilters();
+        }
+
+        function runInboxFilters() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const payFilter = document.getElementById('filterPayment').value;
+            const outputBox = document.getElementById('inboxContainer');
+
+            const filteredData = serverMessagesMemory.filter(item => {
+                const textMatch = item.name.toLowerCase().includes(query) || item.email.toLowerCase().includes(query) || item.message.toLowerCase().includes(query) || item.service.toLowerCase().includes(query);
+                const paymentMatch = payFilter === 'ALL' || item.payment_status === payFilter;
+                return textMatch && paymentMatch;
             });
 
-            if (category === 'All') {
-                displayMessages(allMessages);
-            } else {
-                const filtered = allMessages.filter(msg => msg.service === category);
-                displayMessages(filtered);
-            }
-        }
-
-        function displayMessages(messages) {
-            const container = document.getElementById('messagesList');
-            
-            if (messages.length === 0) {
-                container.innerHTML = '<div class="text-slate-400 italic p-6 bg-slate-800 rounded-xl border border-slate-700 text-sm">No live customer records matched this category filter.</div>';
+            if(filteredData.length === 0) {
+                outputBox.innerHTML = `<p class="text-slate-600 py-10 text-xs">No client messages match your current filters.</p>`;
                 return;
             }
 
-            container.innerHTML = messages.map(msg => `
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-3 shadow-lg transition duration-200 hover:border-slate-600">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b border-slate-700/60 pb-3 gap-2">
+            outputBox.innerHTML = filteredData.map(msg => `
+                <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-xl space-y-3 relative text-left">
+                    <button onclick="removeCustomerRecord(${msg.id})" class="absolute top-4 right-4 text-slate-500 hover:text-red-400 transition text-[11px]">Delete Item</button>
+                    
+                    <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 bg-slate-900 border border-slate-800 text-blue-400 font-black rounded flex items-center justify-center text-[10px]">${msg.name[0].toUpperCase()}</div>
                         <div>
-                            <h3 class="text-base font-bold text-white tracking-wide">${msg.name}</h3>
-                            <p class="text-blue-400 text-xs mt-0.5">${msg.email}</p>
-                        </div>
-                        <div class="text-left sm:text-right space-y-1.5 shrink-0">
-                            <span class="inline-block bg-blue-950/60 text-blue-300 border border-blue-800/80 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider">
-                                ${msg.service || 'General Inquiry'}
-                            </span>
-                            <p class="text-[10px] text-slate-500 font-mono">${new Date(msg.submitted_at).toLocaleString()}</p>
+                            <h4 class="font-bold text-slate-200 text-sm">${msg.name} <span class="text-slate-500 font-normal text-xs">(${msg.email})</span></h4>
                         </div>
                     </div>
-                    <p class="text-slate-300 text-sm whitespace-pre-wrap pt-1 leading-relaxed">${msg.message}</p>
+
+                    <div class="bg-slate-900/50 border border-slate-800 p-3 rounded-lg text-slate-300 space-y-1">
+                        <span class="text-blue-500 font-bold tracking-wider uppercase text-[9px] block">Service: ${msg.service}</span>
+                        <p class="leading-relaxed font-normal text-xs">${msg.message}</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-4 border-t border-slate-900 pt-2 text-[11px]">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-slate-500 font-medium">Job Status:</span>
+                            <select id="work-${msg.id}" onchange="saveClientTrackingChange(${msg.id})" class="bg-slate-900 border border-slate-800 text-slate-300 rounded px-1.5 py-0.5">
+                                <option value="New Inquiry" ${msg.status === 'New Inquiry' ? 'selected' : ''}>New Inquiry</option>
+                                <option value="In Progress" ${msg.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="Completed" ${msg.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-slate-500 font-medium">M-Pesa Ledger:</span>
+                            <select id="pay-${msg.id}" onchange="saveClientTrackingChange(${msg.id})" class="bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5 font-bold ${msg.payment_status === 'Paid' ? 'text-emerald-400' : 'text-amber-500'}">
+                                <option value="Pending" ${msg.payment_status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                                <option value="Paid" ${msg.payment_status === 'Paid' ? 'selected' : ''}>💰 Paid</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        async function saveClientTrackingChange(id) {
+            const password = document.getElementById('adminPassword').value;
+            const status = document.getElementById(`work-${id}`).value;
+            const payment_status = document.getElementById(`pay-${id}`).value;
+
+            const res = await fetch(`/api/messages/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+                body: JSON.stringify({ status, payment_status })
+            });
+            if(res.ok) bootDashboard();
+        }
+
+        async function removeCustomerRecord(id) {
+            if(!confirm("Are you sure you want to delete this customer log?")) return;
+            const password = document.getElementById('adminPassword').value;
+            const res = await fetch(`/api/messages/${id}`, { method: 'DELETE', headers: { 'x-admin-password': password } });
+            if(res.ok) bootDashboard();
+        }
+
+        // --- SHOP TO-DO NOTEBOOK CODES ---
+        async function loadTasksReminders() {
+            const password = document.getElementById('adminPassword').value;
+            const res = await fetch('/api/tasks', { headers: { 'x-admin-password': password } });
+            const tasks = await res.json();
+            const container = document.getElementById('tasksContainer');
+
+            if(tasks.length === 0) {
+                container.innerHTML = `<p class="text-slate-600 italic">No shop tasks logged.</p>`;
+                return;
+            }
+
+            container.innerHTML = tasks.map(tk => `
+                <div class="bg-slate-950 p-2 border border-slate-800 rounded-lg flex items-center justify-between gap-2 text-left">
+                    <div class="flex items-center space-x-2 truncate">
+                        <input type="checkbox" ${tk.is_completed ? 'checked' : ''} onclick="toggleTaskCheckbox(${tk.id}, ${tk.is_completed})" class="rounded accent-emerald-500 border-slate-800 bg-slate-950">
+                        <span class="${tk.is_completed ? 'line-through text-slate-600' : 'text-slate-300'} truncate">${tk.task_text}</span>
+                    </div>
+                    <button onclick="removeTaskNote(${tk.id})" class="text-slate-600 hover:text-red-400 text-xs shrink-0">✕</button>
+                </div>
+            `).join('');
+        }
+
+        async function addTask() {
+            const password = document.getElementById('adminPassword').value;
+            const text = document.getElementById('newTaskText').value;
+            if(!text) return;
+
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+                body: JSON.stringify({ task_text: text })
+            });
+            if(res.ok) {
+                document.getElementById('newTaskText').value = '';
+                bootDashboard();
+            }
+        }
+
+        async function toggleTaskCheckbox(id, current_state) {
+            const password = document.getElementById('adminPassword').value;
+            const res = await fetch(`/api/tasks/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+                body: JSON.stringify({ is_completed: !current_state })
+            });
+            if(res.ok) bootDashboard();
+        }
+
+        async function removeTaskNote(id) {
+            const password = document.getElementById('adminPassword').value;
+            const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE', headers: { 'x-admin-password': password } });
+            if(res.ok) bootDashboard();
+        }
+
+        // --- HOMEPAGE EDIT SERVICES CODES ---
+        async function loadLivePortfolioList() {
+            const res = await fetch('/api/services');
+            const services = await res.json();
+            const container = document.getElementById('servicesContainer');
+
+            if(services.length === 0) {
+                container.innerHTML = `<p class="text-slate-600 italic">No customized services live.</p>`;
+                return;
+            }
+            container.innerHTML = services.map(s => `
+                <div class="bg-slate-950 p-2 border border-slate-800 rounded flex justify-between items-center text-[11px] text-left">
+                    <span class="truncate text-slate-300 font-bold">${s.title}</span>
+                    <button onclick="removeServiceFromLiveSite(${s.id})" class="text-red-500/70 hover:text-red-400 font-semibold">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        async function addService() {
+            const password = document.getElementById('adminPassword').value;
+            const title = document.getElementById('serviceTitle').value;
+            const description = document.getElementById('serviceDesc').value;
+            if(!title || !description) return alert("Fill in title and description.");
+
+            const res = await fetch('/api/services', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+                body: JSON.stringify({ title, description })
+            });
+            if(res.ok) {
+                document.getElementById('serviceTitle').value = '';
+                document.getElementById('serviceDesc').value = '';
+                bootDashboard();
+            }
+        }
+
+        async function removeServiceFromLiveSite(id) {
+            if(!confirm("Completely remove this service from the main home page?")) return;
+            const password = document.getElementById('adminPassword').value;
+            const res = await fetch(`/api/services/${id}`, { method: 'DELETE', headers: { 'x-admin-password': password } });
+            if(res.ok) bootDashboard();
+        }
+
+        // --- SHEET EXPORT UTILITY CODES ---
+        function downloadCSVSpreadsheet() {
+            if (serverMessagesMemory.length === 0) return alert("There are no records to download yet.");
+            
+            let csvDataRows = "data:text/csv;charset=utf-8,ID,Client Name,Email Address,Requested Service,User Message,Job Status,Mesa Payment Status\n";
+            
+            serverMessagesMemory.forEach(row => {
+                const cleanMessage = row.message.replace(/,/g, " ").replace(/\n/g, " ");
+                const cleanService = row.service.replace(/,/g, " ");
+                csvDataRows += `${row.id},"${row.name}","${row.email}","${cleanService}","${cleanMessage}","${row.status}","${row.payment_status}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvDataRows);
+            const downloadAnchor = document.createElement("a");
+            downloadAnchor.setAttribute("href", encodedUri);
+            downloadAnchor.setAttribute("download", "JoyTech_Solutions_Client_Data.csv");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
         }
     </script>
 </body>
