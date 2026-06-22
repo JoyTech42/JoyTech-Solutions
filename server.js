@@ -15,56 +15,48 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-// Middleware for Admin Security
+// Middleware: Strict Admin Security
 const checkAdmin = (req, res, next) => {
-    const incomingPass = req.headers['x-admin-password'];
+    const incoming = req.headers['x-admin-password'];
     const adminPass = (process.env.ADMIN_PASSWORD || 'JoyTechAdmin2026').trim();
-    if (incomingPass && incomingPass.trim() === adminPass) return next();
+    if (incoming && incoming.trim() === adminPass) return next();
     return res.status(401).json({ error: "Unauthorized access." });
 };
 
-// --- DATA ROUTES ---
+// --- ROUTES ---
 
-// Get Dashboard Stats
+// 1. Dashboard Statistics
 app.get('/api/admin/stats', checkAdmin, async (req, res) => {
     try {
         const total = await pool.query('SELECT COUNT(*) FROM quote_requests');
         res.json({ totalRequests: total.rows[0].count });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Get Messages (The source of truth from your Neon table)
+// 2. Get All Entries
 app.get('/api/messages', checkAdmin, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM quote_requests ORDER BY id DESC');
         res.json(result.rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Add a New Entry
+// 3. Create New Entry (Adding Service/Request)
 app.post('/api/requests', checkAdmin, async (req, res) => {
     const { name, email, service, message } = req.body;
     try {
         await pool.query('INSERT INTO quote_requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
             [name, email, service, message]);
         res.status(201).json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// Delete an Entry
+// 4. Delete Entry
 app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
     try {
         await pool.query('DELETE FROM quote_requests WHERE id = $1', [req.params.id]);
         res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-app.listen(PORT, () => console.log(`🚀 Portal active on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Professional Portal Engine Active: ${PORT}`));
