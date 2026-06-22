@@ -6,32 +6,36 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware Configuration
+// 1. Core Global Middleware Setup
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname))); // Serves files from flat root directory
 
-// Database Connection to Neon PostgreSQL
+// 2. Database Connection to Neon PostgreSQL Console
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // Required for secure Neon handshakes
+    ssl: { rejectUnauthorized: false }
 });
 
-// --- ENHANCED AUTHENTICATION MIDDLEWARE ---
+// Test the database link immediately upon startup
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) console.error("❌ Database Connection Error:", err);
+    else console.log("✅ Database Connected Successfully to Neon Console.");
+});
+
+// 3. Simple Authentication Check Middleware
 const checkAdminPassword = (req, res, next) => {
     const incomingPassword = req.headers['x-admin-password'];
-    
-    // Checks Render environment variable first; defaults to your exact secret password string
     const systemPassword = process.env.ADMIN_PASSWORD || 'JoyTechAdmin2026';
 
-    if (incomingPassword === systemPassword) {
-        return next(); // Credentials match, authorized to proceed!
+    if (incomingPassword && incomingPassword.trim() === systemPassword.trim()) {
+        return next();
     }
-
     return res.status(401).json({ error: "Login Failed. Password is not correct." });
 };
 
-// --- SYSTEM MATRIX STATS ENDPOINT ---
+// 4. BUSINESS API ENDPOINTS (Must come BEFORE serving static files)
+
+// --- SYSTEM TELEMETRY STATS ---
 app.get('/api/admin/stats', checkAdminPassword, async (req, res) => {
     try {
         const totalReqs = await pool.query('SELECT COUNT(*) FROM messages');
@@ -46,12 +50,11 @@ app.get('/api/admin/stats', checkAdminPassword, async (req, res) => {
             pendingTasks: parseInt(pendingTasks.rows[0].count) || 0
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to gather operational telemetry stats." });
+        res.status(500).json({ error: "Failed to gather telemetry stats." });
     }
 });
 
-// --- CUSTOMER MESSAGES / INBOX ENDPOINTS ---
+// --- CUSTOMER MESSAGES / INBOX ---
 app.get('/api/messages', checkAdminPassword, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM messages ORDER BY id DESC');
@@ -84,7 +87,7 @@ app.put('/api/messages/:id/status', checkAdminPassword, async (req, res) => {
         );
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: "Failed to update logs tracking profile." });
+        res.status(500).json({ error: "Failed to update tracking profile." });
     }
 });
 
@@ -94,17 +97,17 @@ app.delete('/api/messages/:id', checkAdminPassword, async (req, res) => {
         await pool.query('DELETE FROM messages WHERE id = $1', [id]);
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: "Failed to purge database entry record." });
+        res.status(500).json({ error: "Failed to purge database entry." });
     }
 });
 
-// --- SHOP TO-DO NOTEBOOK ENDPOINTS ---
+// --- SHOP TO-DO NOTEBOOK ---
 app.get('/api/tasks', checkAdminPassword, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM tasks ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "Failed to read operational check logs." });
+        res.status(500).json({ error: "Failed to read task logs." });
     }
 });
 
@@ -117,7 +120,7 @@ app.post('/api/tasks', checkAdminPassword, async (req, res) => {
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        res.status(500).json({ error: "Failed to record task log tracking index." });
+        res.status(500).json({ error: "Failed to record task." });
     }
 });
 
@@ -128,7 +131,7 @@ app.put('/api/tasks/:id', checkAdminPassword, async (req, res) => {
         await pool.query('UPDATE tasks SET is_completed = $1 WHERE id = $2', [is_completed, id]);
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: "Failed to switch checkbox verification tracking state." });
+        res.status(500).json({ error: "Failed to update task checkbox." });
     }
 });
 
@@ -138,17 +141,17 @@ app.delete('/api/tasks/:id', checkAdminPassword, async (req, res) => {
         await pool.query('DELETE FROM tasks WHERE id = $1', [id]);
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: "Failed to clean task index logging entry." });
+        res.status(500).json({ error: "Failed to clear task." });
     }
 });
 
-// --- HOMEPAGE EDIT SERVICES ENDPOINTS ---
+// --- DYNAMIC HOME PAGE SERVICES ---
 app.get('/api/services', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM services ORDER BY id ASC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "Failed to load public feature arrays." });
+        res.status(500).json({ error: "Failed to load active services list." });
     }
 });
 
@@ -161,7 +164,7 @@ app.post('/api/services', checkAdminPassword, async (req, res) => {
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        res.status(500).json({ error: "Failed to register custom web card configurations." });
+        res.status(500).json({ error: "Failed to register custom web card." });
     }
 });
 
@@ -171,16 +174,20 @@ app.delete('/api/services/:id', checkAdminPassword, async (req, res) => {
         await pool.query('DELETE FROM services WHERE id = $1', [id]);
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: "Failed to discard custom service instance matrix." });
+        res.status(500).json({ error: "Failed to discard custom service instance." });
     }
 });
 
-// Catch-all route to serve the main user index page for any broken deep-links
-app.get('*', (req, res) => {
+// 5. STATIC FILES LINK (Serves your flat files explicitly)
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Boot listening port server channel
+app.get('/admin.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// Start network port listener channel
 app.listen(PORT, () => {
-    console.log(`System backend running on network port link channel: ${PORT}`);
+    console.log(`🚀 JoyTech Solutions Engine active on network port: ${PORT}`);
 });
