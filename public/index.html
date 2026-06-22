@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyTech Solutions | KRA, eCitizen, CV Writing & Computer Services</title>
+    <title>JoyTech Solutions | Easy Online Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans scroll-smooth">
@@ -75,7 +75,7 @@
         </div>
     </section>
 
-    <!-- Process Workflow Section -->
+    <!-- Why Choose Us Section -->
     <section id="edge" class="bg-white py-20 border-t border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center space-y-3 mb-16">
@@ -107,7 +107,7 @@
         </div>
     </section>
 
-    <!-- Asynchronous Form & Contact Section -->
+    <!-- Form Section -->
     <section id="contact" class="py-24 max-w-3xl mx-auto px-6">
         <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 md:p-12 space-y-8">
             <div class="text-center space-y-2">
@@ -127,8 +127,19 @@
                     <input type="email" id="email" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">What do you need help with?</label>
-                    <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm" placeholder="Tell us what service you need (e.g., help with KRA Nil returns, writing a new CV, fixing a laptop screen)..."></textarea>
+                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Select the Service You Need</label>
+                    <select id="service" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm">
+                        <option value="" disabled selected>-- Choose a service --</option>
+                        <option value="KRA Assistance">KRA Returns & Assistance</option>
+                        <option value="eCitizen Services">eCitizen & Government Portals</option>
+                        <option value="CV Writing">CV Writing & Job Applications</option>
+                        <option value="Computer Repair & Web Dev">Computer Repair & Web Development</option>
+                        <option value="Other Support">Other Support Services</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">More Details About Your Request</label>
+                    <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm" placeholder="Tell us more about what you need..."></textarea>
                 </div>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg tracking-wide shadow-sm transition">SEND REQUEST</button>
             </form>
@@ -150,7 +161,7 @@
         </div>
     </footer>
 
-    <!-- Form Processing JS Engine Code -->
+    <!-- Script Engine -->
     <script>
         document.getElementById('quoteForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -159,6 +170,7 @@
             const payload = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
                 message: document.getElementById('message').value
             };
 
