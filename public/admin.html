@@ -3,42 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyTech Admin | Message Inbox</title>
+    <title>JoyTech Admin | Sorted Inbox</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 p-8 font-sans">
+<body class="bg-slate-900 text-slate-100 p-4 md:p-8 font-sans">
     <div class="max-w-4xl mx-auto space-y-8">
-        <div>
-            <h1 class="text-3xl font-bold text-white">JoyTech Inbox</h1>
-            <p class="text-slate-400">Enter your password to review and sort your customer requests.</p>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-slate-800 pb-6 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">JoyTech Solutions Inbox</h1>
+                <p class="text-slate-400 text-sm mt-1">Review, sort, and manage incoming customer requests instantly.</p>
+            </div>
+            <a href="/" class="text-xs text-slate-400 hover:text-white transition underline self-start sm:self-center">← Back to Homepage</a>
         </div>
 
-        <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 flex gap-4 max-w-md">
-            <input type="password" id="adminPass" placeholder="Enter Admin Password" class="w-full px-4 py-2 rounded bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500 text-sm">
-            <button onclick="loadMessages()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold text-sm transition shrink-0">View Messages</button>
+        <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 max-w-md shadow-xl space-y-3">
+            <label class="block text-xs font-bold text-slate-400 tracking-wider uppercase">Admin Authentication</label>
+            <div class="flex gap-3">
+                <input type="password" id="adminPass" placeholder="Enter Environment Password" class="w-full px-4 py-2.5 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500 text-sm transition">
+                <button onclick="loadMessages()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition shrink-0 shadow-md">View Messages</button>
+            </div>
         </div>
 
-        <div id="errorBox" class="hidden bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg text-sm"></div>
+        <div id="errorBox" class="hidden bg-red-900/40 border border-red-500/50 text-red-200 p-4 rounded-xl text-sm"></div>
 
-        <div id="filterBar" class="hidden space-y-2">
-            <p class="text-xs font-bold text-slate-400 tracking-wider uppercase">Filter by Service Type:</p>
+        <div id="filterBar" class="hidden space-y-3 bg-slate-800/50 p-4 rounded-xl border border-slate-800">
+            <p class="text-xs font-bold text-slate-400 tracking-wider uppercase">Filter Requests by Category:</p>
             <div class="flex flex-wrap gap-2">
-                <button onclick="filterMessages('All')" class="filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition">All Messages</button>
-                <button onclick="filterMessages('KRA Assistance')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition">KRA Tax</button>
-                <button onclick="filterMessages('eCitizen Services')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition">eCitizen Portal</button>
-                <button onclick="filterMessages('CV Writing')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition">CV Writing</button>
-                <button onclick="filterMessages('Computer Repair & Web Dev')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition">Repairs & Web</button>
-                <button onclick="filterMessages('Other Support')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition">Other</button>
+                <button onclick="filterMessages('All')" class="filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm">All Messages</button>
+                <button onclick="filterMessages('KRA Assistance')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">KRA Tax</button>
+                <button onclick="filterMessages('eCitizen Services')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">eCitizen Portal</button>
+                <button onclick="filterMessages('CV Writing')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">CV Writing</button>
+                <button onclick="filterMessages('Computer Repair & Web Dev')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">Repairs & Web</button>
+                <button onclick="filterMessages('Other Support')" class="filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700">Other</button>
             </div>
         </div>
 
         <div id="messagesList" class="space-y-4">
-            <p class="text-slate-500 italic">No data loaded yet.</p>
+            <p class="text-slate-500 italic p-4 bg-slate-800/30 rounded-xl border border-slate-800 border-dashed text-sm">No data streamed. Enter your admin password above to authenticate.</p>
         </div>
     </div>
 
     <script>
-        let allMessages = []; // Global storage for all downloaded messages
+        let allMessages = []; // Local storage array for filter processing
 
         async function loadMessages() {
             const password = document.getElementById('adminPass').value;
@@ -57,30 +63,28 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Failed to authenticate.');
+                    throw new Error(data.error || 'Access denied. Incorrect administrator token.');
                 }
 
-                allMessages = data; // Save data to sort later
-                filterBar.classList.remove('hidden'); // Show category sorting buttons
-                displayMessages(allMessages); // Render all messages initially
+                allMessages = data; 
+                filterBar.classList.remove('hidden'); 
+                displayMessages(allMessages); 
 
             } catch (err) {
                 errorBox.textContent = err.message;
                 errorBox.classList.remove('hidden');
                 filterBar.classList.add('hidden');
-                container.innerHTML = '<p class="text-slate-500 italic">Access denied.</p>';
+                container.innerHTML = '<p class="text-red-400 italic text-sm p-4 bg-red-950/20 border border-red-900 rounded-xl">Authentication sequence failed. Check your password and try again.</p>';
             }
         }
 
-        // Filter functionality handles layout display switches locally
         function filterMessages(category) {
-            // Update button styles to show active button visual
             const buttons = document.querySelectorAll('.filter-btn');
             buttons.forEach(btn => {
                 if (btn.textContent.includes(category) || (category === 'All' && btn.textContent === 'All Messages')) {
-                    btn.className = "filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition";
+                    btn.className = "filter-btn bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition shadow-sm";
                 } else {
-                    btn.className = "filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition";
+                    btn.className = "filter-btn bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-700";
                 }
             });
 
@@ -96,25 +100,25 @@
             const container = document.getElementById('messagesList');
             
             if (messages.length === 0) {
-                container.innerHTML = '<p class="text-slate-400 italic p-4 bg-slate-800 rounded-xl border border-slate-700">No customer requests found in this category.</p>';
+                container.innerHTML = '<div class="text-slate-400 italic p-6 bg-slate-800 rounded-xl border border-slate-700 text-sm">No live customer records matched this category filter.</div>';
                 return;
             }
 
             container.innerHTML = messages.map(msg => `
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-2 shadow-md">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b border-slate-700 pb-3 gap-2">
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-3 shadow-lg transition duration-200 hover:border-slate-600">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b border-slate-700/60 pb-3 gap-2">
                         <div>
-                            <h3 class="text-lg font-bold text-white">${msg.name}</h3>
-                            <p class="text-blue-400 text-sm">${msg.email}</p>
+                            <h3 class="text-base font-bold text-white tracking-wide">${msg.name}</h3>
+                            <p class="text-blue-400 text-xs mt-0.5">${msg.email}</p>
                         </div>
-                        <div class="text-left sm:text-right space-y-1">
-                            <span class="inline-block bg-blue-900/40 text-blue-300 border border-blue-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                        <div class="text-left sm:text-right space-y-1.5 shrink-0">
+                            <span class="inline-block bg-blue-950/60 text-blue-300 border border-blue-800/80 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider">
                                 ${msg.service || 'General Inquiry'}
                             </span>
-                            <p class="text-[10px] text-slate-500">${new Date(msg.submitted_at).toLocaleString()}</p>
+                            <p class="text-[10px] text-slate-500 font-mono">${new Date(msg.submitted_at).toLocaleString()}</p>
                         </div>
                     </div>
-                    <p class="text-slate-300 text-sm whitespace-pre-wrap pt-2 leading-relaxed">${msg.message}</p>
+                    <p class="text-slate-300 text-sm whitespace-pre-wrap pt-1 leading-relaxed">${msg.message}</p>
                 </div>
             `).join('');
         }
