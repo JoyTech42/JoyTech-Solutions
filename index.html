@@ -1,33 +1,178 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>JoyTech Solutions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoyTech Solutions | Easy IT Support & Computer Help</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-200 p-10">
-    <h1 class="text-4xl font-bold mb-4">JoyTech Solutions</h1>
-    <p>Professional digital and cyber services.</p>
-    
-    <div class="mt-10">
-        <input id="name" placeholder="Name" class="block w-full bg-slate-900 p-2 mb-2">
-        <input id="service" placeholder="Service" class="block w-full bg-slate-900 p-2 mb-2">
-        <textarea id="msg" placeholder="Message" class="block w-full bg-slate-900 p-2 mb-2"></textarea>
-        <button onclick="submitReq()" class="bg-blue-600 px-4 py-2 rounded">Submit Request</button>
-    </div>
+<body class="bg-slate-50 text-slate-800 font-sans scroll-smooth">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">J</div>
+                <span class="text-2xl font-bold text-slate-900">JoyTech <span class="text-blue-600 font-medium">Solutions</span></span>
+            </div>
+            <nav class="hidden md:flex space-x-8 font-medium text-slate-600">
+                <a href="#home" class="hover:text-blue-600 transition">Home</a>
+                <a href="#services" class="hover:text-blue-600 transition">How We Help</a>
+                <a href="#edge" class="hover:text-blue-600 transition">Our 5 Steps</a>
+                <a href="#contact" class="hover:text-blue-600 transition">Contact Us</a>
+            </nav>
+            <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md font-semibold text-sm transition shadow-sm">GET A FREE QUOTE</a>
+        </div>
+    </header>
+
+    <section id="home" class="bg-slate-900 text-white py-28 px-6 relative overflow-hidden bg-cover bg-center" style="background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000');">
+        <div class="max-w-5xl mx-auto text-center relative z-10 space-y-6">
+            <p class="text-blue-400 font-semibold tracking-wider uppercase text-sm">JoyTech Solutions: Technology with a Personal Touch</p>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">WE FIX YOUR COMPUTER & INTERNET PROBLEMS SO YOU CAN WORK IN PEACE</h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">We set up fast office internet, block viruses, and fix slow computers. Reliable, friendly IT support for businesses in Meru and beyond.</p>
+            <div class="pt-4">
+                <a href="#services" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-md font-bold transition inline-block shadow-lg">SEE HOW WE HELP</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center space-y-3 mb-16">
+            <h2 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">What We Can Do For You</h2>
+            <p class="text-slate-500 max-w-2xl mx-auto">Simple and reliable tech services to keep your office running smoothly every single day.</p>
+        </div>
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">🛠️</div>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">Fast Computer Help</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">When your internet goes down or a laptop breaks, just give us a call. We fix it fast so you don't lose time or money.</p>
+                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Ask for help →</a>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">🛡️</div>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">Virus Protection</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">We put strong digital locks on your systems to protect your private business files and customer information from hackers and scammers.</p>
+                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Protect your data →</a>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">☁️</div>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">Safe File Backups</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">We save your important paperwork safely online. If your computer breaks, gets lost, or goes missing, your files are completely safe.</p>
+                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Backup files →</a>
+            </div>
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">📊</div>
+                <h3 class="text-xl font-bold mb-3 text-slate-900">Smart Advice</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">Not sure which laptop, printer, or router is best for your office? We tell you exactly what to buy so you don't waste your budget.</p>
+                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Get advice →</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="edge" class="bg-white py-20 border-t border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center space-y-3 mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 tracking-tight md:text-4xl">Working With Us Is Simple</h2>
+                <p class="text-slate-500">How we get your technology sorted out in 5 easy steps.</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">1</div>
+                    <h4 class="font-bold text-slate-900">Tell Us Your Problem</h4>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">2</div>
+                    <h4 class="font-bold text-slate-900">Get an Easy Plan</h4>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">3</div>
+                    <h4 class="font-bold text-slate-900">We Set It All Up</h4>
+                </div>
+                <div class="space-y-3">
+                    <div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">4</div>
+                    <h4 class="font-bold text-slate-900">We Keep It Working</h4>
+                </div>
+                <div class="space-y-3 col-span-2 md:col-span-1">
+                    <div class="w-12 h-12 bg-blue-600 text-white font-bold rounded-full flex items-center justify-center mx-auto text-lg">5</div>
+                    <h4 class="font-bold text-slate-900">Work Stress-Free</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 max-w-3xl mx-auto px-6">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 md:p-12 space-y-8">
+            <div class="text-center space-y-2">
+                <h3 class="text-2xl font-bold text-slate-900 md:text-3xl">Ready to Fix Your Tech Headaches?</h3>
+                <p class="text-slate-500 text-sm">Fill out this quick form to book a friendly chat directly with Joy.</p>
+            </div>
+            
+            <div id="statusMessage" class="hidden p-4 rounded-lg text-sm text-center font-semibold"></div>
+
+            <form id="quoteForm" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Your Name / Company Name</label>
+                    <input type="text" id="name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Your Email Address</label>
+                    <input type="email" id="email" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">How can we help you?</label>
+                    <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm" placeholder="Tell us what is broken or what you need set up (e.g., slow internet, broken computers, file backups)..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg tracking-wide shadow-sm transition">SEND MESSAGE</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div class="space-y-1">
+                <p class="font-bold text-sm text-white mb-1">JoyTech Solutions Ltd.</p>
+                <p>Meru Corporate Tower, Meru County, Kenya</p>
+                <p class="pt-2 text-slate-300">
+                    <span class="font-semibold text-slate-400">Phone:</span> 0745806435 &nbsp;|&nbsp; 
+                    <span class="font-semibold text-slate-400">Email:</span> jw42205769@gmail.com
+                </p>
+            </div>
+            <p>&copy; 2026 JoyTech Solutions. All systems operational.</p>
+        </div>
+    </footer>
 
     <script>
-        async function submitReq() {
-            await fetch('/api/requests', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    name: document.getElementById('name').value,
-                    service: document.getElementById('service').value,
-                    message: document.getElementById('msg').value
-                })
-            });
-            alert("Request Sent!");
-        }
+        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusMessage = document.getElementById('statusMessage');
+            
+            const payload = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('/api/quote', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusMessage.className = "p-4 rounded-lg text-sm text-center font-semibold bg-green-50 text-green-700 border border-green-200";
+                    statusMessage.textContent = "Message sent successfully! Joy will contact you shortly.";
+                    document.getElementById('quoteForm').reset();
+                } else {
+                    throw new Error(data.error || 'Something went wrong.');
+                }
+            } catch (err) {
+                statusMessage.className = "p-4 rounded-lg text-sm text-center font-semibold bg-red-50 text-red-700 border border-red-200";
+                statusMessage.textContent = "Error: " + err.message;
+            }
+            statusMessage.classList.remove('hidden');
+        });
     </script>
 </body>
 </html>
