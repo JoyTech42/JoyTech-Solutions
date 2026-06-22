@@ -5,44 +5,48 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Database Connection Pooling via Neon Console
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: true
-  }
+  ssl: { rejectUnauthorized: true }
 });
 
-// Middleware configuration
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// API Endpoint to process and save form inquiries
 app.post('/api/quote', async (req, res) => {
-  const { name, email, message } = req.body;
+  const { name, email, service, message } = req.body;
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All structural fields are required.' });
+  if (!name || !email || !service || !message) {
+    return res.status(400).json({ error: 'All form fields are required.' });
   }
 
   try {
-    const queryText = 'INSERT INTO quote_requests (name, email, message) VALUES ($1, $2, $3) RETURNING *';
-    const values = [name, email, message];
-    const result = await pool.query(queryText, values);
+    const queryText = 'INSERT INTO quote_requests (name, email, service, message) VALUES ($1, $2, $3, $4) RETURNING *';
+    const values = [name, email, service, message];
+    await pool.query(queryText, values);
     
-    return res.status(200).json({ 
-      success: true, 
-      message: 'Inquiry successfully logged into the core database.',
-      data: result.rows[0]
-    });
+    return res.status(200).json({ success: true, message: 'Saved successfully!' });
   } catch (err) {
-    console.error('Database insertion breakdown:', err);
+    console.error(err);
     return res.status(500).json({ error: 'Internal pipeline database error.' });
   }
 });
 
-// Start application listener
+app.get('/api/messages', async (req, res) => {
+  const passwordInput = req.headers['x-admin-password'];
+  if (!passwordInput || passwordInput !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized. Wrong password.' });
+  }
+  try {
+    const result = await pool.query('SELECT * FROM quote_requests ORDER BY submitted_at DESC');
+    return res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Could not fetch data.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`JoyTech Solutions active on port ${PORT}`);
 });
