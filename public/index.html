@@ -3,213 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyTech Solutions | Easy Online Services</title>
+    <title>JoyTech Solutions | Professional Online & Technical Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans scroll-smooth relative">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">J</div>
-                <span class="text-2xl font-bold text-slate-900">JoyTech <span class="text-blue-600 font-medium">Solutions</span></span>
-            </div>
-            <nav class="hidden md:flex space-x-8 font-medium text-slate-600">
-                <a href="#home" class="hover:text-blue-600 transition">Home</a>
-                <a href="#services" class="hover:text-blue-600 transition">Our Services</a>
-                <a href="#edge" class="hover:text-blue-600 transition">Why Choose Us</a>
-                <a href="#contact" class="hover:text-blue-600 transition">Get Help Now</a>
-            </nav>
-            <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md font-semibold text-sm transition shadow-sm">GET A FREE QUOTE</a>
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-900 bg-slate-950/70 backdrop-blur sticky top-0 z-50 px-4 lg:px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-blue-600/20">J</div>
+            <span class="text-xl font-bold tracking-tight text-white">JoyTech <span class="text-blue-500 font-normal">Solutions</span></span>
         </div>
+        <nav class="flex items-center space-x-6">
+            <a href="#services" class="text-xs font-medium text-slate-400 hover:text-white transition">Our Services</a>
+            <a href="#request" class="text-xs font-medium text-slate-400 hover:text-white transition">Order Online</a>
+            <a href="/admin.html" class="text-xs px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 text-slate-300 transition">Admin Portal</a>
+        </nav>
     </header>
 
-    <section id="home" class="bg-slate-900 text-white py-28 px-6 relative overflow-hidden bg-cover bg-center" style="background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2000');">
-        <div class="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-            <p class="text-blue-400 font-semibold tracking-wider uppercase text-sm">JoyTech Solutions: Technology with a Personal Touch</p>
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">QUICK & EASY ONLINE SERVICES, KRA RETURNS, AND COMPUTER REPAIRS</h1>
-            <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">Get expert help with KRA tax returns, eCitizen government services, professional CV writing, and laptop repairs. Serving clients in Meru and anywhere online!</p>
-            <div class="pt-4">
-                <a href="#services" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-md font-bold transition inline-block shadow-lg">SEE WHAT WE DO</a>
+    <!-- Hero Announcement Section -->
+    <section class="max-w-4xl mx-auto text-center px-4 pt-16 pb-12 space-y-6">
+        <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full text-blue-400 text-[11px] font-medium tracking-wide uppercase">
+            <span>✨ Fast, Reliable & Trustworthy</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
+            Get Your Online Tasks & Cyber Services Done Right
+        </h1>
+        <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto font-normal leading-relaxed">
+            Need help with KRA returns, government applications, or technical repairs? Fill out a quick form below, and we will handle the rest for you instantly.
+        </p>
+        <div class="pt-2">
+            <a href="#request" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-6 py-3 rounded-xl transition tracking-wide shadow-lg shadow-blue-600/20 inline-block">Start Your Request Now</a>
+        </div>
+    </section>
+
+    <!-- Services Grid Display Section -->
+    <section id="services" class="max-w-6xl mx-auto px-4 py-12 w-full space-y-8">
+        <div class="text-center space-y-1">
+            <h2 class="text-xl font-bold text-white tracking-tight">What We Do For You</h2>
+            <p class="text-xs text-slate-500">Professional assistance for your everyday business and official needs.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Service 1 -->
+            <div class="bg-slate-900/50 border border-slate-900 hover:border-slate-800 p-6 rounded-2xl space-y-3 transition group">
+                <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">📊</div>
+                <h3 class="font-bold text-slate-200 text-base group-hover:text-blue-400 transition">KRA Tax Assistance</h3>
+                <p class="text-slate-400 text-xs leading-relaxed font-normal">Filing your annual KRA returns smoothly, managing penalties, and resolving tax compliance challenges quickly.</p>
+            </div>
+            <!-- Service 2 -->
+            <div class="bg-slate-900/50 border border-slate-900 hover:border-slate-800 p-6 rounded-2xl space-y-3 transition group">
+                <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">🏛️</div>
+                <h3 class="font-bold text-slate-200 text-base group-hover:text-blue-400 transition">eCitizen Applications</h3>
+                <p class="text-slate-400 text-xs leading-relaxed font-normal">Fast support for business registration, driving licenses, good conduct forms, and all government portal services.</p>
+            </div>
+            <!-- Service 3 -->
+            <div class="bg-slate-900/50 border border-slate-900 hover:border-slate-800 p-6 rounded-2xl space-y-3 transition group">
+                <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">📄</div>
+                <h3 class="font-bold text-slate-200 text-base group-hover:text-blue-400 transition">CV Writing & Job Applications</h3>
+                <p class="text-slate-400 text-xs leading-relaxed font-normal">Professional resume creation and cover letter writing to make sure you stand out when applying for employment.</p>
+            </div>
+            <!-- Service 4 -->
+            <div class="bg-slate-900/50 border border-slate-900 hover:border-slate-800 p-6 rounded-2xl space-y-3 transition group">
+                <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">💻</div>
+                <h3 class="font-bold text-slate-200 text-base group-hover:text-blue-400 transition">Web Development</h3>
+                <p class="text-slate-400 text-xs leading-relaxed font-normal">Building ultra-modern, clean, and highly responsive landing pages and customized web applications for your brand.</p>
+            </div>
+            <!-- Service 5 -->
+            <div class="bg-slate-900/50 border border-slate-900 hover:border-slate-800 p-6 rounded-2xl space-y-3 transition group">
+                <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">🔧</div>
+                <h3 class="font-bold text-slate-200 text-base group-hover:text-blue-400 transition">Computer & Device Repair</h3>
+                <p class="text-slate-400 text-xs leading-relaxed font-normal">Fixing broken software systems, slow performance issues, operating systems installations, and general hardware maintenance.</p>
+            </div>
+            <!-- Service 6 -->
+            <div class="bg-slate-900/50 border border-slate-900 hover:border-slate-800 p-6 rounded-2xl space-y-3 transition group">
+                <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">✨</div>
+                <h3 class="font-bold text-slate-200 text-base group-hover:text-blue-400 transition">Customized Support</h3>
+                <p class="text-slate-400 text-xs leading-relaxed font-normal">Have a unique cyber task, printing query, or online form assignment? Let us take care of it for you directly.</p>
             </div>
         </div>
     </section>
 
-    <section id="services" class="py-24 max-w-7xl mx-auto px-6">
-        <div class="text-center space-y-3 mb-16">
-            <h2 class="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">How We Can Help You Today</h2>
-            <p class="text-slate-500 max-w-2xl mx-auto">No long lines, no stressful portals. We handle your online paperwork, tech repairs, and business designs quickly.</p>
-        </div>
-        
-        <div id="servicesContainer" class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">📋</div>
-                <h3 class="text-xl font-bold mb-3 text-slate-900">KRA Returns & Assistance</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">Avoid penalties! We file your KRA returns correctly, assist with PIN generation, and clear tax compliance issues smoothly.</p>
-                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Get Tax Help →</a>
-            </div>
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">🌐</div>
-                <h3 class="text-xl font-bold mb-3 text-slate-900">eCitizen & Applications</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">Fast support for NTSA driving licenses, good conduct certificates, passports, business registrations, and all government portal applications.</p>
-                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Apply Now →</a>
-            </div>
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">📝</div>
-                <h3 class="text-xl font-bold mb-3 text-slate-900">CV Writing & Jobs</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">Stand out from the crowd. We draft neat, professional CVs and cover letters tailored to help you land your dream job.</p>
-                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Get Your CV Written →</a>
-            </div>
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
-                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">💻</div>
-                <h3 class="text-xl font-bold mb-3 text-slate-900">Repairs & Web Dev</h3>
-                <p class="text-slate-600 text-sm leading-relaxed mb-4">We fix slow or broken computers and build modern, beautiful websites to take your local business or startup to the next level.</p>
-                <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Fix or Build Tech →</a>
-            </div>
-        </div>
+    <!-- Dynamic Custom Services Injection Hook (Loaded from DB if added by Admin) -->
+    <section id="customServicesWrapper" class="max-w-6xl mx-auto px-4 pb-12 w-full hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="dynamicServicesBox"></div>
     </section>
 
-    <section id="edge" class="bg-white py-20 border-t border-b border-slate-100">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center space-y-3 mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 tracking-tight md:text-4xl">Why Choose JoyTech Solutions?</h2>
-                <p class="text-slate-500">We make complicated online and computer processes completely stress-free for you.</p>
+    <!-- Client Interactive Request Form -->
+    <section id="request" class="max-w-xl mx-auto px-4 py-16 w-full flex-1 flex flex-col justify-center">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-1">
+                <h2 class="text-lg font-bold text-white">Submit a Service Request</h2>
+                <p class="text-xs text-slate-400">Fill in your information accurately, and we will communicate with you immediately.</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
-                <div class="space-y-3"><div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">1</div><h4 class="font-bold text-slate-900">Tell Us Your Need</h4></div>
-                <div class="space-y-3"><div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">2</div><h4 class="font-bold text-slate-900">Send Details Safely</h4></div>
-                <div class="space-y-3"><div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">3</div><h4 class="font-bold text-slate-900">Quick Processing</h4></div>
-                <div class="space-y-3"><div class="w-12 h-12 bg-slate-100 text-slate-700 font-bold rounded-full flex items-center justify-center mx-auto text-lg">4</div><h4 class="font-bold text-slate-900">Friendly Updates</h4></div>
-                <div class="space-y-3 col-span-2 md:col-span-1"><div class="w-12 h-12 bg-blue-600 text-white font-bold rounded-full flex items-center justify-center mx-auto text-lg">5</div><h4 class="font-bold text-slate-900">Task Completed!</h4></div>
-            </div>
-        </div>
-    </section>
 
-    <section id="contact" class="py-24 max-w-3xl mx-auto px-6">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 md:p-12 space-y-8">
-            <div class="text-center space-y-2">
-                <h3 class="text-2xl font-bold text-slate-900 md:text-3xl">Ready to Get Started?</h3>
-                <p class="text-slate-500 text-sm">Fill out this quick form to send your request straight to Joy.</p>
-            </div>
-            
-            <div id="statusMessage" class="hidden p-4 rounded-lg text-sm text-center font-semibold"></div>
-
-            <form id="quoteForm" class="space-y-5">
+            <form id="clientRequestForm" onsubmit="sendRequestToAdmin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Your Name</label>
-                    <input type="text" id="name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Your Full Name</label>
+                    <input type="text" id="clientName" required placeholder="e.g. John Doe" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500 transition">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Your Email Address</label>
-                    <input type="text" id="email" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm" placeholder="Email or phone number">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <input type="email" id="clientEmail" required placeholder="e.g. name@example.com" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500 transition">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Select the Service You Need</label>
-                    <select id="service" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm">
-                        <option value="" disabled selected>-- Choose a service --</option>
-                        <option value="KRA Assistance">KRA Returns & Assistance</option>
-                        <option value="eCitizen Services">eCitizen & Government Portals</option>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Select Needed Service</label>
+                    <select id="clientService" required class="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 focus:outline-none focus:border-blue-500 transition">
+                        <option value="" disabled selected>-- Choose a category --</option>
+                        <option value="KRA Tax Returns">KRA Tax Returns Support</option>
+                        <option value="eCitizen Applications">eCitizen / Government Portals</option>
                         <option value="CV Writing">CV Writing & Job Applications</option>
-                        <option value="Computer Repair & Web Dev">Computer Repair & Web Development</option>
-                        <option value="Other Support">Other Support Services</option>
+                        <option value="Web Development">Website Development</option>
+                        <option value="Computer Repair">Computer & Device Repair</option>
+                        <option value="Other Online Task">Other Customized Support</option>
                     </select>
                 </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">More Details About Your Request</label>
-                    <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 focus:bg-white transition text-sm" placeholder="Tell us more about what you need..."></textarea>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Explain What You Need Done</label>
+                    <textarea id="clientMessage" required rows="4" placeholder="Provide details like your KRA PIN, application type, or how we can help you..." class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-blue-500 transition"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg tracking-wide shadow-sm transition">SEND REQUEST</button>
+
+                <div id="formStatusBox" class="hidden text-center text-xs p-3 rounded-xl"></div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-xs tracking-wide transition shadow-lg shadow-blue-600/10">
+                    Send Order Form
+                </button>
             </form>
         </div>
     </section>
 
-    <a href="https://wa.me/254745806435?text=Hello%20JoyTech%20Solutions%2C%20I%20visited%20your%20website%20and%20would%20like%20some%20help." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20ba5a] text-white p-4 rounded-full shadow-2xl transition duration-300 transform hover:scale-110 flex items-center justify-center group" title="Chat on WhatsApp">
-        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.66.986 3.294 1.493 5.35 1.495 5.519 0 10.01-4.483 10.014-9.997.002-2.671-1.03-5.182-2.906-7.06C17.13 1.716 14.626.677 11.993.677c-5.523 0-10.02 4.483-10.024 10 .001 2.083.547 4.116 1.581 5.861L2.518 21.6l5.129-1.346zM17.5 14.1c-.28-.14-1.65-.814-1.906-.907-.255-.094-.44-.14-.625.14-.185.281-.716.907-.878 1.094-.162.188-.324.21-.604.07-.28-.14-1.18-.435-2.25-1.391-.83-.741-1.39-1.655-1.55-1.93-.163-.28-.017-.432.123-.571.125-.126.28-.328.42-.492.14-.164.185-.281.28-.47.092-.187.045-.351-.021-.49-.066-.14-.555-1.336-.76-1.83-.2-.486-.4-.42-.56-.425-.143-.004-.308-.005-.473-.005-.166 0-.436.063-.664.312-.228.25-1.87 1.83-1.87 4.46s1.918 5.177 2.183 5.532c.266.355 3.774 5.76 9.143 8.077 1.278.551 2.277.881 3.056 1.127 1.285.408 2.455.35 3.379.212.1.01-.22.1-.55.21-.33.12-1.65.68-1.88.82z"/>
-        </svg>
-        <span class="absolute right-16 bg-slate-900 text-white text-xs px-3 py-1.5 rounded shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Chat with Joy</span>
-    </a>
-
-    <footer class="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800 text-xs">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <div class="space-y-1">
-                <p class="font-bold text-sm text-white mb-1">JoyTech Solutions Ltd.</p>
-                <p>Meru Corporate Tower, Meru County, Kenya</p>
-                <p class="pt-2 text-slate-300">
-                    <span class="font-semibold text-slate-400">Phone:</span> 0745806435 &nbsp;|&nbsp; 
-                    <span class="font-semibold text-slate-400">Email:</span> jw42205769@gmail.com
-                </p>
-            </div>
-            <p>&copy; 2026 JoyTech Solutions. All systems operational.</p>
-        </div>
+    <!-- Footer Area -->
+    <footer class="border-t border-slate-900 bg-slate-950 px-6 py-6 text-center text-[11px] text-slate-500 font-normal mt-auto">
+        <p>&copy; 2026 JoyTech Solutions. All rights reserved.</p>
     </footer>
 
+    <!-- Client System Operational Core Scripts -->
     <script>
-        // Fetch Live customized catalog database entries immediately
-        window.addEventListener('DOMContentLoaded', async () => {
+        // Run database fetch for any additional live services published from admin dashboard
+        document.addEventListener("DOMContentLoaded", fetchCustomActiveServices);
+
+        async function fetchCustomActiveServices() {
             try {
-                const res = await fetch('/api/services');
-                if (!res.ok) return;
-                const dynamicServices = await res.json();
+                const response = await fetch('/api/services');
+                if(!response.ok) return;
+                const dynamicList = await response.json();
                 
-                if (dynamicServices && dynamicServices.length > 0) {
-                    const container = document.getElementById('servicesContainer');
-                    container.innerHTML = dynamicServices.map(s => `
-                        <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
-                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-xl">💡</div>
-                            <h3 class="text-xl font-bold mb-3 text-slate-900">${s.title}</h3>
-                            <p class="text-slate-600 text-sm leading-relaxed mb-4">${s.description}</p>
-                            <a href="#contact" class="text-blue-600 font-semibold text-sm hover:underline">Get Support Now →</a>
+                if(dynamicList.length > 0) {
+                    const wrapper = document.getElementById('customServicesWrapper');
+                    const targetBox = document.getElementById('dynamicServicesBox');
+                    wrapper.classList.remove('hidden');
+                    
+                    targetBox.innerHTML = dynamicList.map(item => `
+                        <div class="bg-slate-900/50 border border-slate-900 p-6 rounded-2xl space-y-3 transition">
+                            <div class="w-10 h-10 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center text-lg border border-blue-500/10">⭐</div>
+                            <h3 class="font-bold text-slate-200 text-base">${item.title}</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed font-normal">${item.description}</p>
                         </div>
                     `).join('');
                 }
             } catch (err) {
-                console.log("Using static fallback presentation cards.");
+                console.log("No custom extra features parsed.");
             }
-        });
+        }
 
-        // Form Submit System
-        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const statusMessage = document.getElementById('statusMessage');
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+        // Handle customer submission flow directly to backend
+        async function sendRequestToAdmin(event) {
+            event.preventDefault();
             
-            const payload = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                service: document.getElementById('service').value,
-                message: document.getElementById('message').value
+            const btn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('formStatusBox');
+            
+            const payloadData = {
+                name: document.getElementById('clientName').value,
+                email: document.getElementById('clientEmail').value,
+                service: document.getElementById('clientService').value,
+                message: document.getElementById('clientMessage').value
             };
 
-            try {
-                submitBtn.textContent = 'Sending...';
-                submitBtn.disabled = true;
-                statusMessage.classList.add('hidden');
+            // Lock submission button
+            btn.disabled = true;
+            btn.textContent = "Sending your request...";
 
-                const response = await fetch('/api/quote', {
+            try {
+                const response = await fetch('/api/messages', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payloadData)
                 });
 
-                const data = await response.json();
+                if(!response.ok) throw new Error();
 
-                if (response.ok) {
-                    statusMessage.className = "p-4 rounded-lg text-sm text-center font-semibold bg-green-50 text-green-700 border border-green-200";
-                    statusMessage.textContent = "Message sent successfully! Joy will contact you shortly.";
-                    document.getElementById('quoteForm').reset();
-                } else {
-                    throw new Error(data.error || 'Something went wrong.');
-                }
-            } catch (err) {
-                statusMessage.className = "p-4 rounded-lg text-sm text-center font-semibold bg-red-50 text-red-700 border border-red-200";
-                statusMessage.textContent = "Submission Error: " + err.message;
+                // Display success messaging structure 
+                statusBox.className = "text-center text-xs p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                statusBox.textContent = "Thank you! Your request was received successfully. We are reviewing it now.";
+                statusBox.classList.remove('hidden');
+                
+                // Clear entire form layout logs
+                document.getElementById('clientRequestForm').reset();
+
+            } catch (error) {
+                // Display structural failure feedback layout
+                statusBox.className = "text-center text-xs p-3 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20";
+                statusBox.textContent = "Something went wrong. Please check your internet connection and try again.";
+                statusBox.classList.remove('hidden');
             } finally {
-                submitBtn.textContent = 'SEND REQUEST';
-                submitBtn.disabled = false;
+                // Restore button controls
+                btn.disabled = false;
+                btn.textContent = "Send Order Form";
             }
-            statusMessage.classList.remove('hidden');
-        });
+        }
     </script>
 </body>
 </html>
