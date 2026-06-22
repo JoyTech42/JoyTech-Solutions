@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyTech Solutions | Admin Dashboard</title>
+    <title>JoyTech Solutions | Admin Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
 
-    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+    <!-- Top Navigation Header Bar (Stays visible) -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur px-6 py-4 flex justify-between items-center shrink-0">
         <div class="flex items-center space-x-2">
             <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">J</div>
             <span class="text-xl font-bold tracking-tight text-white">JoyTech <span class="text-blue-500 font-normal">Solutions Panel</span></span>
@@ -16,19 +17,28 @@
         <a href="/" class="text-xs px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg hover:border-slate-700 transition text-slate-300">← Open Main Website</a>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
-        
-        <div class="bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
-            <div>
-                <h2 class="text-base font-bold text-white">Dashboard Authorization</h2>
-                <p class="text-slate-400 text-xs mt-0.5">Enter your secret admin password to access customer messages and tools.</p>
+    <!-- 1. CLEAN LOGIN SCREEN CONTAINER (Visible by default) -->
+    <div id="loginScreen" class="flex-1 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center mx-auto text-xl border border-blue-500/20">🔒</div>
+                <h2 class="text-xl font-bold text-white tracking-tight">Dashboard Authorization</h2>
+                <p class="text-slate-400 text-xs">Enter your secret admin password to access business systems.</p>
             </div>
-            <div class="flex w-full sm:w-auto gap-3">
-                <input type="password" id="adminPassword" placeholder="Enter password" class="w-full sm:w-56 px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-sm focus:outline-none focus:border-blue-500 text-white">
-                <button onclick="bootDashboard()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-semibold transition tracking-wide shrink-0">Login Now</button>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Admin Password</label>
+                    <input type="password" id="adminPassword" placeholder="••••••••" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-blue-500 text-white transition">
+                </div>
+                <button onclick="bootDashboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-semibold transition tracking-wide shadow-lg shadow-blue-600/10">Login to Dashboard</button>
             </div>
         </div>
+    </div>
 
+    <!-- 2. MAIN BUSINESS DASHBOARD CONTAINER (Hidden by default until logged in) -->
+    <main id="dashboardContent" class="hidden max-w-7xl mx-auto p-4 md:p-6 space-y-6 w-full flex-1">
+        
+        <!-- Dynamic Counter Matrix Cards -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
                 <div>
@@ -60,9 +70,12 @@
             </div>
         </div>
 
+        <!-- Dashboard Columns Splits -->
         <div class="grid lg:grid-cols-3 gap-6">
             
+            <!-- Left Utilities Sidebar (To-dos & Services) -->
             <div class="space-y-6">
+                <!-- Shop Daily Task Note Board Tracker -->
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
                     <div>
                         <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Shop To-Do Notebook</h3>
@@ -72,11 +85,10 @@
                         <input type="text" id="newTaskText" placeholder="Write a reminder here..." class="w-full px-3 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:border-blue-500">
                         <button onclick="addTask()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 rounded-lg text-xs">+</button>
                     </div>
-                    <div id="tasksContainer" class="space-y-2 max-h-48 overflow-y-auto text-xs text-slate-500 italic pt-1">
-                        Log in to load your shop reminders notepad.
-                    </div>
+                    <div id="tasksContainer" class="space-y-2 max-h-48 overflow-y-auto text-xs text-slate-500 italic pt-1"></div>
                 </div>
 
+                <!-- Web Page Live Service Customizer -->
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
                     <div>
                         <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider">Services Shown on Site</h3>
@@ -91,6 +103,7 @@
                 </div>
             </div>
 
+            <!-- Main Client Messages & Tracking Controls Area -->
             <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-3">
                     <div>
@@ -100,6 +113,7 @@
                     <button onclick="downloadCSVSpreadsheet()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-4 py-1.5 border border-slate-700 rounded-lg text-xs tracking-wide transition shrink-0">📥 Download Spreadsheet</button>
                 </div>
 
+                <!-- Instant Filters Layout Components -->
                 <div class="grid sm:grid-cols-3 gap-3">
                     <input type="text" id="searchBar" oninput="runInboxFilters()" placeholder="🔍 Type name, service, email to search..." class="sm:col-span-2 w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-blue-500">
                     <select id="filterPayment" onchange="runInboxFilters()" class="w-full px-2 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-400 focus:outline-none focus:border-blue-500">
@@ -109,16 +123,21 @@
                     </select>
                 </div>
 
-                <div id="inboxContainer" class="space-y-4 max-h-[550px] overflow-y-auto text-xs text-slate-500 italic py-12 text-center">
-                    Please key in your access password up top to fetch your customer orders.
-                </div>
+                <!-- Master Output Loop Board Container -->
+                <div id="inboxContainer" class="space-y-4 max-h-[550px] overflow-y-auto text-xs text-slate-400 font-normal"></div>
             </div>
 
         </div>
     </main>
 
+    <!-- UI Logic Scripts System Engines -->
     <script>
         let serverMessagesMemory = []; // Cache list store for hyper-fast interface typing lookup
+
+        // Listen for the "Enter" key on the password input field for quick logins
+        document.getElementById('adminPassword').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') bootDashboard();
+        });
 
         async function bootDashboard() {
             const password = document.getElementById('adminPassword').value;
@@ -136,9 +155,16 @@
                 document.getElementById('statTasks').textContent = stats.pendingTasks;
 
                 // Fire list updates
-                loadCustomerInbox();
-                loadTasksReminders();
-                loadLivePortfolioList();
+                await Promise.all([
+                    loadCustomerInbox(),
+                    loadTasksReminders(),
+                    loadLivePortfolioList()
+                ]);
+
+                // Reveal dashboard, hide login interface screen completely
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboardContent').classList.remove('hidden');
+
             } catch {
                 alert("Login Failed. Password is not correct.");
             }
@@ -164,7 +190,7 @@
             });
 
             if(filteredData.length === 0) {
-                outputBox.innerHTML = `<p class="text-slate-600 py-10 text-xs">No client messages match your current filters.</p>`;
+                outputBox.innerHTML = `<p class="text-slate-500 py-10 text-xs italic text-center">No client messages match your current filters.</p>`;
                 return;
             }
 
