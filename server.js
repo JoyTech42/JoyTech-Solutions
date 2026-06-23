@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Connect to Neon PostgreSQL Database
+// Connect directly to your Neon PostgreSQL Database Cluster
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
@@ -15,7 +15,7 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Public Route: Saves customer messages straight to Neon
+// Public Route: Saves customer submissions directly from index.html
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
     if (!name || !email || !message) {
@@ -32,13 +32,13 @@ app.post('/api/quote', async (req, res) => {
     }
 });
 
-// Unprotected Admin Routes: Direct streaming data access
+// Unprotected Admin Routes: Open telemetry and message processing
 app.get('/api/admin/stats', async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
         res.json({ totalRequests: parseInt(result.rows[0].count, 10) });
     } catch (err) {
-        res.status(500).json({ error: "Could not fetch stats." });
+        res.status(500).json({ error: "Could not fetch stats cluster." });
     }
 });
 
@@ -47,24 +47,24 @@ app.get('/api/messages', async (req, res) => {
         const result = await pool.query('SELECT * FROM requests ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "Could not fetch messages." });
+        res.status(500).json({ error: "Could not read data lines." });
     }
 });
 
 app.delete('/api/requests/:id', async (req, res) => {
     try {
         await pool.query('DELETE FROM requests WHERE id = $1', [req.params.id]);
-        res.json({ success: true, message: `Record cleared.` });
+        res.json({ success: true, message: `Record deleted.` });
     } catch (err) {
         res.status(500).json({ error: "Could not delete row." });
     }
 });
 
-// Fallback: Routes base web traffic directly to your open landing page
+// Default Fallback: Points all primary root navigation directly to index.html
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`JoyTech Solutions Engine running openly on port ${PORT}`);
+    console.log(`JoyTech Solutions Engine running completely open on port ${PORT}`);
 });
