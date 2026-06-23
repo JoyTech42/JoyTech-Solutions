@@ -5,27 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JoyTech Solutions | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Security Assertion Guard: Kick out users before layout paint if token is absent
+        if (!localStorage.getItem('joytech_admin_token')) {
+            window.location.href = '/login.html';
+        }
+    </script>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen font-sans">
 
-    <!-- Open Dashboard View -->
     <div id="dashboardContent">
-        <!-- Top Navigation Status Bar -->
         <header class="bg-slate-900/80 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-sm">
             <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md shadow-blue-600/10">J</div>
                     <span class="text-xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Console</span></span>
                 </div>
-                <div class="text-[10px] text-emerald-400 border border-emerald-900/30 px-3 py-1.5 rounded-lg font-bold bg-emerald-950/50 uppercase tracking-wider">
-                    Direct Management Mode
-                </div>
+                <button onclick="logoutAdmin()" class="text-[10px] bg-slate-950 hover:bg-red-950/40 border border-slate-800 hover:border-red-900/40 text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-lg font-bold transition uppercase tracking-wider">
+                    Disconnect Session
+                </button>
             </div>
         </header>
 
-        <!-- Metrics & Content Workspace Area -->
         <main class="max-w-7xl mx-auto px-6 py-10 space-y-8">
-            <!-- Telemetry Metrics Grid Row -->
             <div class="grid md:grid-cols-3 gap-6">
                 <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-sm flex items-center justify-between relative overflow-hidden">
                     <div>
@@ -36,12 +38,12 @@
                 </div>
                 <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-sm flex items-center justify-between relative overflow-hidden">
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">System Status</p>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Session Status</p>
                         <h3 class="text-xs font-bold text-emerald-400 flex items-center mt-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-2 animate-pulse"></span> Active & Open
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-2 animate-pulse"></span> Encrypted Core
                         </h3>
                     </div>
-                    <div class="text-2xl p-3 bg-emerald-950/40 border border-emerald-900/30 rounded-lg text-emerald-400">🔓</div>
+                    <div class="text-2xl p-3 bg-emerald-950/40 border border-emerald-900/30 rounded-lg text-emerald-400">🔒</div>
                 </div>
                 <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-sm flex items-center justify-between relative overflow-hidden">
                     <div>
@@ -52,7 +54,6 @@
                 </div>
             </div>
 
-            <!-- Customer Incoming Requests Queue Container -->
             <div class="bg-slate-900 rounded-xl border border-slate-800 shadow-xl overflow-hidden">
                 <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/40">
                     <div>
@@ -64,7 +65,6 @@
                     </button>
                 </div>
 
-                <!-- Feed Output Core Interface List -->
                 <div id="messagesList" class="divide-y divide-slate-800/60 p-4 space-y-3 max-h-[600px] overflow-y-auto">
                     <p class="text-slate-500 text-xs text-center py-12">Synchronizing with cloud cluster records...</p>
                 </div>
@@ -72,23 +72,33 @@
         </main>
     </div>
 
-    <!-- Script Data Processor Engine -->
     <script>
         async function loadDashboardData() {
+            const token = localStorage.getItem('joytech_admin_token');
+            
+            // Append JWT token directly inside authorization headers
+            const fetchHeaders = {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+
             try {
-                // Grab stats
-                const statsRes = await fetch('/api/admin/stats');
+                // Grab statistics counter line
+                const statsRes = await fetch('/api/admin/stats', { headers: fetchHeaders });
+                if (statsRes.status === 401 || statsRes.status === 403) return logoutAdmin();
+                
                 const statsData = await statsRes.json();
                 document.getElementById('statTotal').textContent = statsData.totalRequests || 0;
 
                 // Grab records queue dataset
-                const msgRes = await fetch('/api/messages');
+                const msgRes = await fetch('/api/messages', { headers: fetchHeaders });
+                if (msgRes.status === 401 || msgRes.status === 403) return logoutAdmin();
+                
                 const messages = await msgRes.json();
-
                 const container = document.getElementById('messagesList');
                 container.innerHTML = '';
 
-                if (messages.length === 0) {
+                if (!messages || messages.length === 0) {
                     container.innerHTML = `<div class="text-slate-500 text-xs text-center py-16">No customer data entries found inside the operational data tables.</div>`;
                     return;
                 }
@@ -122,7 +132,8 @@
 
             try {
                 const res = await fetch(`/api/requests/${id}`, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('joytech_admin_token')}` }
                 });
                 
                 if (res.ok) {
@@ -135,12 +146,17 @@
             }
         }
 
+        function logoutAdmin() {
+            localStorage.removeItem('joytech_admin_token');
+            window.location.href = '/login.html';
+        }
+
         function escapeHtml(str) {
             if (!str) return '';
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // Load instantly on page view
+        // Load data on page view
         loadDashboardData();
     </script>
 </body>
