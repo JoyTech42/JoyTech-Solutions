@@ -1,13 +1,12 @@
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
-const jwt = require('jsonwebtoken'); // Run: npm install jsonwebtoken
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'joytech_secret_system_key';
 
+// Connect to Neon PostgreSQL Database
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
@@ -16,84 +15,63 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Public Route: Customers submitting messages from index.html (No Auth)
+// Public Route: Customers sending messages from index.html
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
+    
     if (!name || !email || !message) {
-        return res.status(400).json({ error: "All fields are required." });
+        return res.status(400).json({ error: "Please fill in all required fields." });
     }
+
     try {
-        const result = await pool.query(
-            'INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, email, service || 'General Help', message]
-        );
+        const queryText = 'INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4) RETURNING *';
+        const values = [name, email, service || 'General Help', message];
+        const result = await pool.query(queryText, values);
         res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Failed to save request." });
+        console.error("Database Error:", err);
+        res.status(500).json({ error: "Server could not save the message." });
     }
 });
 
-// Admin Authentication Route
-app.post('/api/admin/login', (req, res) => {
-    const { email, password } = req.body;
-    
-    // Matches your environmental credentials
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-        const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
-        return res.json({ success: true, token });
-    }
-    
-    res.status(401).json({ error: "Invalid administrative credentials." });
-});
-
-// Middleware to protect private data routes
-const verifyAdminToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) return res.status(401).json({ error: "Access denied." });
-
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ error: "Session expired." });
-        req.user = user;
-        next();
-    });
-};
-
-// Protected Data Routes for admin.html
-app.get('/api/admin/stats', verifyAdminToken, async (req, res) => {
+// Open Admin Routes (Direct access, no authentication checks)
+app.get('/api/admin/stats', async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
-        res.json({ totalRequests: parseInt(result.rows[0].count, 10) });
+        const count = parseInt(result.rows[0].count, 10);
+        res.json({ totalRequests: count });
     } catch (err) {
-        res.status(500).json({ error: "Database error." });
+        console.error(err);
+        res.status(500).json({ error: "Could not fetch stats." });
     }
 });
 
-app.get('/api/messages', verifyAdminToken, async (req, res) => {
+app.get('/api/messages', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM requests ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "Database error." });
+        console.error(err);
+        res.status(500).json({ error: "Could not fetch messages." });
     }
 });
 
-app.delete('/api/requests/:id', verifyAdminToken, async (req, res) => {
+app.delete('/api/requests/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        await pool.query('DELETE FROM requests WHERE id = $1', [req.params.id]);
-        res.json({ success: true });
+        await pool.query('DELETE FROM requests WHERE id = $1', [id]);
+        res.json({ success: true, message: `Request ${id} deleted.` });
     } catch (err) {
-        res.status(500).json({ error: "Database error." });
+        console.error(err);
+        res.status(500).json({ error: "Could not delete row." });
     }
 });
 
-// Default: Public falls directly back to index.html
+// Fallback: Send index.html if a user navigates to the root URL
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`JoyTech Solutions Engine online on port ${PORT}`);
+    console.log(`JoyTech Solutions Engine running openly on port ${PORT}`);
 });
