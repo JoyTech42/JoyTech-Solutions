@@ -10,13 +10,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// Connects to your Neon database
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
-// Checks if admin password is correct
 const checkAdmin = (req, res, next) => {
     const incomingPass = req.headers['x-admin-password'];
     const adminPass = (process.env.ADMIN_PASSWORD || 'JoyTechAdmin2026').trim();
@@ -24,13 +22,13 @@ const checkAdmin = (req, res, next) => {
     return res.status(401).json({ error: "Wrong Password." });
 };
 
-// Route 1: Receives form data from index.html
+// Route: Public form submission from website
 app.post('/api/quote', async (req, res) => {
-    const { name, email, message } = req.body;
+    const { name, email, service, message } = req.body;
     try {
         await pool.query(
-            'INSERT INTO quote_requests (name, email, message) VALUES ($1, $2, $3)', 
-            [name, email, message]
+            'INSERT INTO quote_requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
+            [name, email, service, message]
         );
         res.status(201).json({ success: true });
     } catch (err) {
@@ -38,7 +36,7 @@ app.post('/api/quote', async (req, res) => {
     }
 });
 
-// Route 2: Gets total numbers for the admin banner
+// Route: Get summary statistics count
 app.get('/api/admin/stats', checkAdmin, async (req, res) => {
     try {
         const total = await pool.query('SELECT COUNT(*) FROM quote_requests');
@@ -48,7 +46,7 @@ app.get('/api/admin/stats', checkAdmin, async (req, res) => {
     }
 });
 
-// Route 3: Loads all messages into the admin list
+// Route: Pull database rows into admin view
 app.get('/api/messages', checkAdmin, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM quote_requests ORDER BY id DESC');
@@ -58,7 +56,7 @@ app.get('/api/messages', checkAdmin, async (req, res) => {
     }
 });
 
-// Route 4: Deletes a row when you click delete
+// Route: Delete specific record row
 app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
     try {
         await pool.query('DELETE FROM quote_requests WHERE id = $1', [req.params.id]);
@@ -68,7 +66,6 @@ app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
     }
 });
 
-// Serves the homepage automatically
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
