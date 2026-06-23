@@ -1,12 +1,10 @@
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'joytech_solutions_cosmic_key_2026';
 
 // Connect to Neon PostgreSQL Database
 const pool = new Pool({
@@ -17,7 +15,7 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// PUBLIC ROUTE: Customers sending messages from index.html (No Auth Required)
+// Public Route: Saves customer messages straight to Neon
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
     if (!name || !email || !message) {
@@ -34,71 +32,39 @@ app.post('/api/quote', async (req, res) => {
     }
 });
 
-// ADMIN AUTHENTICATION: Validates credentials and returns an access token
-app.post('/api/admin/login', (req, res) => {
-    const { email, password } = req.body;
-
-    // Pulls credentials securely from your environment variables
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-        const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
-        return res.json({ success: true, token });
-    }
-
-    res.status(401).json({ error: "Invalid administrative credentials." });
-});
-
-// SECURITY MIDDLEWARE: Verifies incoming JWT tokens before granting database access
-const verifyAdminToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({ error: "Access denied. Authentication token missing." });
-    }
-
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({ error: "Session expired or invalid token." });
-        }
-        req.user = decoded;
-        next();
-    });
-};
-
-// PROTECTED ADMIN ROUTES: Locked down with the security middleware
-app.get('/api/admin/stats', verifyAdminToken, async (req, res) => {
+// Unprotected Admin Routes: Direct streaming data access
+app.get('/api/admin/stats', async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
         res.json({ totalRequests: parseInt(result.rows[0].count, 10) });
     } catch (err) {
-        res.status(500).json({ error: "Failed to fetch stats cluster." });
+        res.status(500).json({ error: "Could not fetch stats." });
     }
 });
 
-app.get('/api/messages', verifyAdminToken, async (req, res) => {
+app.get('/api/messages', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM requests ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "Failed to read data lines." });
+        res.status(500).json({ error: "Could not fetch messages." });
     }
 });
 
-app.delete('/api/requests/:id', verifyAdminToken, async (req, res) => {
-    const { id } = req.params;
+app.delete('/api/requests/:id', async (req, res) => {
     try {
-        await pool.query('DELETE FROM requests WHERE id = $1', [id]);
-        res.json({ success: true, message: `Record ${id} cleared.` });
+        await pool.query('DELETE FROM requests WHERE id = $1', [req.params.id]);
+        res.json({ success: true, message: `Record cleared.` });
     } catch (err) {
-        res.status(500).json({ error: "Failed to drop entry row." });
+        res.status(500).json({ error: "Could not delete row." });
     }
 });
 
-// FALLBACK: Serves your open-access index page for all base web navigation
+// Fallback: Routes base web traffic directly to your open landing page
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`JoyTech Solutions Engine online and fully guarded on port ${PORT}`);
+    console.log(`JoyTech Solutions Engine running openly on port ${PORT}`);
 });
