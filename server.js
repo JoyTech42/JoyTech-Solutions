@@ -1,73 +1,101 @@
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
-const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname)));
-
+// Connect to Neon PostgreSQL Database
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false } // Required for secure Neon connection
 });
 
-const checkAdmin = (req, res, next) => {
-    const incomingPass = req.headers['x-admin-password'];
-    const adminPass = (process.env.ADMIN_PASSWORD || 'JoyTechAdmin2026').trim();
-    if (incomingPass && incomingPass.trim() === adminPass) return next();
-    return res.status(401).json({ error: "Wrong Password." });
-};
+// Middleware to read JSON data and serve static files
+app.use(express.json());
+app.use(express.static(__dirname));
 
-// Route: Public form submission from website
+// --------------------------------------------------------
+// AUTHENTICATION MIDDLEWARE (The Security Gate)
+// --------------------------------------------------------
+function checkAdminPassword(req, res, next) {
+    const clientPassword = req.headers['x-admin-password'];
+    const correctPassword = process.env.ADMIN_PASSWORD || "JoyTech2026"; // Fallback password
+
+    if (clientPassword === correctPassword) {
+        next(); // Password matches! Move to the next step.
+    } else {
+        res.status(401).json({ error: "Unauthorized access. Wrong password." });
+    }
+}
+
+// --------------------------------------------------------
+// PUBLIC ROUTE: Customers sending messages from index.html
+// --------------------------------------------------------
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
+    
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: "Please fill in all required fields." });
+    }
+
     try {
-        await pool.query(
-            'INSERT INTO quote_requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
-            [name, email, service, message]
-        );
-        res.status(201).json({ success: true });
+        const queryText = 'INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4) RETURNING *';
+        const values = [name, email, service || 'General Help', message];
+        const result = await pool.query(queryText, values);
+        res.status(201).json(result.rows[0]);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Database Error:", err);
+        res.status(500).json({ error: "Server could not save the message." });
     }
 });
 
-// Route: Get summary statistics count
-app.get('/api/admin/stats', checkAdmin, async (req, res) => {
+// --------------------------------------------------------
+// SECURE ROUTES: Protected by the checkAdminPassword gate
+// --------------------------------------------------------
+
+// 1. Get total system request stats
+app.get('/api/admin/stats', checkAdminPassword, async (req, res) => {
     try {
-        const total = await pool.query('SELECT COUNT(*) FROM quote_requests');
-        res.json({ totalRequests: total.rows[0].count });
+        const result = await pool.query('SELECT COUNT(*) FROM requests');
+        const count = parseInt(result.rows[0].count, 10);
+        res.json({ totalRequests: count });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error(err);
+        res.status(500).json({ error: "Could not fetch stats." });
     }
 });
 
-// Route: Pull database rows into admin view
-app.get('/api/messages', checkAdmin, async (req, res) => {
+// 2. Get all client messages for the dashboard list
+app.get('/api/messages', checkAdminPassword, async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM quote_requests ORDER BY id DESC');
+        const result = await pool.query('SELECT * FROM requests ORDER BY id DESC');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error(err);
+        res.status(500).json({ error: "Could not fetch messages." });
     }
 });
 
-// Route: Delete specific record row
-app.delete('/api/requests/:id', checkAdmin, async (req, res) => {
+// 3. Delete a client request entry completely
+app.delete('/api/requests/:id', checkAdminPassword, async (req, res) => {
+    const { id } = req.params;
     try {
-        await pool.query('DELETE FROM quote_requests WHERE id = $1', [req.params.id]);
-        res.json({ success: true });
+        await pool.query('DELETE FROM requests WHERE id = $1', [id]);
+        res.json({ success: true, message: `Request ${id} deleted.` });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error(err);
+        res.status(500).json({ error: "Could not delete row." });
     }
 });
 
+// Fallback: Send index.html if user navigates to root URL
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`JoyTech Server running on port ${PORT}`));
+// Start the server engine
+app.listen(PORT, () => {
+    console.log(`JoyTech Server running perfectly on port ${PORT}`);
+});
