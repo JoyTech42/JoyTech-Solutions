@@ -36,29 +36,29 @@
 
     <section id="services" class="py-20 max-w-7xl mx-auto px-6">
         <div class="text-center space-y-2 mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 md:text-4xl">How We Can Help You Today</h2>
-            <p class="text-slate-500">Simple, fast, and stress-free digital helper services.</p>
+            <h2 class="text-3xl font-bold text-slate-900 md:text-4xl">What We Can Do For You</h2>
+            <p class="text-slate-500">Very simple, fast, and friendly services. No stress, no long lines.</p>
         </div>
         <div class="grid md:grid-cols-4 gap-8">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div class="text-2xl mb-4">📝</div>
                 <h3 class="text-xl font-bold mb-2 text-slate-900">KRA Tax Returns</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">We file your personal or business taxes correctly to avoid expensive penalties and stress.</p>
+                <p class="text-slate-600 text-sm leading-relaxed">We file your KRA returns quickly so you don't get penalties. We do Nil returns and business taxes smoothly.</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div class="text-2xl mb-4">🏛️</div>
                 <h3 class="text-xl font-bold mb-2 text-slate-900">eCitizen Applications</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">Fast assistance with business registration, passport booking, NTSA services, and good conduct.</p>
+                <p class="text-slate-600 text-sm leading-relaxed">Get quick help with Certificate of Good Conduct, Passport applications, NTSA driving services, and Business Registration.</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div class="text-2xl mb-4">💻</div>
-                <h3 class="text-xl font-bold mb-2 text-slate-900">ICT Support</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">Is your laptop slow? Is your office internet down? We fix it fast so you can go back to work.</p>
+                <h3 class="text-xl font-bold mb-2 text-slate-900">Computer & Internet Help</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">Is your laptop too slow? Is your office internet refusing to connect? We clear viruses and fix machine problems fast.</p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                 <div class="text-2xl mb-4">🖨️</div>
                 <h3 class="text-xl font-bold mb-2 text-slate-900">Document Processing</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">Professional typing, scanning, printing, and formatting for all your official paperwork.</p>
+                <p class="text-slate-600 text-sm leading-relaxed">Professional official typing, scanning cards or forms, clean printing, and formatting your paperwork correctly.</p>
             </div>
         </div>
     </section>
@@ -82,8 +82,18 @@
                     <input type="email" id="email" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">What service do you need?</label>
-                    <textarea id="message" rows="4" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Example: I want to file my KRA returns / My computer is slow..."></textarea>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Select Service</label>
+                    <select id="service" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm">
+                        <option value="" disabled selected>Choose a service...</option>
+                        <option value="KRA Tax Returns">KRA Tax Returns</option>
+                        <option value="eCitizen Applications">eCitizen Applications</option>
+                        <option value="ICT Support">Computer & Internet Help (ICT)</option>
+                        <option value="Document Processing">Document Processing</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">What is the problem? (Message)</label>
+                    <textarea id="message" rows="4" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Describe what you need help with..."></textarea>
                 </div>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition shadow-sm">SEND MESSAGE</button>
             </form>
@@ -94,7 +104,7 @@
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div>
                 <p class="font-bold text-sm text-white">JoyTech Solutions Ltd.</p>
-                <p>Meru Town, Meru County, Kenya</p>
+                <p>Meru Corporate Tower, Meru County, Kenya</p>
                 <p class="pt-1 text-slate-300">Phone: 0745806435 | Email: jw42205769@gmail.com</p>
             </div>
             <p>&copy; 2026 JoyTech Solutions. All rights reserved.</p>
@@ -116,6 +126,7 @@
             const payload = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
                 message: document.getElementById('message').value
             };
 
