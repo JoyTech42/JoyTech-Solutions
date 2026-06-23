@@ -1,206 +1,225 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JoyTech Solutions | Cyber & IT Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom smooth focus and ambient glass glow for the Cyber Obsidian theme */
-        .obsidian-glass {
-            background: rgba(15, 23, 42, 0.45);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
 </head>
-<body class="bg-slate-950 text-slate-200 font-sans min-h-screen relative overflow-x-hidden selection:bg-blue-600/30 selection:text-blue-400">
+<body class="bg-slate-950 text-slate-200 scroll-smooth min-h-screen">
 
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.07)_0,transparent_70%)] pointer-events-none z-0"></div>
-
-    <header class="sticky top-0 z-50 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md transition-all">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#home" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/20 group-hover:scale-105 transition-transform">J</div>
-                <span class="text-xl font-bold text-white tracking-tight group-hover:text-slate-300 transition-colors">JoyTech <span class="text-blue-500 font-medium">Solutions</span></span>
-            </a>
-
-            <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-wider uppercase text-slate-400">
-                <a href="#home" class="hover:text-white transition-colors">Home</a>
-                <a href="#services" class="hover:text-white transition-colors">Our Services</a>
-                <a href="#projects" class="hover:text-white transition-colors">Our Projects</a>
-                <a href="#request" class="hover:text-white transition-colors">Send Request</a>
-            </nav>
-
-            <div class="flex items-center">
-                <a href="#request" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition uppercase tracking-wider shadow-md shadow-blue-600/10 hover:shadow-blue-600/20 hover:-translate-y-0.5 active:translate-y-0 transform">
-                    Get Help Now
-                </a>
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-600/20">J</div>
+                <span class="text-2xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Solutions</span></span>
             </div>
+            <nav class="hidden md:flex space-x-8 font-medium text-slate-400">
+                <a href="#home" class="hover:text-blue-500 transition">Home</a>
+                <a href="#services" class="hover:text-blue-500 transition">Our Services</a>
+                <a href="#projects" class="hover:text-blue-500 transition">Our Projects</a>
+                <a href="#contact" class="hover:text-blue-500 transition">Send Request</a>
+            </nav>
+            <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm transition shadow-md shadow-blue-600/10">GET HELP NOW</a>
         </div>
     </header>
 
-    <section id="home" class="relative z-10 max-w-5xl mx-auto px-6 pt-24 pb-20 text-center space-y-8">
-        <div class="inline-flex items-center space-x-2 bg-blue-950/40 border border-blue-900/40 px-4 py-1.5 rounded-full shadow-inner">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-            <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Fast & Reliable Cyber Services</span>
+    <!-- Welcome Section (Hero Banner) -->
+    <section id="home" class="relative py-24 px-6 text-center overflow-hidden border-b border-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08)_0,transparent_100%)]"></div>
+        <div class="relative max-w-4xl mx-auto space-y-6">
+            <p class="text-blue-400 font-semibold tracking-widest uppercase text-xs bg-blue-950/40 w-fit px-3 py-1 rounded-full border border-blue-900/30 mx-auto">Fast & Reliable Cyber Services</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white uppercase">We Help You With KRA, eCitizen, and Computer Problems</h1>
+            <p class="text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">Skip the long lines. We handle your tax returns, official digital applications, and fix slow computers quickly.</p>
+            <div class="pt-4">
+                <a href="#services" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition inline-block shadow-lg shadow-blue-600/20 hover:scale-[1.02]">SEE WHAT WE DO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 max-w-7xl mx-auto px-6">
+        <div class="text-center space-y-2 mb-16">
+            <h2 class="text-3xl font-bold text-white tracking-tight md:text-4xl">What We Can Do For You</h2>
+            <p class="text-slate-500 text-sm">Simple, fast, and friendly professional services. No stress, no long lines.</p>
         </div>
         
-        <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight leading-[1.1] max-w-4xl mx-auto uppercase">
-            We Help You With KRA, eCitizen, <br class="hidden md:inline">And Computer Problems
-        </h1>
-        
-        <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-medium">
-            Skip the long lines. We handle your tax returns, official digital applications, and fix slow computers quickly.
-        </p>
-
-        <div class="pt-4">
-            <a href="#services" class="bg-blue-600/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-500 text-blue-400 hover:text-white text-xs font-bold px-7 py-4 rounded-xl transition uppercase tracking-wider inline-flex items-center space-x-2">
-                <span>See What We Do</span>
-            </a>
-        </div>
-    </section>
-
-    <section id="services" class="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-slate-900/60 scroll-mt-20">
-        <div class="text-center max-w-xl mx-auto space-y-3 mb-16">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">What We Can Do For You</h2>
-            <p class="text-slate-500 text-xs md:text-sm font-medium">Simple, fast, and friendly professional services. No stress, no long lines.</p>
-        </div>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4 hover:border-slate-700 transition group hover:-translate-y-1 transform">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner group-hover:border-blue-500/30 transition-colors">📝</div>
-                <h3 class="text-base font-bold text-white tracking-tight">KRA Tax Returns</h3>
-                <p class="text-slate-400 text-xs leading-relaxed font-medium">We file your KRA returns quickly so you don't get penalties. We do Nil returns and business taxes smoothly.</p>
+        <div class="grid md:grid-cols-4 gap-6">
+            <!-- Service 1 -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition group">
+                <div class="w-12 h-12 bg-blue-950/50 rounded-lg flex items-center justify-center text-2xl border border-blue-900/30 mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📝</div>
+                <h3 class="text-lg font-bold mb-2 text-white">KRA Tax Returns</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">We file your KRA returns quickly so you don't get penalties. We do Nil returns and business taxes smoothly.</p>
             </div>
-            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4 hover:border-slate-700 transition group hover:-translate-y-1 transform">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner group-hover:border-blue-500/30 transition-colors">🏛️</div>
-                <h3 class="text-base font-bold text-white tracking-tight">eCitizen Applications</h3>
-                <p class="text-slate-400 text-xs leading-relaxed font-medium">Get quick help with Certificate of Good Conduct, Passport applications, NTSA driving services, and Business Registration.</p>
+            <!-- Service 2 -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition group">
+                <div class="w-12 h-12 bg-blue-950/50 rounded-lg flex items-center justify-center text-2xl border border-blue-900/30 mb-4 group-hover:bg-blue-600 group-hover:text-white transition">🏛️</div>
+                <h3 class="text-lg font-bold mb-2 text-white">eCitizen Applications</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Get quick help with Certificate of Good Conduct, Passport applications, NTSA driving services, and Business Registration.</p>
             </div>
-            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4 hover:border-slate-700 transition group hover:-translate-y-1 transform">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner group-hover:border-blue-500/30 transition-colors">💻</div>
-                <h3 class="text-base font-bold text-white tracking-tight">Computer & Internet Help</h3>
-                <p class="text-slate-400 text-xs leading-relaxed font-medium">Is your laptop too slow? Is your office internet refusing to connect? We clear viruses and fix machine problems fast.</p>
+            <!-- Service 3 -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition group">
+                <div class="w-12 h-12 bg-blue-950/50 rounded-lg flex items-center justify-center text-2xl border border-blue-900/30 mb-4 group-hover:bg-blue-600 group-hover:text-white transition">💻</div>
+                <h3 class="text-lg font-bold mb-2 text-white">Computer & Internet Help</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Is your laptop too slow? Is your office internet refusing to connect? We clear viruses and fix machine problems fast.</p>
             </div>
-            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4 hover:border-slate-700 transition group hover:-translate-y-1 transform">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl shadow-inner group-hover:border-blue-500/30 transition-colors">🖨️</div>
-                <h3 class="text-base font-bold text-white tracking-tight">Document Processing</h3>
-                <p class="text-slate-400 text-xs leading-relaxed font-medium">Professional official typing, scanning cards or forms, clean printing, and formatting your paperwork correctly.</p>
+            <!-- Service 4 -->
+            <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-slate-700 transition group">
+                <div class="w-12 h-12 bg-blue-950/50 rounded-lg flex items-center justify-center text-2xl border border-blue-900/30 mb-4 group-hover:bg-blue-600 group-hover:text-white transition">🖨️</div>
+                <h3 class="text-lg font-bold mb-2 text-white">Document Processing</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">Professional official typing, scanning cards or forms, clean printing, and formatting your paperwork correctly.</p>
             </div>
         </div>
     </section>
 
-    <section id="projects" class="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-slate-900/60 scroll-mt-20">
-        <div class="text-center max-w-xl mx-auto space-y-3 mb-12">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">Projects We Have Done</h2>
-            <p class="text-slate-500 text-xs md:text-sm font-medium">See the successful work and system solutions we have finished for our happy clients.</p>
-        </div>
+    <!-- Projects Section (Our Past Work) -->
+    <section id="projects" class="py-20 border-t border-b border-slate-900 bg-slate-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center space-y-2 mb-16">
+                <h2 class="text-3xl font-bold text-white tracking-tight md:text-4xl">Projects We Have Done</h2>
+                <p class="text-slate-500 text-sm">See some of the successful work we have finished for our happy clients.</p>
+            </div>
 
-        <div class="text-center pt-2">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3.5 rounded-xl transition uppercase tracking-wider inline-flex items-center space-x-2 shadow-lg shadow-blue-600/10">
-                <span>View All My Past Work ➔</span>
-            </button>
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Project 1 -->
+                <div class="bg-slate-900 rounded-xl p-6 space-y-4 border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">TAX & COMPLIANCE</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Bulk KRA Filing for Local Business</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">We helped a local company clear 3 years of backlogged tax returns and sorted out their pin problems quickly without any penalties.</p>
+                    </div>
+                    <div class="text-[11px] text-emerald-400 font-medium flex items-center bg-emerald-950/40 w-fit px-2.5 py-1 rounded-full border border-emerald-900/30">
+                        🟢 Successfully Completed
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="bg-slate-900 rounded-xl p-6 space-y-4 border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">ICT SUPPORT</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Office Computer & Network Setup</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Cleaned viruses from 5 slow office laptops, upgraded their hard drives to make them fast, and installed a strong wireless internet router.</p>
+                    </div>
+                    <div class="text-[11px] text-emerald-400 font-medium flex items-center bg-emerald-950/40 w-fit px-2.5 py-1 rounded-full border border-emerald-900/30">
+                        🟢 Successfully Completed
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="bg-slate-900 rounded-xl p-6 space-y-4 border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">ECITIZEN SERVICES</div>
+                        <h3 class="text-lg font-bold text-white mb-2">Business Registration Workflow</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">Guided a group of youths through name search, successful business registration on eCitizen, and processed 4 certificates of good conduct.</p>
+                    </div>
+                    <div class="text-[11px] text-emerald-400 font-medium flex items-center bg-emerald-950/40 w-fit px-2.5 py-1 rounded-full border border-emerald-900/30">
+                        🟢 Successfully Completed
+                    </div>
+                </div>
+            </div>
+
+            <!-- External Link Button to Your Portfolio Website -->
+            <div class="text-center pt-14">
+                <a href="https://portfolio-1-pzy8.onrender.com/" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-xl transition shadow-lg shadow-blue-600/10 hover:scale-[1.03] tracking-wide text-xs uppercase">
+                    View All My Past Work ➔
+                </a>
+            </div>
         </div>
     </section>
 
-    <section id="request" class="relative z-10 max-w-xl mx-auto px-6 py-20 scroll-mt-20">
-        <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-8 md:p-10 shadow-2xl space-y-6 relative overflow-hidden backdrop-blur-sm">
+    <!-- Message Request Form Section -->
+    <section id="contact" class="py-20 px-6">
+        <div class="max-w-xl mx-auto bg-slate-900 p-8 rounded-xl border border-slate-800 shadow-xl">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold text-white tracking-tight">Send Us a Message</h3>
+                <p class="text-slate-400 text-xs mt-1">Tell us what you need, and we will get back to you immediately.</p>
+            </div>
             
-            <div class="text-center space-y-2">
-                <h2 class="text-2xl font-bold text-white tracking-tight">Send Us a Message</h2>
-                <p class="text-slate-400 text-xs font-medium">Tell us what you need, and we will get back to you immediately.</p>
-            </div>
+            <!-- Dynamic Status Pop-up Message Box -->
+            <div id="statusMessage" class="hidden p-4 rounded-lg text-xs text-center font-semibold mb-4"></div>
 
-            <div id="errorBanner" class="hidden p-4 rounded-xl text-xs font-semibold bg-red-950/50 text-red-400 border border-red-900/30 text-center animate-fade-in"></div>
-            <div id="successBanner" class="hidden p-4 rounded-xl text-xs font-semibold bg-emerald-950/50 text-emerald-400 border border-emerald-900/30 text-center animate-fade-in"></div>
-
-            <form id="submissionForm" class="space-y-5">
-                <div class="space-y-1.5">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Name</label>
-                    <input type="text" id="formName" required placeholder="Maureen mhembere" class="w-full px-4 py-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl text-slate-200 font-medium text-xs outline-none transition shadow-inner">
+            <form id="quoteForm" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Your Name</label>
+                    <input type="text" id="name" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm outline-none focus:border-blue-500 transition">
                 </div>
-
-                <div class="space-y-1.5">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Your Email Address</label>
-                    <input type="email" id="formEmail" required placeholder="maureenmhembere74@gmail.com" class="w-full px-4 py-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl text-slate-200 font-medium text-xs outline-none transition shadow-inner">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Your Email Address</label>
+                    <input type="email" id="email" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm outline-none focus:border-blue-500 transition">
                 </div>
-
-                <div class="space-y-1.5">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Service</label>
-                    <select id="formService" class="w-full px-4 py-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl text-slate-200 font-medium text-xs outline-none transition shadow-inner appearance-none cursor-pointer">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Select Service</label>
+                    <select id="service" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-300 text-sm outline-none focus:border-blue-500 transition">
+                        <option value="" disabled selected>Choose a service...</option>
                         <option value="KRA Tax Returns">KRA Tax Returns</option>
-                        <option value="eCitizen Applications" selected>eCitizen Applications</option>
-                        <option value="Computer & IT Help">Computer & IT Help</option>
+                        <option value="eCitizen Applications">eCitizen Applications</option>
+                        <option value="ICT Support">Computer & Internet Help (ICT)</option>
                         <option value="Document Processing">Document Processing</option>
                     </select>
                 </div>
-
-                <div class="space-y-1.5">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">What do you need help with?</label>
-                    <textarea id="formMessage" rows="4" required placeholder="Write down your requirements details here..." class="w-full px-4 py-3.5 bg-slate-950 border border-slate-800 focus:border-blue-500 rounded-xl text-slate-200 font-medium text-xs outline-none transition shadow-inner resize-none"></textarea>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">What do you need help with?</label>
+                    <textarea id="message" rows="4" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-lg text-white text-sm outline-none focus:border-blue-500 transition" placeholder="Describe your request in detail..."></textarea>
                 </div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition text-xs uppercase tracking-wider shadow-md shadow-blue-600/10 hover:shadow-blue-600/20">
-                    Send Message
-                </button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition text-xs uppercase tracking-wider shadow-md shadow-blue-600/10">SEND MESSAGE</button>
             </form>
         </div>
     </section>
 
-    <footer class="border-t border-slate-900 bg-slate-950 text-slate-500 text-xs py-12 relative z-10">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div class="space-y-1.5">
-                <p class="text-slate-300 font-bold text-sm tracking-tight">JoyTech Solutions Ltd.</p>
-                <p class="font-medium text-slate-400">Meru Corporate Tower, Meru County, Kenya</p>
-                <p class="text-[11px]">Phone: 0745806435 | Email: jw42205769@gmail.com</p>
+    <!-- Footer Area -->
+    <footer class="bg-slate-950 text-slate-500 py-12 px-6 text-[11px] border-t border-slate-900">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div class="text-center md:text-left space-y-1">
+                <p class="font-bold text-xs text-white">JoyTech Solutions Ltd.</p>
+                <p>Meru Corporate Tower, Meru County, Kenya</p>
+                <p class="text-slate-400">Phone: 0745806435 | Email: jw42205769@gmail.com</p>
             </div>
-            <p class="font-medium text-[11px]">&copy; 2026 JoyTech Solutions. All rights reserved.</p>
+            <p class="text-center md:text-right">&copy; 2026 JoyTech Solutions. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- Floating Action WhatsApp Button -->
+    <a href="https://wa.me/254745806435" target="_blank" 
+       class="fixed bottom-6 right-6 bg-green-600 p-3.5 rounded-full shadow-xl hover:bg-green-500 transition z-50 hover:scale-110 shadow-green-600/10">
+        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12.03 2c-5.52 0-10 4.48-10 10 0 1.76.46 3.49 1.33 5.01l-1.33 4.86 5.01-1.33c1.47.8 3.16 1.22 4.98 1.22 5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.33c-1.57 0-3.11-.42-4.45-1.22l-.32-.19-3.32.88.88-3.32-.19-.32c-.8-1.34-1.22-2.88-1.22-4.45 0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
+        </svg>
+    </a>
+
+    <!-- Frontend Form Submission Engine Script -->
     <script>
-        document.getElementById('submissionForm').addEventListener('submit', async (e) => {
+        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const errorBanner = document.getElementById('errorBanner');
-            const successBanner = document.getElementById('successBanner');
+            const statusMessage = document.getElementById('statusMessage');
             
-            // Hide previous alerts instantly
-            errorBanner.classList.add('hidden');
-            successBanner.classList.add('hidden');
-
             const payload = {
-                name: document.getElementById('formName').value,
-                email: document.getElementById('formEmail').value,
-                service: document.getElementById('formService').value,
-                message: document.getElementById('formMessage').value
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value
             };
 
             try {
-                // Submit directly to your backend endpoint cluster
                 const response = await fetch('/api/quote', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    // Display visual success confirmation banner safely
-                    successBanner.textContent = "Message transmitted successfully! We'll reach out soon.";
-                    successBanner.classList.remove('hidden');
-                    e.target.reset();
+                if (response.ok) {
+                    statusMessage.className = "p-4 rounded-lg text-xs text-center font-semibold bg-green-950/80 text-green-400 border border-green-900/50";
+                    statusMessage.textContent = "Done! Your request has been sent successfully.";
+                    document.getElementById('quoteForm').reset();
                 } else {
-                    throw new Error(data.error || "Server rejected data stream.");
+                    throw new Error('Could not send.');
                 }
             } catch (err) {
-                console.error("Transmission breakdown:", err);
-                // Fixes error state block from image_1a17a2.png perfectly
-                errorBanner.textContent = `Error: ${err.message || 'Something went wrong.'} Try again.`;
-                errorBanner.classList.remove('hidden');
+                statusMessage.className = "p-4 rounded-lg text-xs text-center font-semibold bg-red-950/80 text-red-400 border border-red-900/50";
+                statusMessage.textContent = "Error: Something went wrong. Try again.";
             }
+            statusMessage.classList.remove('hidden');
         });
     </script>
 </body>
