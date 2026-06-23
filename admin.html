@@ -5,26 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JoyTech Solutions | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Security Assertion Guard
+        if (!localStorage.getItem('joytech_token')) {
+            window.location.href = '/signin.html';
+        }
+    </script>
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen font-sans">
 
-    <!-- Top Navigation Status Bar -->
     <header class="bg-slate-900/80 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md shadow-blue-600/10">J</div>
                 <span class="text-xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Console</span></span>
             </div>
-            <div class="text-[10px] text-emerald-400 border border-emerald-900/30 px-3 py-1.5 rounded-lg font-bold bg-emerald-950/50 uppercase tracking-wider">
-                Direct Cloud Sync Active
-            </div>
+            <button onclick="logout()" class="text-[10px] bg-slate-950 hover:bg-red-950/40 border border-slate-800 hover:border-red-900/40 text-slate-400 hover:text-red-400 px-3 py-1.5 rounded-lg font-bold transition uppercase tracking-wider">
+                Disconnect Session
+            </button>
         </div>
     </header>
 
-    <!-- Metrics & Content Workspace Area -->
     <main class="max-w-7xl mx-auto px-6 py-10 space-y-8">
-        
-        <!-- Telemetry Cards Row -->
         <div class="grid md:grid-cols-3 gap-6">
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 flex items-center justify-between">
                 <div>
@@ -35,12 +37,12 @@
             </div>
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">System Pipeline</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Security Core</p>
                     <h3 class="text-xs font-bold text-emerald-400 flex items-center mt-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-2 animate-pulse"></span> Direct & Open
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block mr-2 animate-pulse"></span> Encrypted JWT JWT Active
                     </h3>
                 </div>
-                <div class="text-2xl p-3 bg-emerald-950/40 border border-emerald-900/30 rounded-lg text-emerald-400">🔓</div>
+                <div class="text-2xl p-3 bg-emerald-950/40 border border-emerald-900/30 rounded-lg text-emerald-400">🔒</div>
             </div>
             <div class="bg-slate-900 p-6 rounded-xl border border-slate-800 flex items-center justify-between">
                 <div>
@@ -51,41 +53,43 @@
             </div>
         </div>
 
-        <!-- Request Pipeline List Container -->
         <div class="bg-slate-900 rounded-xl border border-slate-800 shadow-xl overflow-hidden">
             <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/40">
                 <div>
                     <h4 class="text-lg font-bold text-white tracking-tight">Customer Request Pipeline</h4>
-                    <p class="text-slate-500 text-xs mt-0.5">Incoming real-time interactions transmitted directly from your index page.</p>
+                    <p class="text-slate-500 text-xs mt-0.5">Real-time incoming client requests from your main web landing interface.</p>
                 </div>
                 <button onclick="loadDashboardData()" class="text-[11px] bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 px-3 py-1.5 rounded-md font-bold transition uppercase tracking-wider">
-                    Refresh Pipeline
+                    Refresh Grid
                 </button>
             </div>
 
-            <!-- Message Feed Target -->
             <div id="messagesList" class="divide-y divide-slate-800/60 p-4 space-y-3 max-h-[600px] overflow-y-auto">
-                <p class="text-slate-500 text-xs text-center py-12">Synchronizing with cloud cluster records...</p>
+                <p class="text-slate-500 text-xs text-center py-12">Querying secure streams...</p>
             </div>
         </div>
     </main>
 
-    <!-- Operational JavaScript Engine -->
     <script>
         async function loadDashboardData() {
+            const token = localStorage.getItem('joytech_token');
+            const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+
             try {
-                const statsRes = await fetch('/api/admin/stats');
+                const statsRes = await fetch('/api/admin/stats', { headers });
+                if (statsRes.status === 401 || statsRes.status === 403) return logout();
                 const statsData = await statsRes.json();
                 document.getElementById('statTotal').textContent = statsData.totalRequests || 0;
 
-                const msgRes = await fetch('/api/messages');
+                const msgRes = await fetch('/api/messages', { headers });
+                if (msgRes.status === 401 || msgRes.status === 403) return logout();
                 const messages = await msgRes.json();
 
                 const container = document.getElementById('messagesList');
                 container.innerHTML = '';
 
                 if (!messages || messages.length === 0) {
-                    container.innerHTML = `<div class="text-slate-500 text-xs text-center py-16">No customer entries inside the active data tables.</div>`;
+                    container.innerHTML = `<div class="text-slate-500 text-xs text-center py-16">No customer entries inside the tracking index.</div>`;
                     return;
                 }
 
@@ -108,18 +112,26 @@
                     container.appendChild(block);
                 });
             } catch (err) {
-                console.error("Pipeline streaming error:", err);
+                console.error(err);
             }
         }
 
         async function deleteRequest(id) {
-            if (!confirm("Permanently remove this data row?")) return;
+            if (!confirm("Permanently remove this entry?")) return;
             try {
-                const res = await fetch(`/api/requests/${id}`, { method: 'DELETE' });
+                const res = await fetch(`/api/requests/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('joytech_token')}` }
+                });
                 if (res.ok) loadDashboardData();
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function logout() {
+            localStorage.removeItem('joytech_token');
+            window.location.href = '/signin.html';
         }
 
         function escapeHtml(str) {
@@ -127,7 +139,6 @@
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        // Initialize automatically on load
         loadDashboardData();
     </script>
 </body>
