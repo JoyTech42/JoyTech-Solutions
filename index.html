@@ -73,56 +73,15 @@
         </div>
     </section>
 
-    <!-- Projects Section (Our Past Work) -->
+    <!-- Projects Section (Our Past Work Links Directly to Portfolio) -->
     <section id="projects" class="py-20 border-t border-b border-slate-900 bg-slate-900/20">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center space-y-2 mb-16">
+        <div class="max-w-3xl mx-auto px-6 text-center space-y-8">
+            <div class="space-y-2">
                 <h2 class="text-3xl font-bold text-white tracking-tight md:text-4xl">Projects We Have Done</h2>
-                <p class="text-slate-500 text-sm">See some of the successful work we have finished for our happy clients.</p>
+                <p class="text-slate-500 text-sm">See the successful work and system solutions we have finished for our happy clients.</p>
             </div>
-
-            <!-- Projects Grid -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Project 1 -->
-                <div class="bg-slate-900 rounded-xl p-6 space-y-4 border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">TAX & COMPLIANCE</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Bulk KRA Filing for Local Business</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed">We helped a local company clear 3 years of backlogged tax returns and sorted out their pin problems quickly without any penalties.</p>
-                    </div>
-                    <div class="text-[11px] text-emerald-400 font-medium flex items-center bg-emerald-950/40 w-fit px-2.5 py-1 rounded-full border border-emerald-900/30">
-                        🟢 Successfully Completed
-                    </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="bg-slate-900 rounded-xl p-6 space-y-4 border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">ICT SUPPORT</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Office Computer & Network Setup</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed">Cleaned viruses from 5 slow office laptops, upgraded their hard drives to make them fast, and installed a strong wireless internet router.</p>
-                    </div>
-                    <div class="text-[11px] text-emerald-400 font-medium flex items-center bg-emerald-950/40 w-fit px-2.5 py-1 rounded-full border border-emerald-900/30">
-                        🟢 Successfully Completed
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="bg-slate-900 rounded-xl p-6 space-y-4 border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">ECITIZEN SERVICES</div>
-                        <h3 class="text-lg font-bold text-white mb-2">Business Registration Workflow</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed">Guided a group of youths through name search, successful business registration on eCitizen, and processed 4 certificates of good conduct.</p>
-                    </div>
-                    <div class="text-[11px] text-emerald-400 font-medium flex items-center bg-emerald-950/40 w-fit px-2.5 py-1 rounded-full border border-emerald-900/30">
-                        🟢 Successfully Completed
-                    </div>
-                </div>
-            </div>
-
-            <!-- External Link Button to Your Portfolio Website -->
-            <div class="text-center pt-14">
-                <a href="https://portfolio-1-pzy8.onrender.com/" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-xl transition shadow-lg shadow-blue-600/10 hover:scale-[1.03] tracking-wide text-xs uppercase">
+            <div>
+                <a href="https://portfolio-1-pzy8.onrender.com/" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-4 rounded-xl transition shadow-lg shadow-blue-600/10 hover:scale-[1.03] tracking-wide text-xs uppercase">
                     View All My Past Work ➔
                 </a>
             </div>
@@ -216,7 +175,7 @@
                     throw new Error('Could not send.');
                 }
             } catch (err) {
-                statusMessage.className = "p-4 rounded-lg text-xs text-center font-semibold bg-red-950/80 text-red-400 border border-red-900/50";
+                statusMessage.className = "p-4 rounded-lg text-xs text-center font-semibold bg-red-950/80 text-red-400 border border-red-200/50";
                 statusMessage.textContent = "Error: Something went wrong. Try again.";
             }
             statusMessage.classList.remove('hidden');
