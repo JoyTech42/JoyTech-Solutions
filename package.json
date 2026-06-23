@@ -1,7 +1,7 @@
 {
   "name": "joytech-solutions",
   "version": "1.0.0",
-  "description": "Professional IT Services Platform for JoyTech Solutions",
+  "description": "JoyTech Solutions Cyber Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
