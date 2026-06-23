@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | JoyTech Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen font-sans flex items-center justify-center relative overflow-hidden">
+
+    <!-- Subtle Background Glow Element -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.06)_0,transparent_100%)]"></div>
+
+    <!-- Login Form Card Container -->
+    <div class="relative w-full max-w-md mx-6 bg-slate-900/40 backdrop-blur-md p-10 rounded-2xl border border-slate-800/80 shadow-2xl space-y-8">
+        <!-- Glowing Accent Top Line -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+        
+        <!-- Header Text Block -->
+        <div class="text-center space-y-2">
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h1>
+            <p class="text-slate-400 text-xs">Sign in to access your JoyTech Solutions platform.</p>
+        </div>
+
+        <!-- Alert Popup Notification Box -->
+        <div id="authFeedback" class="hidden p-3.5 rounded-xl text-xs text-center font-semibold"></div>
+
+        <!-- Submission Form Interface -->
+        <form id="authForm" class="space-y-5">
+            <div>
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Email Address</label>
+                <input type="email" id="email" required autocomplete="username" placeholder="enter your email" 
+                       class="w-full px-4 py-3 bg-slate-950/80 border border-slate-800 rounded-xl text-white text-sm outline-none focus:border-blue-500 transition placeholder:text-slate-700">
+            </div>
+            
+            <div class="space-y-1">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Password</label>
+                <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••" 
+                       class="w-full px-4 py-3 bg-slate-950/80 border border-slate-800 rounded-xl text-white text-sm outline-none focus:border-blue-500 transition placeholder:text-slate-700">
+                <div class="text-right">
+                    <a href="#" class="text-xs text-blue-500 hover:text-blue-400 font-medium transition">Forgot Password?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition text-xs uppercase tracking-wider shadow-lg shadow-blue-600/10 hover:scale-[1.01]">
+                Sign In
+            </button>
+        </form>
+
+        <!-- Footer Alternative Options Block -->
+        <div class="text-center text-xs text-slate-500 pt-2">
+            Don't have an account? <a href="#" class="text-blue-500 hover:text-blue-400 font-medium transition">Sign Up</a>
+        </div>
+    </div>
+
+    <!-- Frontend Form Security Controller Engine -->
+    <script>
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const feedback = document.getElementById('authFeedback');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Prepare validation check data packet
+            const payload = { email, password };
+
+            try {
+                // Pointing directly to your flat root backend router endpoint
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    feedback.className = "p-3.5 rounded-xl text-xs text-center font-semibold bg-green-950/50 text-green-400 border border-green-900/30";
+                    feedback.textContent = "Access verified! Redirecting to dashboard dashboard...";
+                    feedback.classList.remove('hidden');
+
+                    // Save session token locally in client context storage
+                    localStorage.setItem('joytech_admin_token', data.token);
+                    
+                    // Route directly to your administrative dashboard view
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || "Authentication verification failed.");
+                }
+            } catch (err) {
+                feedback.className = "p-3.5 rounded-xl text-xs text-center font-semibold bg-red-950/50 text-red-400 border border-red-900/30";
+                feedback.textContent = err.message;
+                feedback.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
