@@ -35,7 +35,7 @@ app.post('/api/quote', async (req, res) => {
     }
 });
 
-// Open Admin Routes (Direct access, no authentication checks)
+// Open Admin Routes (No passwords, no tokens)
 app.get('/api/admin/stats', async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
