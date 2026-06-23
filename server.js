@@ -9,30 +9,14 @@ const PORT = process.env.PORT || 3000;
 // Connect to Neon PostgreSQL Database
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // Required for secure Neon connection
+    ssl: { rejectUnauthorized: false }
 });
 
 // Middleware to read JSON data and serve static files
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// --------------------------------------------------------
-// AUTHENTICATION MIDDLEWARE (The Security Gate)
-// --------------------------------------------------------
-function checkAdminPassword(req, res, next) {
-    const clientPassword = req.headers['x-admin-password'];
-    const correctPassword = process.env.ADMIN_PASSWORD || "JoyTech2026"; // Fallback password
-
-    if (clientPassword === correctPassword) {
-        next(); // Password matches! Move to the next step.
-    } else {
-        res.status(401).json({ error: "Unauthorized access. Wrong password." });
-    }
-}
-
-// --------------------------------------------------------
-// PUBLIC ROUTE: Customers sending messages from index.html
-// --------------------------------------------------------
+// Public Route: Customers sending messages from index.html
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
     
@@ -51,12 +35,8 @@ app.post('/api/quote', async (req, res) => {
     }
 });
 
-// --------------------------------------------------------
-// SECURE ROUTES: Protected by the checkAdminPassword gate
-// --------------------------------------------------------
-
-// 1. Get total system request stats
-app.get('/api/admin/stats', checkAdminPassword, async (req, res) => {
+// Open Admin Routes (Direct access, no authentication checks)
+app.get('/api/admin/stats', async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
         const count = parseInt(result.rows[0].count, 10);
@@ -67,8 +47,7 @@ app.get('/api/admin/stats', checkAdminPassword, async (req, res) => {
     }
 });
 
-// 2. Get all client messages for the dashboard list
-app.get('/api/messages', checkAdminPassword, async (req, res) => {
+app.get('/api/messages', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM requests ORDER BY id DESC');
         res.json(result.rows);
@@ -78,8 +57,7 @@ app.get('/api/messages', checkAdminPassword, async (req, res) => {
     }
 });
 
-// 3. Delete a client request entry completely
-app.delete('/api/requests/:id', checkAdminPassword, async (req, res) => {
+app.delete('/api/requests/:id', async (req, res) => {
     const { id } = req.params;
     try {
         await pool.query('DELETE FROM requests WHERE id = $1', [id]);
