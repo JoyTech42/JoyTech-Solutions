@@ -31,9 +31,9 @@
 
     <!-- Hero Section -->
     <section id="home" class="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center space-y-6">
-       <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight uppercase max-w-2xl mx-auto">
-    Web & Software Development, Graphic Design, Networking, KRA, eCitizen, and Computer Solutions
-</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight uppercase max-w-2xl mx-auto">
+            Web & Software Development, Graphic Design, Networking, KRA, eCitizen, and Computer Solutions
+        </h1>
         <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto font-medium">
             Skip the long lines. We handle your tax returns, official digital applications, and fix slow computers quickly.
         </p>
@@ -69,16 +69,13 @@
         </div>
     </section>
 
-    <!-- Projects Section (Carousel) -->
+    <!-- Projects Section -->
     <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16">
             <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Projects Done</h2>
             <p class="text-slate-500 text-sm font-medium">See some of the successful work done.</p>
         </div>
-        
-      
-
-        <div class="text-center mt-12">
+        <div class="text-center">
             <a href="https://portfolio-1-pzy8.onrender.com/" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3.5 rounded-xl transition uppercase tracking-wider shadow-lg shadow-blue-600/10">
                 View All My Past Work ➔
             </a>
@@ -97,15 +94,15 @@
             <form id="submissionForm" class="space-y-5">
                 <input type="text" id="formName" required placeholder="Your Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none focus:border-blue-500">
                 <input type="email" id="formEmail" required placeholder="Your Email" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none focus:border-blue-500">
-               <select id="formService" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none cursor-pointer">
-    <option value="" disabled selected>Select a Service</option>
-    <option value="KRA Tax Returns">KRA Tax Returns</option>
-    <option value="eCitizen Applications">eCitizen Applications</option>
-    <option value="Computer & ICT Help">Computer & ICT Help</option>
-    <option value="Document Processing">Document Processing</option>
-    <option value="Web Development">Web Development</option>
-    <option value="Software Development">Software Development</option>
-</select>
+                <select id="formService" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none cursor-pointer">
+                    <option value="" disabled selected>Select a Service</option>
+                    <option value="KRA Tax Returns">KRA Tax Returns</option>
+                    <option value="eCitizen Applications">eCitizen Applications</option>
+                    <option value="Computer & ICT Help">Computer & ICT Help</option>
+                    <option value="Document Processing">Document Processing</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Software Development">Software Development</option>
+                </select>
                 <textarea id="formMessage" rows="4" required placeholder="Requirements details..." class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none resize-none"></textarea>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition text-xs uppercase tracking-wider">Send Message</button>
             </form>
@@ -121,10 +118,14 @@
     <script>
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button');
             const errorBanner = document.getElementById('errorBanner');
             const successBanner = document.getElementById('successBanner');
+            
             errorBanner.classList.add('hidden');
             successBanner.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
 
             try {
                 const response = await fetch('/api/quote', {
@@ -142,12 +143,16 @@
                     successBanner.textContent = "Message sent successfully!";
                     successBanner.classList.remove('hidden');
                     e.target.reset();
+                    setTimeout(() => successBanner.classList.add('hidden'), 5000);
                 } else {
                     throw new Error(data.error || "Submission failed.");
                 }
             } catch (err) {
                 errorBanner.textContent = `Error: ${err.message}`;
                 errorBanner.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Message';
             }
         });
     </script>
