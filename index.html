@@ -35,22 +35,29 @@
     </div>
 
     <script>
-        function toggleAuth() {
-            const title = document.getElementById('authTitle');
-            const btn = document.getElementById('authBtn');
-            const toggle = document.getElementById('toggleBtn');
-            const nameField = document.getElementById('name');
-            
-            if (title.textContent === 'Sign Up') {
-                title.textContent = 'Sign In'; btn.textContent = 'Sign In';
-                toggle.textContent = 'Don\'t have an account? Sign Up';
-                nameField.classList.add('hidden'); // Name not needed for Sign In
-            } else {
-                title.textContent = 'Sign Up'; btn.textContent = 'Create Account';
-                toggle.textContent = 'Already have an account? Sign In';
-                nameField.classList.remove('hidden');
-            }
-        }
+       function toggleAuth() {
+    const title = document.getElementById('authTitle');
+    const btn = document.getElementById('authBtn');
+    const toggle = document.getElementById('toggleBtn');
+    const nameField = document.getElementById('name');
+    
+    // Clear inputs when switching
+    document.getElementById('authForm').reset();
+
+    if (title.textContent === 'Sign Up') {
+        title.textContent = 'Sign In'; 
+        btn.textContent = 'Sign In';
+        toggle.textContent = 'Don\'t have an account? Sign Up';
+        nameField.classList.add('hidden'); // Hide name field for Sign In
+        nameField.removeAttribute('required'); // Prevent validation error
+    } else {
+        title.textContent = 'Sign Up'; 
+        btn.textContent = 'Create Account';
+        toggle.textContent = 'Already have an account? Sign In';
+        nameField.classList.remove('hidden'); // Show name field for Sign Up
+        nameField.setAttribute('required', 'required');
+    }
+}
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
     e.preventDefault();
