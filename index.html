@@ -181,22 +181,38 @@
         }
         function openAuth() { document.getElementById('authModal').classList.remove('hidden'); }
 
-        document.getElementById('submissionForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const success = document.getElementById('successBanner');
-            btn.disabled = true; btn.textContent = 'Sending...';
-            try {
-                const response = await fetch('/api/quote', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: document.getElementById('formName').value,
-                        email: document.getElementById('formEmail').value,
-                        service: document.getElementById('formService').value,
-                        message: document.getElementById('formMessage').value
-                    })
-                });
+       document.getElementById('authForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('authTitle').textContent;
+    const inputs = e.target.querySelectorAll('input');
+    const email = inputs[0].value;
+    const password = inputs[1].value;
+
+    if (title === 'Sign Up') {
+        try {
+            // Send data to your backend
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (response.ok) {
+                document.getElementById('formInputs').innerHTML = `<div class="text-emerald-400 text-center py-4 font-bold">Account created successfully!</div>`;
+                document.getElementById('authBtn').classList.add('hidden');
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                alert("Sign up failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    } else {
+        // Sign In logic
+        document.getElementById('authModal').classList.add('hidden');
+        document.getElementById('mainContent').classList.remove('hidden');
+    }
+});
                 if (response.ok) {
                     success.textContent = "Message sent successfully!";
                     success.classList.remove('hidden');
