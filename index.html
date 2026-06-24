@@ -53,23 +53,34 @@
         }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const isSignup = document.getElementById('authTitle').textContent === 'Sign Up';
-            const endpoint = isSignup ? '/api/auth/signup' : '/api/auth/signin';
-            
-            const payload = {
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
-            };
-            if(isSignup) payload.name = document.getElementById('name').value;
+    e.preventDefault();
+    
+    // Get values from your input fields
+    // Note: Ensure your HTML inputs have IDs 'name', 'email', 'password'
+    const name = document.getElementById('name')?.value || 'Guest';
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
+    try {
+        const response = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Account created successfully! Now click 'Sign In' to enter.");
+            toggleAuth(); // Switches to Sign In mode
+        } else {
+            alert("Signup Failed: " + (data.error || "Unknown error"));
+        }
+    } catch (err) {
+        console.error("Connection Error:", err);
+        alert("Server is not responding. Please check your Render logs.");
+    }
+});
                 const data = await response.json();
                 if (response.ok) {
                     if (!isSignup) {
