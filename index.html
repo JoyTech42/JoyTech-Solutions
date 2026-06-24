@@ -8,7 +8,7 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans min-h-screen">
 
-    <!-- Gatekeeper Section: Shown by default -->
+    <!-- Gatekeeper Section -->
     <div id="gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950 p-6">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm text-center shadow-2xl">
             <h2 class="text-xl font-bold text-white mb-6">Welcome to JoyTech Solutions</h2>
@@ -16,14 +16,13 @@
         </div>
     </div>
 
-    <!-- Main Content: Hidden until authentication -->
+    <!-- Main Content -->
     <div id="mainContent" class="hidden">
-        <!-- Header -->
         <header class="sticky top-0 z-50 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                 <a href="#home" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/20">J</div>
-                    <span class="text-xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Solutions</span></span>
+                    <span class="text-xl font-bold text-white tracking-tight">JoyTech Solutions</span>
                 </a>
                 <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-wider uppercase text-slate-400">
                     <a href="#home" class="hover:text-white transition">Home</a>
@@ -34,12 +33,9 @@
             </div>
         </header>
 
-        <!-- Sections: Hero, Services, Projects, Request -->
-        <section id="home" class="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center space-y-6">
-            <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight uppercase max-w-2xl mx-auto">Web & Software Development, Graphic Design, Networking, KRA, eCitizen, and Computer Solutions</h1>
+        <section id="home" class="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
+            <h1 class="text-xl md:text-2xl font-bold text-white uppercase">Web & Software Development, Networking, KRA, eCitizen, and Computer Solutions</h1>
         </section>
-        
-        <!-- ... (Rest of your sections remain exactly the same as before) ... -->
 
         <footer class="border-t border-slate-900 bg-slate-950 py-12 text-center text-slate-500 text-xs">
             <p>&copy; 2026 JoyTech Solutions. All rights reserved.</p>
@@ -55,9 +51,8 @@
                 <input type="password" required placeholder="Password" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <button type="submit" id="authBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider">Create Account</button>
             </form>
-            <div class="mt-4 flex flex-col space-y-2 text-center">
+            <div class="mt-4 text-center">
                 <button onclick="toggleAuth()" id="toggleBtn" class="text-xs text-slate-500 hover:text-blue-500 transition">Already have an account? Sign In</button>
-                <button onclick="alert('Password reset link sent to your email!')" class="text-xs text-slate-600 hover:text-slate-400 transition">Forgot Password?</button>
             </div>
         </div>
     </div>
@@ -75,14 +70,21 @@
                 toggle.textContent = 'Already have an account? Sign In';
             }
         }
+
         function openAuth() { document.getElementById('authModal').classList.remove('hidden'); }
         
-        // Grant access when form is submitted
         document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('mainContent').classList.remove('hidden');
-            document.getElementById('authModal').classList.add('hidden');
+            const title = document.getElementById('authTitle').textContent;
+            
+            if (title === 'Sign Up') {
+                alert('Account created! Please sign in now.');
+                toggleAuth(); // Switches to Sign In mode automatically
+            } else {
+                document.getElementById('gate').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('authModal').classList.add('hidden');
+            }
         });
     </script>
 </body>
