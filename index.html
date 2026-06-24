@@ -59,33 +59,58 @@
     }
 }
 
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
+        <div class="mt-2 text-center">
+    <button type="button" onclick="forgotPassword()" class="text-[10px] text-slate-600 hover:text-blue-400 underline">Forgot Password?</button>
+</div>
+        
+       // 1. New Forgot Password function
+function forgotPassword() {
+    alert("Please contact JoyTech Support at support@joytech.com to reset your credentials.");
+}
+
+// 2. Enhanced Form Submission with clear feedback
+document.getElementById('authForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const title = document.getElementById('authTitle').textContent;
+    const isSignup = (title === 'Sign Up');
     
-    // Get values from your input fields
-    // Note: Ensure your HTML inputs have IDs 'name', 'email', 'password'
-    const name = document.getElementById('name')?.value || 'Guest';
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    // UI Feedback: Disable button while waiting
+    const btn = document.getElementById('authBtn');
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+
+    const payload = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        name: document.getElementById('name').value || 'User'
+    };
 
     try {
-        const response = await fetch('/api/auth/signup', {
+        const response = await fetch(isSignup ? '/api/auth/signup' : '/api/auth/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify(payload)
         });
-
+        
         const data = await response.json();
-
+        
         if (response.ok) {
-            alert("Account created successfully! Now click 'Sign In' to enter.");
-            toggleAuth(); // Switches to Sign In mode
+            if (isSignup) {
+                alert("Success! Your account was created. Please sign in now.");
+                toggleAuth(); // Switches to Sign In mode
+            } else {
+                localStorage.setItem('token', data.token);
+                document.getElementById('authModal').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+            }
         } else {
-            alert("Signup Failed: " + (data.error || "Unknown error"));
+            alert("Error: " + (data.error || "Authentication failed. Check your details."));
         }
     } catch (err) {
-        console.error("Connection Error:", err);
-        alert("Server is not responding. Please check your Render logs.");
+        alert("Server unreachable. Please try again later.");
+    } finally {
+        btn.disabled = false;
+        btn.textContent = isSignup ? 'Create Account' : 'Sign In';
     }
 });
                 const data = await response.json();
