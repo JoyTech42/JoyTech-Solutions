@@ -143,26 +143,37 @@
             }
         }
 
-        // AUTH: Simulated for Demo
+        // AUTH FORM LOGIC
         document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = document.getElementById('authBtn');
-            btn.disabled = true; btn.textContent = 'Processing...';
+            const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
             
-            // Simulating a successful backend response
+            btn.disabled = true; 
+            btn.textContent = 'Processing...';
+
             setTimeout(() => {
-                localStorage.setItem('isLoggedIn', 'true');
-                location.reload(); 
+                if (isSignUp) {
+                    // Registration Path
+                    showBanner(authStatus, "Account created successfully! Please Sign In.", true);
+                    toggleAuth(); 
+                    document.getElementById('authForm').reset();
+                } else {
+                    // Sign In Path
+                    localStorage.setItem('isLoggedIn', 'true');
+                    location.reload(); 
+                }
+                btn.disabled = false;
+                btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
             }, 800);
         });
 
-        // CONTACT: Simulated for Demo
+        // CONTACT FORM LOGIC
         document.getElementById('submissionForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             btn.disabled = true; btn.textContent = 'Sending...';
             
-            // Simulating successful email send
             setTimeout(() => {
                 showBanner(statusBanner, "Message sent successfully!", true);
                 e.target.reset();
