@@ -24,7 +24,6 @@
                 <a href="#services" class="hover:text-white transition">Our Services</a>
                 <a href="#projects" class="hover:text-white transition">Our Projects</a>
                 <a href="#request" class="hover:text-white transition">Send Request</a>
-                <!-- Logout Button -->
                 <button onclick="localStorage.removeItem('isLoggedIn'); location.reload();" class="text-red-500 hover:text-red-400 transition">Logout</button>
             </nav>
             <a href="#request" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition uppercase tracking-wider shadow-md">Get Help Now</a>
@@ -37,7 +36,7 @@
         </h1>
     </section>
 
-    <!-- Services & Projects Sections (Kept same) -->
+    <!-- Services Section -->
     <section id="services" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">What We Can Do For You</h2></div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -60,6 +59,7 @@
         </div>
     </section>
 
+    <!-- Projects Section -->
     <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Projects Done</h2></div>
         <div class="text-center">
@@ -67,6 +67,7 @@
         </div>
     </section>
 
+    <!-- Request Form -->
     <section id="request" class="max-w-xl mx-auto px-6 py-20">
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 md:p-10 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
@@ -114,7 +115,7 @@
             banner.classList.add(isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
         }
 
-        // Check login on load
+        // Check authentication on load
         window.addEventListener('load', () => {
             if (!localStorage.getItem('isLoggedIn')) {
                 document.getElementById('authModal').classList.remove('hidden');
