@@ -18,7 +18,7 @@ const pool = new Pool({
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// 2. Public Client Contact Form Pipeline (Fixes submission failures)
+// 2. Public Client Contact Form Pipeline
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
     
@@ -32,10 +32,7 @@ app.post('/api/quote', async (req, res) => {
         const result = await pool.query(queryText, values);
         return res.status(201).json({ success: true, data: result.rows[0] });
     } catch (err) {
-        // Prints the precise reason to your Render service logs
         console.error("!!! NEON DATABASE REJECTION !!! ->", err.message);
-        
-        // Sends the explicit database message directly back to your frontend error banner
         return res.status(500).json({ error: `Database Failure: ${err.message}` });
     }
 });
@@ -43,23 +40,19 @@ app.post('/api/quote', async (req, res) => {
 // 3. Smart Administrative Access Router
 app.get('/admin', async (req, res) => {
     try {
-        // Query the users table to verify if any master admin account exists
         const checkUsers = await pool.query('SELECT id FROM users LIMIT 1');
         
         if (checkUsers.rows.length === 0) {
-            // No profiles registered yet -> Present Signup screen first
             return res.sendFile(path.join(__dirname, 'signup.html'));
         }
-        // Account exists -> Direct straight to Sign In screen
         return res.sendFile(path.join(__dirname, 'signin.html'));
     } catch (err) {
         console.error("Smart Router Navigation Exception:", err.message);
-        // Fallback to signup to handle clean state initializations
         return res.sendFile(path.join(__dirname, 'signup.html'));
     }
 });
 
-// 4. Authentication Endpoints (Creates & Verifies Accounts)
+// 4. Authentication Endpoints (FIXED: Using password_hash column)
 app.post('/api/auth/signup', async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -67,7 +60,8 @@ app.post('/api/auth/signup', async (req, res) => {
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const queryText = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, email';
+        // Corrected column name from 'password' to 'password_hash'
+        const queryText = 'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, email';
         const result = await pool.query(queryText, [name, email, hashedPassword]);
         return res.status(201).json({ success: true, user: result.rows[0] });
     } catch (err) {
@@ -87,12 +81,12 @@ app.post('/api/auth/signin', async (req, res) => {
             return res.status(401).json({ error: "No administrator account matched those details." });
         }
 
-        const match = await bcrypt.compare(password, result.rows[0].password);
+        // Corrected property reference from result.rows[0].password to .password_hash
+        const match = await bcrypt.compare(password, result.rows[0].password_hash);
         if (!match) {
             return res.status(401).json({ error: "Incorrect password credentials." });
         }
 
-        // Sign an encrypted token valid for a 24-hour administrative session window
         const token = jwt.sign({ id: result.rows[0].id }, JWT_SECRET, { expiresIn: '24h' });
         return res.json({ success: true, token });
     } catch (err) {
@@ -119,7 +113,7 @@ const secureGuard = (req, res, next) => {
     });
 };
 
-// 6. Private Telemetry & Data Management Lines (Protected by Secure Guard)
+// 6. Private Telemetry & Data Management Lines
 app.get('/api/admin/stats', secureGuard, async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
@@ -147,7 +141,7 @@ app.delete('/api/requests/:id', secureGuard, async (req, res) => {
     }
 });
 
-// 7. Global Public Route Fallback (Serves Landing Interface)
+// 7. Global Public Route Fallback
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -155,7 +149,7 @@ app.get('*', (req, res) => {
 // Start Engine
 app.listen(PORT, () => {
     console.log(`================================================================`);
-    console.log(`  JoyTech Solutions Core Engine online on port ${PORT}          `);
-    console.log(`  Mode: Smart Admin Routing & Error Diagnostic Level Active     `);
+    console.log(`  JoyTech Solutions Core Engine online on port ${PORT}         `);
+    console.log(`  Mode: Smart Admin Routing & Error Diagnostic Level Active    `);
     console.log(`================================================================`);
 });
