@@ -12,6 +12,7 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans min-h-screen selection:bg-blue-600/30 selection:text-blue-400">
 
+    <!-- Header Navigation -->
     <header class="sticky top-0 z-50 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <a href="#home" class="flex items-center space-x-3">
@@ -74,7 +75,6 @@
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 md:p-10 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
             
-            <!-- Notification Banner (Replaces alert boxes) -->
             <div id="statusBanner" class="hidden text-center p-4 rounded-xl text-xs font-bold border"></div>
 
             <form id="submissionForm" class="space-y-5">
@@ -97,6 +97,10 @@
     <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-sm">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
             <h3 id="authTitle" class="text-xl font-bold text-white mb-6">Sign Up</h3>
+            
+            <!-- Auth Status Banner -->
+            <div id="authStatus" class="hidden mb-4 text-center p-3 rounded-lg text-xs font-bold border"></div>
+            
             <form id="authForm" class="space-y-4">
                 <input type="text" id="authName" placeholder="Full Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="email" id="authEmail" required placeholder="Email Address" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
@@ -110,21 +114,16 @@
     </div>
 
     <script>
-        // UI Helper for status messages
+        // UI Helpers
         const statusBanner = document.getElementById('statusBanner');
+        const authStatus = document.getElementById('authStatus');
         
-        function showBanner(message, isSuccess) {
-            statusBanner.textContent = message;
-            statusBanner.classList.remove('hidden', 'bg-emerald-950', 'text-emerald-400', 'border-emerald-900', 'bg-red-950', 'text-red-400', 'border-red-900');
-            
-            if (isSuccess) {
-                statusBanner.classList.add('bg-emerald-950', 'text-emerald-400', 'border-emerald-900');
-            } else {
-                statusBanner.classList.add('bg-red-950', 'text-red-400', 'border-red-900');
-            }
+        function showBanner(banner, message, isSuccess) {
+            banner.textContent = message;
+            banner.classList.remove('hidden', 'bg-emerald-950', 'text-emerald-400', 'border-emerald-900', 'bg-red-950', 'text-red-400', 'border-red-900');
+            banner.classList.add(isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
         }
 
-        // Force Login Check
         window.addEventListener('load', () => {
             if (!localStorage.getItem('isLoggedIn')) {
                 document.getElementById('authModal').classList.remove('hidden');
@@ -148,14 +147,49 @@
             }
         }
 
-        // Submission Logic
+        // AUTH FORM SUBMISSION (FIXED BLINK)
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevents page reload
+            
+            const btn = document.getElementById('authBtn');
+            const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
+            const url = isSignUp ? '/api/signup' : '/api/signin';
+            
+            btn.disabled = true; btn.textContent = 'Processing...';
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('authName').value,
+                        email: document.getElementById('authEmail').value,
+                        password: document.getElementById('authPassword').value
+                    })
+                });
+
+                if (response.ok) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    location.reload(); 
+                } else {
+                    showBanner(authStatus, "Authentication failed. Check your details.", false);
+                }
+            } catch (err) {
+                showBanner(authStatus, "Connection error.", false);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
+            }
+        });
+
+        // CONTACT FORM SUBMISSION
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const service = document.getElementById('formService').value;
             const btn = document.getElementById('submitBtn');
             
             if (!service || service === "") {
-                showBanner("Please select a service first.", false);
+                showBanner(statusBanner, "Please select a service first.", false);
                 return;
             }
 
@@ -174,13 +208,13 @@
                 });
 
                 if (response.ok) {
-                    showBanner("Message sent successfully!", true);
+                    showBanner(statusBanner, "Message sent successfully!", true);
                     e.target.reset();
                 } else {
-                    showBanner("Submission failed. Please try again.", false);
+                    showBanner(statusBanner, "Submission failed.", false);
                 }
             } catch (err) { 
-                showBanner("Submission failed. Check your connection.", false); 
+                showBanner(statusBanner, "Submission failed. Check your connection.", false); 
             } finally { 
                 btn.disabled = false; btn.textContent = 'Send Message'; 
             }
