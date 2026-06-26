@@ -41,23 +41,18 @@
     <section id="services" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16">
             <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">What We Can Do For You</h2>
-            <p class="text-slate-500 text-sm font-medium">Simple, fast, and friendly professional services.</p>
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">📝</div>
                 <h3 class="font-bold text-white">KRA Tax Returns</h3>
             </div>
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🏛️</div>
                 <h3 class="font-bold text-white">eCitizen Applications</h3>
             </div>
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">💻</div>
                 <h3 class="font-bold text-white">Computer & ICT Help</h3>
             </div>
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🖨️</div>
                 <h3 class="font-bold text-white">Document Processing</h3>
             </div>
         </div>
@@ -66,40 +61,38 @@
     <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16">
             <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Our Recent Projects</h2>
-            <p class="text-slate-500 text-sm font-medium">A showcase of our professional work and successful deliveries.</p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 hover:border-blue-600/50 transition">
-                <div class="h-40 bg-slate-950 rounded-xl mb-4 flex items-center justify-center text-slate-700">Project Thumbnail</div>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
                 <h3 class="font-bold text-white mb-2">Web Development</h3>
-                <p class="text-slate-400 text-sm">Custom responsive website build for a local business.</p>
+                <p class="text-slate-400 text-sm">Custom responsive website build.</p>
             </div>
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 hover:border-blue-600/50 transition">
-                <div class="h-40 bg-slate-950 rounded-xl mb-4 flex items-center justify-center text-slate-700">Project Thumbnail</div>
-                <h3 class="font-bold text-white mb-2">Network Optimization</h3>
-                <p class="text-slate-400 text-sm">Complete office network overhaul and security setup.</p>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
+                <h3 class="font-bold text-white mb-2">Network Setup</h3>
+                <p class="text-slate-400 text-sm">Office infrastructure optimization.</p>
             </div>
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 hover:border-blue-600/50 transition">
-                <div class="h-40 bg-slate-950 rounded-xl mb-4 flex items-center justify-center text-slate-700">Project Thumbnail</div>
-                <h3 class="font-bold text-white mb-2">Tax Automation</h3>
-                <p class="text-slate-400 text-sm">Automated processing workflow for bulk tax filings.</p>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6">
+                <h3 class="font-bold text-white mb-2">Tax Systems</h3>
+                <p class="text-slate-400 text-sm">Efficient tax filing workflows.</p>
             </div>
         </div>
     </section>
 
-    <section id="request" class="max-w-xl mx-auto px-6 py-20">
-        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 md:p-10 shadow-2xl space-y-6">
+    <section id="request" class="max-w-xl mx-auto px-6 py-20 border-t border-slate-900">
+        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
             <form id="submissionForm" class="space-y-5">
                 <input type="text" id="formName" required placeholder="Your Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="email" id="formEmail" required placeholder="Your Email" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
-                <select id="formService" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none cursor-pointer">
+                
+                <select id="formService" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none cursor-pointer text-slate-200">
                     <option value="" disabled selected>Select a Service</option>
                     <option value="KRA Tax Returns">KRA Tax Returns</option>
                     <option value="eCitizen Applications">eCitizen Applications</option>
                     <option value="Computer & ICT Help">Computer & ICT Help</option>
                     <option value="Document Processing">Document Processing</option>
                 </select>
+
                 <textarea id="formMessage" rows="4" required placeholder="Requirements details..." class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none resize-none"></textarea>
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition text-xs uppercase tracking-wider">Send Message</button>
             </form>
@@ -122,6 +115,7 @@
     </div>
 
     <script>
+        // Check for login on load
         window.addEventListener('load', () => {
             if (!localStorage.getItem('isLoggedIn')) {
                 document.getElementById('authModal').classList.remove('hidden');
@@ -145,13 +139,11 @@
             }
         }
 
+        // Auth Logic
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const isSignup = document.getElementById('authTitle').textContent === 'Sign Up';
             const endpoint = isSignup ? '/api/auth/signup' : '/api/auth/signin';
-            const btn = document.getElementById('authBtn');
-            btn.disabled = true; btn.textContent = 'Processing...';
-
             try {
                 const response = await fetch(endpoint, {
                     method: 'POST',
@@ -162,25 +154,26 @@
                         name: isSignup ? document.getElementById('authName').value : undefined
                     })
                 });
-
                 if (response.ok) {
                     localStorage.setItem('isLoggedIn', 'true');
                     document.getElementById('authModal').classList.add('hidden');
                 } else {
-                    const data = await response.json();
-                    alert("Error: " + (data.error || "Authentication failed."));
+                    alert("Authentication failed.");
                 }
             } catch (err) { alert("Server Error"); }
-            finally { btn.disabled = false; btn.textContent = isSignup ? 'Create Account' : 'Sign In'; }
         });
 
+        // Submission Logic (With Service Validation)
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const service = document.getElementById('formService').value;
+            
+            // Validation check
             if (!service) {
-                alert("Please select a valid service before submitting.");
+                alert("Please select a valid service.");
                 return;
             }
+
             const btn = e.target.querySelector('button');
             btn.disabled = true; btn.textContent = 'Sending...';
             try {
@@ -198,8 +191,7 @@
                     alert("Message sent successfully!");
                     e.target.reset();
                 } else {
-                    const data = await response.json();
-                    alert("Submission failed: " + (data.error || "Unknown error"));
+                    alert("Submission failed.");
                 }
             } catch (err) { alert("Submission failed."); }
             finally { btn.disabled = false; btn.textContent = 'Send Message'; }
