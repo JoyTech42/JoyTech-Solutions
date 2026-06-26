@@ -22,8 +22,9 @@ app.use(express.static(__dirname));
 app.post('/api/quote', async (req, res) => {
     const { name, email, service, message } = req.body;
     
-    if (!name || !email || !message) {
-        return res.status(400).json({ error: "All entry form fields are required." });
+    // UPDATED: Added 'service' to validation to ensure users select a service
+    if (!name || !email || !service || !message) {
+        return res.status(400).json({ error: "All fields, including Service, are required." });
     }
     
     try {
@@ -52,7 +53,7 @@ app.get('/admin', async (req, res) => {
     }
 });
 
-// 4. Authentication Endpoints (FIXED: Using password_hash column)
+// 4. Authentication Endpoints
 app.post('/api/auth/signup', async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -60,7 +61,7 @@ app.post('/api/auth/signup', async (req, res) => {
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        // Corrected column name from 'password' to 'password_hash'
+        // Uses password_hash column per database schema
         const queryText = 'INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, email';
         const result = await pool.query(queryText, [name, email, hashedPassword]);
         return res.status(201).json({ success: true, user: result.rows[0] });
@@ -81,7 +82,6 @@ app.post('/api/auth/signin', async (req, res) => {
             return res.status(401).json({ error: "No administrator account matched those details." });
         }
 
-        // Corrected property reference from result.rows[0].password to .password_hash
         const match = await bcrypt.compare(password, result.rows[0].password_hash);
         if (!match) {
             return res.status(401).json({ error: "Incorrect password credentials." });
@@ -113,7 +113,7 @@ const secureGuard = (req, res, next) => {
     });
 };
 
-// 6. Private Telemetry & Data Management Lines
+// 6. Private Telemetry & Data Management
 app.get('/api/admin/stats', secureGuard, async (req, res) => {
     try {
         const result = await pool.query('SELECT COUNT(*) FROM requests');
