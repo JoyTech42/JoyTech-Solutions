@@ -12,36 +12,26 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans min-h-screen selection:bg-blue-600/30 selection:text-blue-400">
 
-    <!-- Header Navigation -->
     <header class="sticky top-0 z-50 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#home" class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/20">J</div>
                 <span class="text-xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Solutions</span></span>
-            </a>
+            </div>
             
             <div id="userDisplay" class="hidden flex items-center space-x-4">
                 <span id="userNameDisplay" class="text-xs font-medium text-slate-400"></span>
-                <button onclick="logout()" class="text-xs text-red-500 hover:text-red-400 font-semibold uppercase tracking-wider">Logout</button>
+                <button onclick="logout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition">Logout</button>
             </div>
-
-            <nav id="navMenu" class="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-wider uppercase text-slate-400">
-                <a href="#home" class="hover:text-white transition">Home</a>
-                <a href="#services" class="hover:text-white transition">Our Services</a>
-                <a href="#projects" class="hover:text-white transition">Our Projects</a>
-                <a href="#request" class="hover:text-white transition">Send Request</a>
-            </nav>
         </div>
     </header>
 
-    <!-- Home Section -->
     <section id="home" class="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center space-y-6">
         <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight uppercase max-w-2xl mx-auto">
             Web & Software Development, Graphic Design, Networking, KRA, eCitizen, and Computer Solutions
         </h1>
     </section>
 
-    <!-- Services Section -->
     <section id="services" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">What We Can Do For You</h2></div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -64,8 +54,14 @@
         </div>
     </section>
 
-    <!-- Request Form -->
-    <section id="request" class="max-w-xl mx-auto px-6 py-20">
+    <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
+        <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Projects Done</h2></div>
+        <div class="text-center">
+            <a href="https://portfolio-1-pzy8.onrender.com/" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3.5 rounded-xl transition uppercase tracking-wider shadow-lg shadow-blue-600/10">View All My Past Work ➔</a>
+        </div>
+    </section>
+
+    <section id="request" class="max-w-xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 md:p-10 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
             <div id="statusBanner" class="hidden text-center p-4 rounded-xl text-xs font-bold border"></div>
@@ -85,9 +81,8 @@
         </div>
     </section>
 
-    <!-- Auth Modal -->
     <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-md">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm shadow-2xl border-slate-800/50">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
             <h3 id="authTitle" class="text-xl font-bold text-white mb-6">Sign Up</h3>
             <div id="authStatus" class="hidden mb-4 text-center p-3 rounded-lg text-xs font-bold border"></div>
             <form id="authForm" class="space-y-4">
@@ -103,6 +98,15 @@
     </div>
 
     <script>
+        const statusBanner = document.getElementById('statusBanner');
+        const authStatus = document.getElementById('authStatus');
+
+        function showBanner(banner, message, isSuccess) {
+            banner.textContent = message;
+            banner.classList.remove('hidden', 'bg-emerald-950', 'text-emerald-400', 'border-emerald-900', 'bg-red-950', 'text-red-400', 'border-red-900');
+            banner.classList.add('block', isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
+        }
+
         // --- AUTH Logic ---
         function checkLogin() {
             const user = localStorage.getItem('user');
@@ -127,6 +131,8 @@
             const btn = document.getElementById('authBtn');
             const toggle = document.getElementById('toggleBtn');
             const nameField = document.getElementById('authName');
+            
+            authStatus.classList.add('hidden');
             
             if (title.textContent === 'Sign Up') {
                 title.textContent = 'Sign In'; 
@@ -155,13 +161,12 @@
                 if (isSignUp) {
                     const name = document.getElementById('authName').value;
                     localStorage.setItem('user', JSON.stringify({ name: name }));
+                    showBanner(authStatus, "Account created! Please Sign In.", true);
                     toggleAuth();
                     document.getElementById('authForm').reset();
-                    alert("Account created! Please sign in.");
                 } else {
-                    // Simple simulated login
                     if(!localStorage.getItem('user')) {
-                        alert("Please sign up first!");
+                        showBanner(authStatus, "No account found. Please Sign Up first.", false);
                     } else {
                         location.reload();
                     }
@@ -175,13 +180,11 @@
         document.getElementById('submissionForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            const statusBanner = document.getElementById('statusBanner');
             
             btn.disabled = true; btn.textContent = 'Sending...';
             
             setTimeout(() => {
-                statusBanner.className = 'text-center p-4 rounded-xl text-xs font-bold border block bg-emerald-950 text-emerald-400 border-emerald-900';
-                statusBanner.textContent = "Message sent successfully!";
+                showBanner(statusBanner, "Message sent successfully!", true);
                 e.target.reset();
                 btn.disabled = false; btn.textContent = 'Send Message';
             }, 800);
