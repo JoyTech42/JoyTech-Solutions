@@ -107,9 +107,9 @@
             banner.classList.add('block', isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
         }
 
-        // --- AUTH Logic ---
+        // --- AUTH Logic (Session Storage) ---
         function checkLogin() {
-            const user = localStorage.getItem('user');
+            const user = sessionStorage.getItem('user');
             if (user) {
                 document.getElementById('userDisplay').classList.remove('hidden');
                 document.getElementById('userNameDisplay').textContent = `Welcome, ${JSON.parse(user).name}`;
@@ -120,7 +120,7 @@
         }
 
         function logout() {
-            localStorage.removeItem('user');
+            sessionStorage.removeItem('user');
             location.reload();
         }
 
@@ -160,19 +160,21 @@
             setTimeout(() => {
                 if (isSignUp) {
                     const name = document.getElementById('authName').value;
-                    localStorage.setItem('user', JSON.stringify({ name: name }));
-                    showBanner(authStatus, "Account created! Please Sign In.", true);
-                    toggleAuth();
-                    document.getElementById('authForm').reset();
+                    sessionStorage.setItem('user', JSON.stringify({ name: name }));
+                    showBanner(authStatus, "Account created! Now signing in...", true);
+                    
+                    // Delay login transition slightly so user sees the message
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 } else {
-                    if(!localStorage.getItem('user')) {
+                    if(!sessionStorage.getItem('user')) {
                         showBanner(authStatus, "No account found. Please Sign Up first.", false);
                     } else {
                         location.reload();
                     }
                 }
                 btn.disabled = false;
-                btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
             }, 800);
         });
 
