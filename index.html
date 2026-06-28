@@ -23,7 +23,7 @@
                 <a href="#services" class="hover:text-white transition">Our Services</a>
                 <a href="#projects" class="hover:text-white transition">Our Projects</a>
                 <a href="#request" class="hover:text-white transition">Send Request</a>
-                <button onclick="localStorage.removeItem('isLoggedIn'); location.reload();" class="text-red-500 hover:text-red-400 transition">Logout</button>
+                <button onclick="logout()" class="text-red-500 hover:text-red-400 transition">Logout</button>
             </nav>
             <a href="#request" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition uppercase tracking-wider shadow-md">Get Help Now</a>
         </div>
@@ -89,7 +89,7 @@
             <h3 id="authTitle" class="text-xl font-bold text-white mb-6">Sign Up</h3>
             <div id="authStatus" class="hidden mb-4 text-center p-3 rounded-lg text-xs font-bold border"></div>
             <form id="authForm" class="space-y-4">
-                <input type="text" id="authName" placeholder="Full Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
+                <input type="text" id="authName" required placeholder="Full Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="email" id="authEmail" required placeholder="Email Address" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="password" id="authPassword" required placeholder="Password" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <button type="submit" id="authBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider">Create Account</button>
@@ -101,13 +101,10 @@
     </div>
 
     <script>
-        const statusBanner = document.getElementById('statusBanner');
-        const authStatus = document.getElementById('authStatus');
-        
-        function showBanner(banner, message, isSuccess) {
-            banner.textContent = message;
-            banner.classList.remove('hidden', 'bg-emerald-950', 'text-emerald-400', 'border-emerald-900', 'bg-red-950', 'text-red-400', 'border-red-900');
-            banner.classList.add(isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
+        // AUTH Logic
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            location.reload();
         }
 
         window.addEventListener('load', () => {
@@ -124,51 +121,61 @@
             
             if (title.textContent === 'Sign Up') {
                 title.textContent = 'Sign In'; 
-                btn.textContent = 'Sign In'; 
+                btn.textContent = 'Sign In';
                 toggle.textContent = 'Don\'t have an account? Sign Up';
                 nameField.classList.add('hidden');
+                nameField.required = false;
             } else {
                 title.textContent = 'Sign Up'; 
                 btn.textContent = 'Create Account';
                 toggle.textContent = 'Already have an account? Sign In';
                 nameField.classList.remove('hidden');
+                nameField.required = true;
             }
         }
 
         document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = document.getElementById('authBtn');
-            const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
+            const title = document.getElementById('authTitle').textContent;
             
             btn.disabled = true; 
             btn.textContent = 'Processing...';
 
             setTimeout(() => {
-                if (isSignUp) {
-                    showBanner(authStatus, "Account created! Please Sign In.", true);
-                    toggleAuth(); 
+                if (title === 'Sign Up') {
+                    // Success logic: Account created, switch to Sign In
+                    document.getElementById('authStatus').className = 'mb-4 text-center p-3 rounded-lg text-xs font-bold border bg-emerald-950 text-emerald-400 border-emerald-900 block';
+                    document.getElementById('authStatus').textContent = "Account created! Please Sign In.";
+                    toggleAuth();
                     document.getElementById('authForm').reset();
                 } else {
+                    // Login logic
                     localStorage.setItem('isLoggedIn', 'true');
-                    location.reload(); 
+                    location.reload();
                 }
                 btn.disabled = false;
-                // Ensure text matches the current state after processing
                 btn.textContent = document.getElementById('authTitle').textContent === 'Sign Up' ? 'Create Account' : 'Sign In';
             }, 800);
         });
 
+        // CONTACT Logic
         document.getElementById('submissionForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.textContent = 'Sending...';
+            const statusBanner = document.getElementById('statusBanner');
+            
+            btn.disabled = true; 
+            btn.textContent = 'Sending...';
+            
             setTimeout(() => {
-                showBanner(statusBanner, "Message sent successfully!", true);
+                statusBanner.className = 'text-center p-4 rounded-xl text-xs font-bold border block bg-emerald-950 text-emerald-400 border-emerald-900';
+                statusBanner.textContent = "Message sent successfully!";
                 e.target.reset();
-                btn.disabled = false; btn.textContent = 'Send Message';
+                btn.disabled = false; 
+                btn.textContent = 'Send Message';
             }, 800);
         });
     </script>
 </body>
-                    </html>
-                    
+</html>
