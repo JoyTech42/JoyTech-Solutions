@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+                                    <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -54,13 +54,6 @@
         </div>
     </section>
 
-    <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
-        <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Projects Done</h2></div>
-        <div class="text-center">
-            <a href="https://portfolio-1-pzy8.onrender.com/" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3.5 rounded-xl transition uppercase tracking-wider shadow-lg shadow-blue-600/10">View All My Past Work ➔</a>
-        </div>
-    </section>
-
     <section id="request" class="max-w-xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 md:p-10 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
@@ -107,12 +100,11 @@
             banner.classList.add('block', isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
         }
 
-        // --- AUTH Logic (Session Storage) ---
+        // --- AUTH Logic (Connects to server.js) ---
         function checkLogin() {
-            const user = sessionStorage.getItem('user');
-            if (user) {
+            const token = localStorage.getItem('token');
+            if (token) {
                 document.getElementById('userDisplay').classList.remove('hidden');
-                document.getElementById('userNameDisplay').textContent = `Welcome, ${JSON.parse(user).name}`;
                 document.getElementById('authModal').classList.add('hidden');
             } else {
                 document.getElementById('authModal').classList.remove('hidden');
@@ -120,7 +112,7 @@
         }
 
         function logout() {
-            sessionStorage.removeItem('user');
+            localStorage.removeItem('token');
             location.reload();
         }
 
@@ -149,7 +141,7 @@
             }
         }
 
-        document.getElementById('authForm').addEventListener('submit', (e) => {
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('authBtn');
             const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
@@ -157,39 +149,72 @@
             btn.disabled = true; 
             btn.textContent = 'Processing...';
 
-            setTimeout(() => {
-                if (isSignUp) {
-                    const name = document.getElementById('authName').value;
-                    sessionStorage.setItem('user', JSON.stringify({ name: name }));
-                    showBanner(authStatus, "Account created! Now signing in...", true);
-                    
-                    // Delay login transition slightly so user sees the message
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                } else {
-                    if(!sessionStorage.getItem('user')) {
-                        showBanner(authStatus, "No account found. Please Sign Up first.", false);
+            const payload = {
+                email: document.getElementById('authEmail').value,
+                password: document.getElementById('authPassword').value
+            };
+            if(isSignUp) payload.name = document.getElementById('authName').value;
+
+            try {
+                const endpoint = isSignUp ? '/api/auth/signup' : '/api/auth/signin';
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (isSignUp) {
+                        showBanner(authStatus, "Account created! Switching to Sign In...", true);
+                        setTimeout(toggleAuth, 1500);
                     } else {
+                        localStorage.setItem('token', data.token);
                         location.reload();
                     }
+                } else {
+                    showBanner(authStatus, data.error || "Operation failed", false);
                 }
+            } catch (err) {
+                showBanner(authStatus, "Server unreachable", false);
+            } finally {
                 btn.disabled = false;
-            }, 800);
+                btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
+            }
         });
 
         // --- CONTACT Form Logic ---
-        document.getElementById('submissionForm').addEventListener('submit', (e) => {
+        document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
+            const formData = {
+                name: document.getElementById('formName').value,
+                email: document.getElementById('formEmail').value,
+                service: document.getElementById('formService').value,
+                message: document.getElementById('formMessage').value
+            };
             
             btn.disabled = true; btn.textContent = 'Sending...';
             
-            setTimeout(() => {
-                showBanner(statusBanner, "Message sent successfully!", true);
-                e.target.reset();
+            try {
+                const response = await fetch('/api/quote', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    showBanner(statusBanner, "Message sent to Neon Database!", true);
+                    e.target.reset();
+                } else {
+                    showBanner(statusBanner, "Failed to send message.", false);
+                }
+            } catch (err) {
+                showBanner(statusBanner, "Network error.", false);
+            } finally {
                 btn.disabled = false; btn.textContent = 'Send Message';
-            }, 800);
+            }
         });
     </script>
 </body>
