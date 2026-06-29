@@ -1,4 +1,4 @@
-                                    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -36,20 +36,20 @@
         <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">What We Can Do For You</h2></div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">📝</div>
-                <h3 class="font-bold text-white">KRA Tax Returns</h3>
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🌐</div>
+                <h3 class="font-bold text-white">Web & Software Dev</h3>
             </div>
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🏛️</div>
-                <h3 class="font-bold text-white">eCitizen Applications</h3>
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🎨</div>
+                <h3 class="font-bold text-white">Graphic Design</h3>
+            </div>
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">📡</div>
+                <h3 class="font-bold text-white">Networking</h3>
             </div>
             <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
                 <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">💻</div>
-                <h3 class="font-bold text-white">Computer & ICT Help</h3>
-            </div>
-            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🖨️</div>
-                <h3 class="font-bold text-white">Document Processing</h3>
+                <h3 class="font-bold text-white">Computer Solutions</h3>
             </div>
         </div>
     </section>
@@ -63,10 +63,12 @@
                 <input type="email" id="formEmail" required placeholder="Your Email" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <select id="formService" required class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none cursor-pointer">
                     <option value="" disabled selected>Select a Service</option>
+                    <option value="Web & Software Development">Web & Software Development</option>
+                    <option value="Graphic Design">Graphic Design</option>
+                    <option value="Networking">Networking</option>
                     <option value="KRA Tax Returns">KRA Tax Returns</option>
                     <option value="eCitizen Applications">eCitizen Applications</option>
-                    <option value="Computer & ICT Help">Computer & ICT Help</option>
-                    <option value="Document Processing">Document Processing</option>
+                    <option value="Computer Solutions">Computer Solutions</option>
                 </select>
                 <textarea id="formMessage" rows="4" required placeholder="Requirements details..." class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none resize-none"></textarea>
                 <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition text-xs uppercase tracking-wider">Send Message</button>
@@ -100,7 +102,6 @@
             banner.classList.add('block', isSuccess ? 'bg-emerald-950' : 'bg-red-950', isSuccess ? 'text-emerald-400' : 'text-red-400', isSuccess ? 'border-emerald-900' : 'border-red-900');
         }
 
-        // --- AUTH Logic (Connects to server.js) ---
         function checkLogin() {
             const token = localStorage.getItem('token');
             if (token) {
@@ -123,21 +124,15 @@
             const btn = document.getElementById('authBtn');
             const toggle = document.getElementById('toggleBtn');
             const nameField = document.getElementById('authName');
-            
             authStatus.classList.add('hidden');
-            
             if (title.textContent === 'Sign Up') {
-                title.textContent = 'Sign In'; 
-                btn.textContent = 'Sign In';
+                title.textContent = 'Sign In'; btn.textContent = 'Sign In';
                 toggle.textContent = 'Don\'t have an account? Sign Up';
-                nameField.classList.add('hidden');
-                nameField.required = false;
+                nameField.classList.add('hidden'); nameField.required = false;
             } else {
-                title.textContent = 'Sign Up'; 
-                btn.textContent = 'Create Account';
+                title.textContent = 'Sign Up'; btn.textContent = 'Create Account';
                 toggle.textContent = 'Already have an account? Sign In';
-                nameField.classList.remove('hidden');
-                nameField.required = true;
+                nameField.classList.remove('hidden'); nameField.required = true;
             }
         }
 
@@ -145,46 +140,21 @@
             e.preventDefault();
             const btn = document.getElementById('authBtn');
             const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
-            
-            btn.disabled = true; 
-            btn.textContent = 'Processing...';
-
-            const payload = {
-                email: document.getElementById('authEmail').value,
-                password: document.getElementById('authPassword').value
-            };
+            btn.disabled = true; btn.textContent = 'Processing...';
+            const payload = { email: document.getElementById('authEmail').value, password: document.getElementById('authPassword').value };
             if(isSignUp) payload.name = document.getElementById('authName').value;
-
             try {
                 const endpoint = isSignUp ? '/api/auth/signup' : '/api/auth/signin';
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
+                const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await response.json();
-
                 if (response.ok) {
-                    if (isSignUp) {
-                        showBanner(authStatus, "Account created! Switching to Sign In...", true);
-                        setTimeout(toggleAuth, 1500);
-                    } else {
-                        localStorage.setItem('token', data.token);
-                        location.reload();
-                    }
-                } else {
-                    showBanner(authStatus, data.error || "Operation failed", false);
-                }
-            } catch (err) {
-                showBanner(authStatus, "Server unreachable", false);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
-            }
+                    if (isSignUp) { showBanner(authStatus, "Account created! Switching to Sign In...", true); setTimeout(toggleAuth, 1500); }
+                    else { localStorage.setItem('token', data.token); location.reload(); }
+                } else { showBanner(authStatus, data.error || "Operation failed", false); }
+            } catch (err) { showBanner(authStatus, "Server unreachable", false); }
+            finally { btn.disabled = false; btn.textContent = isSignUp ? 'Create Account' : 'Sign In'; }
         });
 
-        // --- CONTACT Form Logic ---
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -194,27 +164,13 @@
                 service: document.getElementById('formService').value,
                 message: document.getElementById('formMessage').value
             };
-            
             btn.disabled = true; btn.textContent = 'Sending...';
-            
             try {
-                const response = await fetch('/api/quote', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    showBanner(statusBanner, "Message sent to Neon Database!", true);
-                    e.target.reset();
-                } else {
-                    showBanner(statusBanner, "Failed to send message.", false);
-                }
-            } catch (err) {
-                showBanner(statusBanner, "Network error.", false);
-            } finally {
-                btn.disabled = false; btn.textContent = 'Send Message';
-            }
+                const response = await fetch('/api/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+                if (response.ok) { showBanner(statusBanner, "Message sent to Neon Database!", true); e.target.reset(); }
+                else { showBanner(statusBanner, "Failed to send message.", false); }
+            } catch (err) { showBanner(statusBanner, "Network error.", false); }
+            finally { btn.disabled = false; btn.textContent = 'Send Message'; }
         });
     </script>
 </body>
