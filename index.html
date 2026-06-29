@@ -101,38 +101,89 @@
         </div>
     </div>
 
-    <script>
-        // Gatekeeper Logic
-        function checkAccess(event, url) {
-            if (!localStorage.getItem('token')) { event.preventDefault(); document.getElementById('authModal').classList.remove('hidden'); return false; }
-            if (url) window.open(url, '_blank');
+   <script>
+    // 1. Define the state at the top
+    let isSignUp = true; 
+
+    // Gatekeeper Logic
+    function checkAccess(event, url) {
+        if (!localStorage.getItem('token')) { 
+            event.preventDefault(); 
+            document.getElementById('authModal').classList.remove('hidden'); 
+            return false; 
         }
+        if (url) window.open(url, '_blank');
+    }
 
-        function logout() { localStorage.removeItem('token'); location.reload(); }
+    function logout() { 
+        localStorage.removeItem('token'); 
+        location.reload(); 
+    }
 
-        // Form Submissions
-        document.getElementById('submissionForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const res = await fetch('/api/quote', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
-            if (res.ok) { alert('Message sent!'); e.target.reset(); }
+    // 2. Toggle Logic using our variable
+    function toggleAuth() {
+        isSignUp = !isSignUp; // Toggle the state variable
+        const title = document.getElementById('authTitle');
+        const btn = document.getElementById('authBtn');
+        const toggle = document.getElementById('toggleBtn');
+
+        if (isSignUp) {
+            title.textContent = 'Sign Up';
+            btn.textContent = 'Create Account';
+            toggle.textContent = 'Already have an account? Sign In';
+        } else {
+            title.textContent = 'Sign In';
+            btn.textContent = 'Sign In';
+            toggle.textContent = 'Don\'t have an account? Sign Up';
+        }
+    }
+
+    // 3. Robust Submission Handler
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Use the variable to determine the endpoint
+        const endpoint = isSignUp ? '/api/auth/signup' : '/api/auth/signin';
+        
+        const res = await fetch(endpoint, {
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ 
+                email: document.getElementById('authEmail').value, 
+                password: document.getElementById('authPassword').value 
+            })
         });
 
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
-            const res = await fetch(isSignUp ? '/api/auth/signup' : '/api/auth/signin', {
-                method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ email: document.getElementById('authEmail').value, password: document.getElementById('authPassword').value })
-            });
-            const data = await res.json();
-            if (res.ok) { 
-                if (!isSignUp) { localStorage.setItem('token', data.token); location.reload(); } 
-                else { alert('Created!'); toggleAuth(); } 
-            } else { alert(data.error); }
-        });
+        const data = await res.json();
+        if (res.ok) { 
+            if (!isSignUp) { 
+                localStorage.setItem('token', data.token); 
+                document.getElementById('authModal').classList.add('hidden'); // Close modal on success
+                location.reload(); 
+            } else { 
+                alert('Account created! Please Sign In.'); 
+                toggleAuth(); // Switch to sign-in view
+            } 
+        } else { 
+            alert(data.error || 'Authentication failed'); 
+        }
+    });
 
-        function toggleAuth() { /* (Same toggle logic as your code) */ }
-        window.addEventListener('load', () => { if (!localStorage.getItem('token')) document.getElementById('authModal').classList.remove('hidden'); });
-    </script>
+    // Handle Contact Form
+    document.getElementById('submissionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const res = await fetch('/api/quote', { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify(Object.fromEntries(new FormData(e.target))) 
+        });
+        if (res.ok) { alert('Message sent!'); e.target.reset(); }
+        else { alert('Error sending message'); }
+    });
+
+    window.addEventListener('load', () => { 
+        if (!localStorage.getItem('token')) document.getElementById('authModal').classList.remove('hidden'); 
+    });
+</script>
 </body>
 </html>index.html
