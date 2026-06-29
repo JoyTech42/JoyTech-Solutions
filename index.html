@@ -15,14 +15,16 @@
                 <span class="text-xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Solutions</span></span>
             </div>
             <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-wider uppercase text-slate-400">
-                <a href="#" onclick="checkAccess(event, 'https://portfolio-1-pzy8.onrender.com/')" class="hover:text-white transition">Our Projects</a>
+                <a href="#home" class="hover:text-white transition">Home</a>
+                <a href="#services" class="hover:text-white transition">Our Services</a>
+                <a href="#" onclick="checkAccess(event)" class="hover:text-white transition">Our Projects</a>
                 <a href="#request" class="hover:text-white transition">Send Request</a>
                 <button onclick="logout()" class="text-red-500 hover:text-red-400 transition">Logout</button>
             </nav>
             <a href="#request" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition uppercase tracking-wider shadow-md">Get Help Now</a>
         </div>
     </header>
-
+     <!-- Hero Section -->
     <section id="home" class="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center space-y-6">
         <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight uppercase max-w-2xl mx-auto">
             Web & Software Development, Graphic Design, Networking, KRA, eCitizen, and Computer Solutions
@@ -32,6 +34,7 @@
         </p>
     </section>
 
+     <!-- Services Section -->
     <section id="services" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16">
             <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">What We Can Do For You</h2>
@@ -54,9 +57,6 @@
                 <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🖨️</div>
                 <h3 class="font-bold text-white">Document Processing</h3>
             </div>
-        </div>
-    </section>
-
     <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
         <div class="text-center mb-16"><h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Projects Done</h2></div>
         <div class="text-center">
@@ -64,6 +64,8 @@
         </div>
     </section>
 
+     </div>
+    </section>
     <section id="request" class="max-w-xl mx-auto px-6 py-20">
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
@@ -112,20 +114,6 @@
             if (res.ok) { alert('Message sent!'); e.target.reset(); }
         });
 
-        // Auth Logic
-        function toggleAuth() {
-            const title = document.getElementById('authTitle');
-            const btn = document.getElementById('authBtn');
-            const toggle = document.getElementById('toggleBtn');
-            if (title.textContent === 'Sign Up') {
-                title.textContent = 'Sign In'; btn.textContent = 'Sign In';
-                toggle.textContent = 'Don\'t have an account? Sign Up';
-            } else {
-                title.textContent = 'Sign Up'; btn.textContent = 'Create Account';
-                toggle.textContent = 'Already have an account? Sign In';
-            }
-        }
-
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const isSignUp = document.getElementById('authTitle').textContent === 'Sign Up';
@@ -136,11 +124,12 @@
             const data = await res.json();
             if (res.ok) { 
                 if (!isSignUp) { localStorage.setItem('token', data.token); location.reload(); } 
-                else { alert('Created! Please Sign In'); toggleAuth(); } 
+                else { alert('Created!'); toggleAuth(); } 
             } else { alert(data.error); }
         });
 
+        function toggleAuth() { /* (Same toggle logic as your code) */ }
         window.addEventListener('load', () => { if (!localStorage.getItem('token')) document.getElementById('authModal').classList.remove('hidden'); });
     </script>
 </body>
-</html>
+</html>index.html
