@@ -73,6 +73,9 @@
     <section id="request" class="max-w-xl mx-auto px-6 py-20">
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
+            
+            <div id="contactStatus" class="text-center text-xs font-semibold h-4"></div>
+
             <form id="submissionForm" class="space-y-5">
                 <input type="text" name="name" required placeholder="Your Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="email" name="email" required placeholder="Your Email" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
@@ -93,6 +96,9 @@
     <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-sm">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm">
             <h3 id="authTitle" class="text-xl font-bold text-white mb-6">Sign Up</h3>
+            
+            <div id="authStatus" class="text-center text-xs font-semibold h-4 mb-4"></div>
+
             <form id="authForm" class="space-y-4">
                 <input type="text" id="authName" placeholder="Full Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="email" id="authEmail" required placeholder="Email Address" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
@@ -105,6 +111,14 @@
 
     <script>
         let isSignUp = true;
+
+        // New helper to display messages instead of alerts
+        function showMessage(text, isError, elementId) {
+            const el = document.getElementById(elementId);
+            el.textContent = text;
+            el.style.color = isError ? '#ef4444' : '#3b82f6'; // red-500 or blue-500
+            setTimeout(() => { el.textContent = ''; }, 5000); // Clear after 5s
+        }
 
         function checkAccess(event, url) {
             if (!localStorage.getItem('token')) { 
@@ -131,12 +145,12 @@
                 title.textContent = 'Sign Up';
                 btn.textContent = 'Create Account';
                 toggle.textContent = 'Already have an account? Sign In';
-                nameInput.style.display = 'block'; // Show name on Sign Up
+                nameInput.style.display = 'block';
             } else {
                 title.textContent = 'Sign In';
                 btn.textContent = 'Sign In';
                 toggle.textContent = 'Don\'t have an account? Sign Up';
-                nameInput.style.display = 'none'; // Hide name on Sign In
+                nameInput.style.display = 'none';
             }
         }
 
@@ -144,13 +158,11 @@
             e.preventDefault();
             const endpoint = isSignUp ? '/api/auth/signup' : '/api/auth/signin';
             
-            // Build the payload dynamically
             const payload = {
                 email: document.getElementById('authEmail').value,
                 password: document.getElementById('authPassword').value
             };
             
-            // Include name only if signing up
             if (isSignUp) payload.name = document.getElementById('authName').value;
 
             const res = await fetch(endpoint, {
@@ -166,11 +178,11 @@
                     document.getElementById('authModal').classList.add('hidden');
                     location.reload(); 
                 } else { 
-                    alert('Account created! Please Sign In.'); 
+                    showMessage('Account created! Please Sign In.', false, 'authStatus');
                     toggleAuth();
                 } 
             } else { 
-                alert(data.error || 'Authentication failed'); 
+                showMessage(data.error || 'Authentication failed', true, 'authStatus');
             }
         });
 
@@ -181,8 +193,13 @@
                 headers: {'Content-Type': 'application/json'}, 
                 body: JSON.stringify(Object.fromEntries(new FormData(e.target))) 
             });
-            if (res.ok) { alert('Message sent!'); e.target.reset(); }
-            else { alert('Error sending message'); }
+            
+            if (res.ok) { 
+                showMessage('Message sent successfully!', false, 'contactStatus');
+                e.target.reset(); 
+            } else { 
+                showMessage('Error sending message', true, 'contactStatus');
+            }
         });
 
         window.addEventListener('load', () => { 
