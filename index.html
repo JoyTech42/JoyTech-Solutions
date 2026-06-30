@@ -107,17 +107,17 @@
         let isSignUp = true;
 
         function checkAccess(event, url) {
-            if (!localStorage.getItem('token')) {
-                event.preventDefault();
-                document.getElementById('authModal').classList.remove('hidden');
-                return false;
+            if (!localStorage.getItem('token')) { 
+                event.preventDefault(); 
+                document.getElementById('authModal').classList.remove('hidden'); 
+                return false; 
             }
             if (url) window.open(url, '_blank');
         }
 
-        function logout() {
-            localStorage.removeItem('token');
-            location.reload();
+        function logout() { 
+            localStorage.removeItem('token'); 
+            location.reload(); 
         }
 
         function toggleAuth() {
@@ -131,12 +131,12 @@
                 title.textContent = 'Sign Up';
                 btn.textContent = 'Create Account';
                 toggle.textContent = 'Already have an account? Sign In';
-                nameInput.classList.remove('hidden'); // Show for Signup
+                nameInput.style.display = 'block'; // Show name on Sign Up
             } else {
                 title.textContent = 'Sign In';
                 btn.textContent = 'Sign In';
                 toggle.textContent = 'Don\'t have an account? Sign Up';
-                nameInput.classList.add('hidden'); // Hide for Signin
+                nameInput.style.display = 'none'; // Hide name on Sign In
             }
         }
 
@@ -144,21 +144,19 @@
             e.preventDefault();
             const endpoint = isSignUp ? '/api/auth/signup' : '/api/auth/signin';
             
-            // Build the body object dynamically
-            const bodyData = {
+            // Build the payload dynamically
+            const payload = {
                 email: document.getElementById('authEmail').value,
                 password: document.getElementById('authPassword').value
             };
             
-            // Only add name if we are signing up
-            if (isSignUp) {
-                bodyData.name = document.getElementById('authName').value;
-            }
+            // Include name only if signing up
+            if (isSignUp) payload.name = document.getElementById('authName').value;
 
             const res = await fetch(endpoint, {
                 method: 'POST', 
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(bodyData)
+                body: JSON.stringify(payload)
             });
 
             const data = await res.json();
