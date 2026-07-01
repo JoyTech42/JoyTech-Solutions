@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
+import './Navbar.css'; // Don't forget to import the CSS!
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,10 +12,15 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="logo">JoyTech Solutions</div>
       
-      {/* Hamburger Button */}
-      <div className="hamburger" onClick={toggleMenu}>
+      {/* Accessible Hamburger Button */}
+      <button 
+        className="hamburger" 
+        onClick={toggleMenu} 
+        aria-label="Toggle navigation menu"
+        aria-expanded={isOpen}
+      >
         ☰
-      </div>
+      </button>
 
       {/* Menu Links */}
       <ul className={`nav-links ${isOpen ? 'active' : ''}`}>
