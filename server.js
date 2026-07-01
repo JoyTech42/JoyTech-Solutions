@@ -81,12 +81,14 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         );
 
         const resetLink = `https://your-domain.com/reset-password?token=${token}`;
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Password Reset Request',
-            text: `Click here to reset your password: ${resetLink}`
-        });
+       // Change this part in your forgot-password route
+await transporter.sendMail({
+    // Use the format: "Display Name" <email@address.com>
+    from: '"JoyTech Solutions Support" <your-actual-email@gmail.com>', 
+    to: email,
+    subject: 'Password Reset Request',
+    text: `You requested a password reset. Click here to reset: ${resetLink}`
+});
 
         res.json({ message: "If an account exists, a reset link has been sent." });
     } catch (err) {
