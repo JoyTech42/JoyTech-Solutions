@@ -155,16 +155,35 @@
     <script>
         let isSignUp = true;
 
-        // Toggle Password
         function togglePasswordVisibility() {
             const pw = document.getElementById('authPassword');
             pw.type = pw.type === 'password' ? 'text' : 'password';
         }
 
-        // Handle Forgot Password click
-        function handleForgotPassword(event) {
+        // --- NEW FORGOT PASSWORD LOGIC ---
+        async function handleForgotPassword(event) {
             event.preventDefault();
-            alert("Forgot Password functionality will be implemented soon.");
+            const email = prompt("Please enter your email address to receive a reset link:");
+            
+            if (!email) return; 
+
+            try {
+                const res = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await res.json();
+                
+                if (res.ok) {
+                    alert("Success! Please check your email for the reset instructions.");
+                } else {
+                    alert(data.error || "Could not process request. Please try again.");
+                }
+            } catch (err) {
+                alert("Server error. Please ensure your backend is connected.");
+            }
         }
 
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
