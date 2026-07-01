@@ -52,6 +52,52 @@
         </p>
     </section>
 
+    <section id="services" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
+        <div class="text-center mb-16">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">What We Can Do For You</h2>
+            <p class="text-slate-500 text-sm font-medium">Simple, fast, and friendly professional services.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4 transition hover:border-blue-500 hover:bg-slate-900">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">📝</div>
+                <h3 class="font-bold text-white">KRA Tax Returns</h3>
+            </div>
+            <div class="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4 transition hover:border-blue-500 hover:bg-slate-900">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🏛️</div>
+                <h3 class="font-bold text-white">eCitizen Applications</h3>
+            </div>
+            <div class="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4 transition hover:border-blue-500 hover:bg-slate-900">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">💻</div>
+                <h3 class="font-bold text-white">Computer & ICT Help</h3>
+            </div>
+            <div class="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4 transition hover:border-blue-500 hover:bg-slate-900">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">⚙️</div>
+                <h3 class="font-bold text-white">Software Development</h3>
+            </div>
+            <div class="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4 transition hover:border-blue-500 hover:bg-slate-900">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🌐</div>
+                <h3 class="font-bold text-white">Website Development</h3>
+            </div>
+            <div class="group bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4 transition hover:border-blue-500 hover:bg-slate-900">
+                <div class="w-12 h-12 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-center text-xl">🎨</div>
+                <h3 class="font-bold text-white">Graphic Design</h3>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="max-w-7xl mx-auto px-6 py-20 border-t border-slate-900">
+        <div class="text-center mb-16">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">Projects Done</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 hover:border-blue-500 transition">
+                <h3 class="font-bold text-white mb-4">Client Portfolio</h3>
+                <p class="text-slate-400 text-sm mb-6">View some of our recent web development work.</p>
+                <a href="#" onclick="checkAccess(event, 'https://portfolio-1-pzy8.onrender.com/')" class="text-blue-500 font-bold text-xs uppercase">View Project ➔</a>
+            </div>
+        </div>
+    </section>
+
     <section id="request" class="max-w-xl mx-auto px-6 py-20">
         <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
             <h2 class="text-2xl font-bold text-white text-center">Send Us a Message</h2>
@@ -104,6 +150,7 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm">
             <h3 class="text-xl font-bold text-white mb-4">Reset Password</h3>
             <p class="text-slate-400 text-xs mb-4">Enter your email to receive a reset link.</p>
+            <div id="forgotStatus" class="text-center text-xs font-semibold h-4 mb-4"></div>
             <input type="email" id="forgotEmailInput" placeholder="Email Address" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none mb-4">
             <div class="flex space-x-3">
                 <button onclick="submitForgotEmail()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase">Send</button>
@@ -113,22 +160,28 @@
     </div>
 
     <script>
-        // --- AUTH LOGIC ---
         let isSignUp = true;
         function togglePasswordVisibility() { const pw = document.getElementById('authPassword'); pw.type = pw.type === 'password' ? 'text' : 'password'; }
         
-        // --- NEW MODAL LOGIC ---
+        // --- FORGOT PASSWORD MODAL LOGIC (Replaces browser prompt) ---
         function handleForgotPassword(event) {
             event.preventDefault();
             document.getElementById('forgotPasswordModal').classList.remove('hidden');
         }
         function closeForgotModal() {
             document.getElementById('forgotPasswordModal').classList.add('hidden');
+            document.getElementById('forgotStatus').textContent = '';
         }
 
         async function submitForgotEmail() {
             const email = document.getElementById('forgotEmailInput').value;
-            if (!email) return alert("Please enter an email address.");
+            const statusDiv = document.getElementById('forgotStatus');
+            
+            if (!email) {
+                statusDiv.textContent = "Please enter an email address.";
+                statusDiv.style.color = "#ef4444";
+                return;
+            }
 
             try {
                 const res = await fetch('/api/auth/forgot-password', {
@@ -137,10 +190,12 @@
                     body: JSON.stringify({ email })
                 });
                 const data = await res.json();
-                alert(data.message || data.error);
-                closeForgotModal();
+                statusDiv.textContent = data.message || data.error;
+                statusDiv.style.color = res.ok ? "#3b82f6" : "#ef4444";
+                if(res.ok) setTimeout(closeForgotModal, 3000);
             } catch (err) {
-                alert("Server error. Please ensure backend is connected.");
+                statusDiv.textContent = "Server error. Please try again.";
+                statusDiv.style.color = "#ef4444";
             }
         }
 
