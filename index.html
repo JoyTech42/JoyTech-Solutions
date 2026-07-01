@@ -140,11 +140,11 @@
     <div id="forgotPasswordModal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-sm">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm relative">
             <h3 class="text-xl font-bold text-white mb-4">Reset Password</h3>
-            <div id="forgotStatus" class="text-center text-xs font-semibold h-4 mb-4"></div>
+            <div id="forgotStatus" class="text-center text-xs font-semibold min-h-4 mb-4 transition-all"></div>
             <input type="email" id="forgotEmailInput" placeholder="Enter your email" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none mb-4">
             <div class="flex space-x-3">
-                <button onclick="submitForgotEmail()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-xs uppercase">Send</button>
-                <button onclick="closeForgotModal()" class="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl text-xs uppercase">Cancel</button>
+                <button onclick="submitForgotEmail()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-xs uppercase hover:bg-blue-700 transition">Send</button>
+                <button onclick="closeForgotModal()" class="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl text-xs uppercase hover:bg-slate-700 transition">Cancel</button>
             </div>
         </div>
     </div>
@@ -152,24 +152,63 @@
     <script>
         let isSignUp = true;
         
-        function openForgotModal() { document.getElementById('forgotPasswordModal').classList.remove('hidden'); }
-        function closeForgotModal() { document.getElementById('forgotPasswordModal').classList.add('hidden'); }
+        function openForgotModal() { 
+            document.getElementById('forgotPasswordModal').classList.remove('hidden'); 
+            const statusDiv = document.getElementById('forgotStatus');
+            statusDiv.textContent = "Enter your email to receive a reset link.";
+            statusDiv.style.color = "#94a3b8";
+        }
+        
+        function closeForgotModal() { 
+            document.getElementById('forgotPasswordModal').classList.add('hidden'); 
+            document.getElementById('forgotEmailInput').value = '';
+        }
 
         async function submitForgotEmail() {
             const email = document.getElementById('forgotEmailInput').value;
             const statusDiv = document.getElementById('forgotStatus');
-            if (!email) return;
+            
+            if (!email) {
+                statusDiv.textContent = "Please enter an email address.";
+                statusDiv.style.color = "#ef4444";
+                return;
+            }
+            
             statusDiv.textContent = "Processing...";
+            statusDiv.style.color = "#94a3b8";
+            
             try {
                 const res = await fetch('/api/auth/forgot-password', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ email })
                 });
-                const data = await res.json();
-                statusDiv.textContent = data.message || data.error;
-                statusDiv.style.color = res.ok ? "#3b82f6" : "#ef4444";
-            } catch (err) { statusDiv.textContent = "Error connecting to server."; }
+                
+                const contentType = res.headers.get("content-type");
+                let messageText = "";
+                
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await res.json();
+                    messageText = data.message || data.error || "";
+                } else {
+                    messageText = await res.text();
+                }
+                
+                if (res.ok) {
+                    statusDiv.textContent = messageText || "Reset link sent successfully!";
+                    statusDiv.style.color = "#3b82f6"; // Safe Blue Success text
+                    setTimeout(() => {
+                        closeForgotModal();
+                    }, 4000);
+                } else {
+                    statusDiv.textContent = messageText || "Error processing request.";
+                    statusDiv.style.color = "#ef4444"; // Explicit Red Error text
+                }
+            } catch (err) {
+                console.error("Error:", err);
+                statusDiv.textContent = "Network error. Server could not be reached.";
+                statusDiv.style.color = "#ef4444"; // Explicit Red Error text
+            }
         }
 
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
