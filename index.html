@@ -143,7 +143,7 @@
                 </div>
 
                 <div class="text-right">
-                    <a href="#" class="text-xs text-slate-500 hover:text-blue-500 transition">Forgot Password?</a>
+                    <a href="#" onclick="handleForgotPassword(event)" class="text-xs text-slate-500 hover:text-blue-500 transition cursor-pointer">Forgot Password?</a>
                 </div>
 
                 <button type="submit" id="authBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider">Create Account</button>
@@ -159,6 +159,12 @@
         function togglePasswordVisibility() {
             const pw = document.getElementById('authPassword');
             pw.type = pw.type === 'password' ? 'text' : 'password';
+        }
+
+        // Handle Forgot Password click
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            alert("Forgot Password functionality will be implemented soon.");
         }
 
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
