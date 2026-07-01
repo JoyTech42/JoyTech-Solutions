@@ -12,7 +12,7 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans min-h-screen selection:bg-blue-600/30 selection:text-blue-400">
 
-    <header class="sticky top-0 z-50 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
+    <header class="sticky top-0 z-40 border-b border-slate-900 bg-slate-950/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/20">J</div>
@@ -120,69 +120,46 @@
         </div>
     </section>
 
-    <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-sm">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm relative">
-            <div class="flex items-center space-x-3 mb-6">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/20">J</div>
-                <span class="text-xl font-bold text-white tracking-tight">JoyTech <span class="text-blue-500 font-medium">Solutions</span></span>
-            </div>
+    <div id="authModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm relative shadow-2xl">
             <h3 id="authTitle" class="text-xl font-bold text-white mb-6">Sign Up</h3>
             <div id="authStatus" class="text-center text-xs font-semibold h-4 mb-4"></div>
             <form id="authForm" class="space-y-4">
                 <input type="text" id="authName" placeholder="Full Name" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <input type="email" id="authEmail" required placeholder="Email Address" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
-                <div class="relative">
-                    <input type="password" id="authPassword" required placeholder="Password" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none pr-10">
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-3 text-slate-500 hover:text-white">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                    </button>
-                </div>
+                <input type="password" id="authPassword" required placeholder="Password" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none">
                 <div class="text-right">
-                    <a href="#" onclick="handleForgotPassword(event)" class="text-xs text-slate-500 hover:text-blue-500 transition cursor-pointer">Forgot Password?</a>
+                    <a href="javascript:void(0)" onclick="openForgotModal()" class="text-xs text-blue-500 hover:underline">Forgot Password?</a>
                 </div>
-                <button type="submit" id="authBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider">Create Account</button>
+                <button type="submit" id="authBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase">Create Account</button>
             </form>
-            <p class="mt-4 text-center"><button onclick="toggleAuth()" id="toggleBtn" class="text-xs text-slate-500 hover:text-blue-500 transition">Already have an account? Sign In</button></p>
+            <p class="mt-4 text-center"><button onclick="toggleAuth()" id="toggleBtn" class="text-xs text-slate-500 hover:text-blue-500">Already have an account? Sign In</button></p>
         </div>
     </div>
 
-    <div id="forgotPasswordModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-sm">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm">
+    <div id="forgotPasswordModal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 w-full max-w-sm relative">
             <h3 class="text-xl font-bold text-white mb-4">Reset Password</h3>
-            <p class="text-slate-400 text-xs mb-4">Enter your email to receive a reset link.</p>
             <div id="forgotStatus" class="text-center text-xs font-semibold h-4 mb-4"></div>
-            <input type="email" id="forgotEmailInput" placeholder="Email Address" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none mb-4">
+            <input type="email" id="forgotEmailInput" placeholder="Enter your email" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs outline-none mb-4">
             <div class="flex space-x-3">
-                <button onclick="submitForgotEmail()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase">Send</button>
-                <button onclick="closeForgotModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl transition text-xs uppercase">Cancel</button>
+                <button onclick="submitForgotEmail()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl text-xs uppercase">Send</button>
+                <button onclick="closeForgotModal()" class="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl text-xs uppercase">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
         let isSignUp = true;
-        function togglePasswordVisibility() { const pw = document.getElementById('authPassword'); pw.type = pw.type === 'password' ? 'text' : 'password'; }
         
-        // --- FORGOT PASSWORD MODAL LOGIC (Replaces browser prompt) ---
-        function handleForgotPassword(event) {
-            event.preventDefault();
-            document.getElementById('forgotPasswordModal').classList.remove('hidden');
-        }
-        function closeForgotModal() {
-            document.getElementById('forgotPasswordModal').classList.add('hidden');
-            document.getElementById('forgotStatus').textContent = '';
-        }
+        function openForgotModal() { document.getElementById('forgotPasswordModal').classList.remove('hidden'); }
+        function closeForgotModal() { document.getElementById('forgotPasswordModal').classList.add('hidden'); }
 
         async function submitForgotEmail() {
             const email = document.getElementById('forgotEmailInput').value;
             const statusDiv = document.getElementById('forgotStatus');
-            
-            if (!email) {
-                statusDiv.textContent = "Please enter an email address.";
-                statusDiv.style.color = "#ef4444";
-                return;
-            }
-
+            if (!email) return;
+            statusDiv.textContent = "Processing...";
             try {
                 const res = await fetch('/api/auth/forgot-password', {
                     method: 'POST',
@@ -192,19 +169,22 @@
                 const data = await res.json();
                 statusDiv.textContent = data.message || data.error;
                 statusDiv.style.color = res.ok ? "#3b82f6" : "#ef4444";
-                if(res.ok) setTimeout(closeForgotModal, 3000);
-            } catch (err) {
-                statusDiv.textContent = "Server error. Please try again.";
-                statusDiv.style.color = "#ef4444";
-            }
+            } catch (err) { statusDiv.textContent = "Error connecting to server."; }
         }
 
-        // --- EXISTING LOGIC ---
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-        function showMessage(text, isError, elementId) { const el = document.getElementById(elementId); el.textContent = text; el.style.color = isError ? '#ef4444' : '#3b82f6'; setTimeout(() => { el.textContent = ''; }, 5000); }
+        function showMessage(text, isError, elementId) { const el = document.getElementById(elementId); el.textContent = text; el.style.color = isError ? '#ef4444' : '#3b82f6'; }
         function checkAccess(event, url) { if (!localStorage.getItem('token')) { event.preventDefault(); document.getElementById('authModal').classList.remove('hidden'); return false; } if (url) window.open(url, '_blank'); }
         function logout() { localStorage.removeItem('token'); location.reload(); }
-        function toggleAuth() { isSignUp = !isSignUp; const title = document.getElementById('authTitle'); const btn = document.getElementById('authBtn'); const toggle = document.getElementById('toggleBtn'); const nameInput = document.getElementById('authName'); if (isSignUp) { title.textContent = 'Sign Up'; btn.textContent = 'Create Account'; toggle.textContent = 'Already have an account? Sign In'; nameInput.style.display = 'block'; } else { title.textContent = 'Sign In'; btn.textContent = 'Sign In'; toggle.textContent = 'Don\'t have an account? Sign Up'; nameInput.style.display = 'none'; } }
+        
+        function toggleAuth() { 
+            isSignUp = !isSignUp; 
+            const title = document.getElementById('authTitle'); 
+            const btn = document.getElementById('authBtn'); 
+            const toggle = document.getElementById('toggleBtn'); 
+            const nameInput = document.getElementById('authName'); 
+            if (isSignUp) { title.textContent = 'Sign Up'; btn.textContent = 'Create Account'; toggle.textContent = 'Already have an account? Sign In'; nameInput.style.display = 'block'; } else { title.textContent = 'Sign In'; btn.textContent = 'Sign In'; toggle.textContent = 'Don\'t have an account? Sign Up'; nameInput.style.display = 'none'; } 
+        }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
