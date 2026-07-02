@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 require('dotenv').config();
 
+// 1. Initialize App
 const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
@@ -67,18 +68,14 @@ app.post('/api/auth/signin', async (req, res) => {
 // Forgot Password
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
-    console.log(`[DEBUG] Received reset request for: ${email}`);
-
     try {
-        // 1. Check if user exists
         const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         
+        // Always return success to prevent email enumeration attacks
         if (user.rows.length === 0) {
-            console.log(`[DEBUG] User ${email} not found.`);
             return res.json({ message: "If an account exists, a reset link has been sent." });
         }
 
-        // 2. Generate token
         const token = crypto.randomBytes(32).toString('hex');
         const expiry = new Date(Date.now() + 3600000); // 1 hour
 
@@ -87,10 +84,9 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             [token, expiry, email]
         );
 
-        // 3. Send email
         const resetLink = `https://joytech-solutions-84ca.onrender.com/reset-password?token=${token}`;
         
-        console.log(`[DEBUG] Attempting to send email to ${email}`);
+        // Attempt to send email
         await transporter.sendMail({
             from: `"JoyTech Solutions Support" <${process.env.EMAIL_USER}>`, 
             to: email,
@@ -98,13 +94,11 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             text: `You requested a password reset. Click here to reset: ${resetLink}`
         });
 
-        console.log(`[DEBUG] Email sent successfully.`);
         res.json({ message: "If an account exists, a reset link has been sent." });
-
     } catch (err) {
-        // CRITICAL: This log captures the "Timeout" error so you can see it in Render
-        console.error("[CRITICAL ERROR] Failed to send email:", err);
-        res.status(500).json({ error: "Failed to process request. Check logs." });
+        // Logging the error is crucial for debugging the timeout
+        console.error("Email Error:", err); 
+        res.status(500).json({ error: "Failed to process request. Please check server logs." });
     }
 });
 
