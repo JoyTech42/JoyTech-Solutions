@@ -39,7 +39,6 @@ app.post('/api/auth/signup', async (req, res) => {
         );
         res.status(201).json({ success: true, message: "User created" });
     } catch (err) {
-        console.error("Signup Error:", err);
         if (err.code === '23505') return res.status(409).json({ error: "Email already registered." });
         res.status(500).json({ error: "Registration failed." });
     }
@@ -59,20 +58,17 @@ app.post('/api/auth/signin', async (req, res) => {
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.json({ token });
     } catch (err) {
-        console.error("Signin Error:", err);
         res.status(500).json({ error: "Authentication failed." });
     }
 });
 
-// Forgot Password - Optimized for error debugging
+// Forgot Password - Robust Error Handling Added
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
-    console.log(`[DEBUG] Password reset requested for: ${email}`);
-    
     try {
         const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         
-        // Always return success to prevent email enumeration
+        // Always return success to prevent email enumeration, even if user doesn't exist
         if (user.rows.length === 0) {
             return res.json({ message: "If an account exists, a reset link has been sent." });
         }
@@ -86,19 +82,17 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         );
 
         const resetLink = `https://joytech-solutions-84ca.onrender.com/reset-password?token=${token}`;
-        
-        console.log(`[DEBUG] Sending email to: ${email}`);
+
         await transporter.sendMail({
-            from: `"JoyTech Solutions Support" <${process.env.EMAIL_USER}>`, 
+            from: '"JoyTech Solutions Support" <' + process.env.EMAIL_USER + '>', 
             to: email,
             subject: 'Password Reset Request',
             text: `You requested a password reset. Click here to reset: ${resetLink}`
         });
 
-        console.log(`[DEBUG] Email sent successfully.`);
         res.json({ message: "If an account exists, a reset link has been sent." });
     } catch (err) {
-        console.error("[CRITICAL ERROR] Failed to send email:", err);
+        console.error("EMAIL ERROR:", err); // This logs the failure reason in Render logs
         res.status(500).json({ error: "Failed to process request. Check server logs." });
     }
 });
@@ -110,11 +104,11 @@ app.post('/api/quote', async (req, res) => {
         [req.body.name, req.body.email, req.body.service, req.body.message]);
         res.status(201).json({ success: true, message: "Message sent successfully" });
     } catch (err) {
-        console.error("Quote Error:", err);
         res.status(500).json({ error: "Failed to send message." });
     }
 });
 
+// Default
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 const PORT = process.env.PORT || 10000;
