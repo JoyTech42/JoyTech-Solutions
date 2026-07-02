@@ -11,11 +11,13 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// 2. Database connection
 const pool = new Pool({ 
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
+// 3. Configure Nodemailer
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -26,6 +28,7 @@ const transporter = nodemailer.createTransport({
 
 // --- ROUTES ---
 
+// Sign Up
 app.post('/api/auth/signup', async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -42,6 +45,7 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 });
 
+// Sign In
 app.post('/api/auth/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -60,32 +64,33 @@ app.post('/api/auth/signin', async (req, res) => {
     }
 });
 
-// FIXED Forgot Password Route
+// Forgot Password
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
-    console.log(`[DEBUG] Reset requested for: ${email}`);
+    console.log(`[DEBUG] Received reset request for: ${email}`);
 
     try {
+        // 1. Check if user exists
         const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         
         if (user.rows.length === 0) {
-            console.log(`[DEBUG] User ${email} not found in DB.`);
+            console.log(`[DEBUG] User ${email} not found.`);
             return res.json({ message: "If an account exists, a reset link has been sent." });
         }
 
+        // 2. Generate token
         const token = crypto.randomBytes(32).toString('hex');
-        const expiry = new Date(Date.now() + 3600000); 
+        const expiry = new Date(Date.now() + 3600000); // 1 hour
 
-        console.log(`[DEBUG] Updating DB with reset token for: ${email}`);
         await pool.query(
             'UPDATE users SET reset_token = $1, reset_expiry = $2 WHERE email = $3',
             [token, expiry, email]
         );
 
-        // USE YOUR ACTUAL RENDER URL HERE
+        // 3. Send email
         const resetLink = `https://joytech-solutions-84ca.onrender.com/reset-password?token=${token}`;
-
-        console.log(`[DEBUG] Attempting to send email via Nodemailer...`);
+        
+        console.log(`[DEBUG] Attempting to send email to ${email}`);
         await transporter.sendMail({
             from: `"JoyTech Solutions Support" <${process.env.EMAIL_USER}>`, 
             to: email,
@@ -93,16 +98,17 @@ app.post('/api/auth/forgot-password', async (req, res) => {
             text: `You requested a password reset. Click here to reset: ${resetLink}`
         });
 
-        console.log(`[DEBUG] Email sent successfully to ${email}`);
+        console.log(`[DEBUG] Email sent successfully.`);
         res.json({ message: "If an account exists, a reset link has been sent." });
 
     } catch (err) {
-        // This will print the actual technical error to Render Logs
-        console.error("[CRITICAL ERROR] Forgot Password Failed:", err);
-        res.status(500).json({ error: "Failed to process request." });
+        // CRITICAL: This log captures the "Timeout" error so you can see it in Render
+        console.error("[CRITICAL ERROR] Failed to send email:", err);
+        res.status(500).json({ error: "Failed to process request. Check logs." });
     }
 });
 
+// Request Quote
 app.post('/api/quote', async (req, res) => {
     try {
         await pool.query('INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
@@ -114,6 +120,7 @@ app.post('/api/quote', async (req, res) => {
     }
 });
 
+// Default
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 const PORT = process.env.PORT || 10000;
