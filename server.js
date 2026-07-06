@@ -115,7 +115,7 @@ app.post('/api/quote', async (req, res) => {
     try {
         await pool.query('INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
         [req.body.name, req.body.email, req.body.service, req.body.message]);
-        res.status(201).json({ success: true, message: "Message sent successfully" });
+        res.status(201).json({ success: true, message: "Message sent successfully! I'll get to you shortly!" });
     } catch (err) {
         console.error("Quote Error:", err);
         res.status(500).json({ error: "Failed to send message." });
