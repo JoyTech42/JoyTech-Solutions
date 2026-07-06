@@ -176,7 +176,6 @@
                 return;
             }
             
-            // UI Feedback
             statusDiv.textContent = "Processing...";
             statusDiv.style.color = "#94a3b8";
             if (sendBtn) {
@@ -185,7 +184,6 @@
                 sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
 
-            // Create a 10-second timeout controller
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
             
@@ -194,10 +192,10 @@
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ email }),
-                    signal: controller.signal // Bind the timeout
+                    signal: controller.signal
                 });
                 
-                clearTimeout(timeoutId); // Request finished, cancel timeout
+                clearTimeout(timeoutId);
                 
                 const contentType = res.headers.get("content-type");
                 let messageText = "";
@@ -227,7 +225,6 @@
                 }
                 statusDiv.style.color = "#ef4444";
             } finally {
-                // Always reset the button no matter what happens
                 if (sendBtn) {
                     sendBtn.disabled = false;
                     sendBtn.textContent = "Send";
@@ -260,18 +257,30 @@
             if (res.ok) { if (!isSignUp) { localStorage.setItem('token', data.token); document.getElementById('authModal').classList.add('hidden'); location.reload(); } else { showMessage('Account created! Please Sign In.', false, 'authStatus'); toggleAuth(); } } else { showMessage(data.error || 'Authentication failed', true, 'authStatus'); }
         });
 
+        // --- FIXED AND UPDATED SUBMISSION FORM LISTENER ---
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-          const res = await fetch('/api/quote', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
-
-            if (res.ok) { showMessage('Message sent successfully!', false, 'contactStatus'); e.target.reset(); } else { showMessage('Error sending message', true, 'contactStatus'); }
-
+            try {
+                const res = await fetch('/api/quote', { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify(Object.fromEntries(new FormData(e.target))) 
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) { 
+                    // Dynamically displays your custom backend server message beautifully!
+                    showMessage(data.message || 'Message sent successfully!', false, 'contactStatus'); 
+                    e.target.reset(); 
+                } else { 
+                    showMessage(data.error || 'Error sending message', true, 'contactStatus'); 
+                }
+            } catch (err) {
+                console.error("Submission Error:", err);
+                showMessage('Network error. Server unreachable.', true, 'contactStatus');
+            }
         });
-    } catch (err) {
-        console.error("Quote Error:", err);
-        res.status(500).json({ error: "Failed to send message." });
-    }
-});
 
         window.addEventListener('load', () => { if (!localStorage.getItem('token')) document.getElementById('authModal').classList.remove('hidden'); });
     </script>
