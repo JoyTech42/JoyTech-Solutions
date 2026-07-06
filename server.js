@@ -1,4 +1,4 @@
-                                                                                                     const express = require('express');
+const express = require('express');
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -89,6 +89,44 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     } catch (err) {
         console.error("[CRITICAL ERROR] Password reset process failed:", err.message);
         res.status(500).json({ error: "Failed to process password reset request." });
+    }
+});
+
+// NEW POST: Execute and save the adjusted password changes
+app.post('/api/auth/reset-password', async (req, res) => {
+    const { token, password } = req.body;
+    
+    try {
+        if (!token || !password) {
+            return res.status(400).json({ error: "Missing required token or password data fields." });
+        }
+
+        // 1. Look for user matching this reset token where it hasn't expired yet
+        const result = await pool.query(
+            'SELECT * FROM users WHERE reset_token = $1 AND reset_expiry > NOW()',
+            [token]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ error: "Security reset link is invalid or has expired." });
+        }
+
+        const user = result.rows[0];
+
+        // 2. Safely encrypt the brand new user password via bcrypt
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // 3. Update the credentials and clear out the token fields to prevent reuse attacks
+        await pool.query(
+            'UPDATE users SET password_hash = $1, reset_token = NULL, reset_expiry = NULL WHERE id = $2',
+            [hashedPassword, user.id]
+        );
+
+        res.json({ message: "Password updated successfully!" });
+
+    } catch (err) {
+        console.error("[CRITICAL ERROR] Reset token processing crashed:", err);
+        res.status(500).json({ error: "Internal database update exception occurred." });
     }
 });
 
