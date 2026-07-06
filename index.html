@@ -262,18 +262,11 @@
 
         document.getElementById('submissionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-           // Request Quote Route
-app.post('/api/quote', async (req, res) => {
-    try {
-        await pool.query('INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
-        [req.body.name, req.body.email, req.body.service, req.body.message]);
-        
-        // Change this line to your custom message:
-        res.status(201).json({ 
-            success: true, 
-            message: "Message sent successfully! Thanks for contacting JoyTech Solutions, I'll get to you shortly." 
-        }); 
-        
+          const res = await fetch('/api/quote', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
+
+            if (res.ok) { showMessage('Message sent successfully!', false, 'contactStatus'); e.target.reset(); } else { showMessage('Error sending message', true, 'contactStatus'); }
+
+        });
     } catch (err) {
         console.error("Quote Error:", err);
         res.status(500).json({ error: "Failed to send message." });
