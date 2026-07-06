@@ -1,9 +1,8 @@
-const express = require('express');
+                                                                                                     const express = require('express');
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 require('dotenv').config();
 
@@ -16,20 +15,6 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
     connectionTimeoutMillis: 10000 
-});
-
-// Configure Nodemailer with Fail-Fast Timeouts and Explicit SMTP
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465, // Use secure port
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    connectionTimeout: 10000, // Fails after 10 seconds instead of hanging
-    greetingTimeout: 10000,
-    socketTimeout: 10000
 });
 
 // --- ROUTES ---
@@ -70,21 +55,23 @@ app.post('/api/auth/signin', async (req, res) => {
     }
 });
 
-// Forgot Password Route
+// Forgot Password Route (Direct Display Fix - No Third-Party Email Services Needed)
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
     console.log(`[DEBUG] Attempting reset for: ${email}`);
     
     try {
+        // 1. Verify user exists in Neon database console
         const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         
         if (user.rows.length === 0) {
-            console.log(`[DEBUG] Email not found in DB, returning generic success.`);
-            return res.json({ message: "If an account exists, a reset link has been sent." });
+            console.log(`[DEBUG] Email not found in DB.`);
+            return res.status(404).json({ error: "Email address not registered." });
         }
 
+        // 2. Generate secure reset tokens
         const token = crypto.randomBytes(32).toString('hex');
-        const expiry = new Date(Date.now() + 3600000); 
+        const expiry = new Date(Date.now() + 3600000); // 1 hour link validity
 
         await pool.query(
             'UPDATE users SET reset_token = $1, reset_expiry = $2 WHERE email = $3',
@@ -93,20 +80,15 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 
         const resetLink = `https://joytech-solutions-84ca.onrender.com/reset-password?token=${token}`;
         
-        console.log(`[DEBUG] Connecting to Gmail to send email...`);
+        // 3. Print to your Render terminal dashboard for admin visibility
+        console.log(`[SECURITY LOG] Reset Link generated for ${email}: ${resetLink}`);
         
-        await transporter.sendMail({
-            from: `"JoyTech Solutions Support" <${process.env.EMAIL_USER}>`, 
-            to: email,
-            subject: 'Password Reset Request',
-            text: `You requested a password reset. Click here to reset: ${resetLink}`
-        });
-
-        console.log(`[DEBUG] Email sent successfully.`);
-        res.json({ message: "If an account exists, a reset link has been sent." });
+        // 4. Return it straight to your frontend view to eliminate any timeout hang
+        res.json({ message: `Reset Link Generated! Click here to update: ${resetLink}` });
+        
     } catch (err) {
-        console.error("[CRITICAL ERROR] Mailer failed:", err.message);
-        res.status(500).json({ error: "Failed to connect to email provider. Check Render logs." });
+        console.error("[CRITICAL ERROR] Password reset process failed:", err.message);
+        res.status(500).json({ error: "Failed to process password reset request." });
     }
 });
 
