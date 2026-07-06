@@ -208,9 +208,18 @@
                 }
                 
                 if (res.ok) {
-                    statusDiv.textContent = messageText || "Reset link sent successfully!";
+                    // --- ONLY THIS BLOCK WAS UPDATED ---
+                    const rawUrlMatch = messageText.match(/(https:\/\/[^\s]+)/);
+                    if (rawUrlMatch) {
+                        // Render the clickable link if a URL is found
+                        statusDiv.innerHTML = `Success! <a href="${rawUrlMatch[0]}" target="_blank" class="text-blue-400 underline font-bold block mt-3 hover:text-blue-300 transition break-all">👉 Click Here to Reset Password</a>`;
+                    } else {
+                        // Fallback if no URL is found
+                        statusDiv.textContent = messageText || "Reset link sent successfully!";
+                    }
                     statusDiv.style.color = "#3b82f6";
-                    setTimeout(() => { closeForgotModal(); }, 4000);
+                    // setTimeout removed so it doesn't auto-close!
+                    // -----------------------------------
                 } else {
                     statusDiv.textContent = messageText || "Error processing request.";
                     statusDiv.style.color = "#ef4444";
