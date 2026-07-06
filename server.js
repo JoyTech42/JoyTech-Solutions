@@ -1,23 +1,29 @@
 const express = require('express');
 const { Pool } = require('pg');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const path = require('path');
-const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(cors());
 
-const pool = new Pool({ 
+// Configure Database Connection
+const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10000 
+    ssl: { rejectUnauthorized: false }
 });
 
-// Configure Email Transporter
+// TEST DATABASE CONNECTION ON STARTUP
+pool.query('SELECT 1').then(() => {
+    console.log("✅ Database Connected Successfully");
+}).catch(err => {
+    console.error("❌ Database Connection Failed:", err.message);
+});
+
+// Nodemailer Transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -26,90 +32,90 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// --- ROUTES ---
+// --- AUTH ROUTES ---
 
-// Sign Up
+// 1. Sign Up
 app.post('/api/auth/signup', async (req, res) => {
-    const { name, email, password } = req.body;
     try {
+        const { name, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        await pool.query('INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)', [name || 'Customer', email, hashedPassword]);
-        res.status(201).json({ success: true, message: "User created" });
+        await pool.query('INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)', [name, email, hashedPassword]);
+        res.status(201).json({ message: "Account created!" });
     } catch (err) {
-        if (err.code === '23505') return res.status(409).json({ error: "Email already registered." });
-        res.status(500).json({ error: "Registration failed." });
+        res.status(500).json({ error: "Signup failed (email might exist)." });
     }
 });
 
-// Sign In
+// 2. Sign In
 app.post('/api/auth/signin', async (req, res) => {
-    const { email, password } = req.body;
     try {
+        const { email, password } = req.body;
         const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (result.rows.length === 0) return res.status(401).json({ error: "User not found" });
-        const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.password_hash);
-        if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-        res.json({ token });
+        if (result.rows.length === 0) return res.status(401).json({ error: "User not found." });
+        
+        const valid = await bcrypt.compare(password, result.rows[0].password_hash);
+        if (!valid) return res.status(401).json({ error: "Invalid password." });
+        
+        res.json({ token: "fake-jwt-token-for-now" });
     } catch (err) {
-        res.status(500).json({ error: "Authentication failed." });
+        res.status(500).json({ error: "Login error." });
     }
 });
 
-// Forgot Password - Now Sends Email
+// 3. Forgot Password
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
-        const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (userResult.rows.length === 0) return res.status(404).json({ error: "Email not registered." });
+        const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (user.rows.length === 0) return res.status(404).json({ error: "Email not registered." });
 
         const token = crypto.randomBytes(32).toString('hex');
         const expiry = new Date(Date.now() + 3600000); // 1 hour
+        
         await pool.query('UPDATE users SET reset_token = $1, reset_expiry = $2 WHERE email = $3', [token, expiry, email]);
 
-        const resetLink = `https://joytech-solutions-84ca.onrender.com/reset-password?token=${token}`;
-
         await transporter.sendMail({
-            from: '"JoyTech Support" <noreply@joytech.com>',
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'Password Reset Request',
-            html: `<p>We received a request to reset your password.</p><a href="${resetLink}">Click here to reset your password</a><p>This link expires in 1 hour.</p>`
+            html: `<p>Click here to reset your password: <br> 
+                   <a href="https://joytech-solutions-84ca.onrender.com/?token=${token}">Reset Password</a></p>`
         });
 
-        res.json({ message: "Success! Check your email for the reset link." });
+        res.json({ message: "Success! Check your email." });
     } catch (err) {
-        console.error("Email Error:", err);
-        res.status(500).json({ error: "Failed to send email." });
+        console.error("Forgot Password Error:", err);
+        res.status(500).json({ error: "Server error, try again later." });
     }
 });
 
-// Reset Password Execution
+// 4. Reset Password
 app.post('/api/auth/reset-password', async (req, res) => {
     const { token, password } = req.body;
     try {
         const result = await pool.query('SELECT * FROM users WHERE reset_token = $1 AND reset_expiry > NOW()', [token]);
         if (result.rows.length === 0) return res.status(400).json({ error: "Invalid or expired token." });
-        const user = result.rows[0];
+        
         const hashedPassword = await bcrypt.hash(password, 10);
-        await pool.query('UPDATE users SET password_hash = $1, reset_token = NULL, reset_expiry = NULL WHERE id = $2', [hashedPassword, user.id]);
+        await pool.query('UPDATE users SET password_hash = $1, reset_token = NULL, reset_expiry = NULL WHERE id = $2', [hashedPassword, result.rows[0].id]);
+        
         res.json({ message: "Password updated successfully!" });
     } catch (err) {
-        res.status(500).json({ error: "Server error." });
+        console.error("Reset Error:", err);
+        res.status(500).json({ error: "Failed to update password." });
     }
 });
 
+// 5. Quote Submission
 app.post('/api/quote', async (req, res) => {
     try {
-        await pool.query('INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4)', 
-        [req.body.name, req.body.email, req.body.service, req.body.message]);
-        res.status(201).json({ success: true, message: "Message sent successfully!" });
+        const { name, email, service, message } = req.body;
+        await pool.query('INSERT INTO submissions (name, email, service, message) VALUES ($1, $2, $3, $4)', [name, email, service, message]);
+        res.json({ message: "Request received!" });
     } catch (err) {
-        res.status(500).json({ error: "Failed to send message." });
+        res.status(500).json({ error: "Submission failed." });
     }
 });
 
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
