@@ -79,7 +79,7 @@ app.post('/api/quote', async (req, res) => {
         await pool.query('INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4)', [req.body.name, req.body.email, req.body.service, req.body.message]);
         res.status(201).json({ success: true, message: "Message sent!" });
     } catch (err) {
-        res.status(500).json({ error: "Failed to send message." });
+        res.status(500).json({ error: "Failed to send message. I'll get to you shortly" });
     }
 });
 
