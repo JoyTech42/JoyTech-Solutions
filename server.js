@@ -5,9 +5,13 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const crypto = require('crypto');
 const fs = require('fs');
+const cors = require('cors'); // Required to fix Network Errors
 require('dotenv').config();
 
 const app = express();
+
+// Middleware
+app.use(cors()); // CRITICAL: This allows your frontend to talk to your backend
 app.use(express.json());
 
 // Database connection
@@ -18,7 +22,8 @@ const pool = new Pool({
 });
 
 // --- API ROUTES ---
-// (Your existing routes remain unchanged)
+
+// Sign Up
 app.post('/api/auth/signup', async (req, res) => {
     const { name, email, password } = req.body;
     try {
@@ -31,6 +36,7 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 });
 
+// Sign In
 app.post('/api/auth/signin', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -46,6 +52,7 @@ app.post('/api/auth/signin', async (req, res) => {
     }
 });
 
+// Forgot Password
 app.post('/api/auth/forgot-password', async (req, res) => {
     const { email } = req.body;
     try {
@@ -61,6 +68,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     }
 });
 
+// Reset Password
 app.post('/api/auth/reset-password', async (req, res) => {
     const { token, password } = req.body;
     try {
@@ -74,28 +82,27 @@ app.post('/api/auth/reset-password', async (req, res) => {
     }
 });
 
+// Quote Submission
 app.post('/api/quote', async (req, res) => {
     try {
         await pool.query('INSERT INTO requests (name, email, service, message) VALUES ($1, $2, $3, $4)', [req.body.name, req.body.email, req.body.service, req.body.message]);
-        res.status(201).json({ success: true, message: "Message sent!" });
+        res.status(201).json({ success: true, message: "Message sent successfully! I'll get to you shortly!" });
     } catch (err) {
-        res.status(500).json({ error: "Failed to send message. I'll get to you shortly" });
+        console.error("Quote Error:", err);
+        res.status(500).json({ error: "Failed to send message." });
     }
 });
 
 // --- SAFE FRONTEND ROUTING ---
-// Define the folder where your index.html lives (e.g., 'public' or 'dist')
 const frontendDir = path.join(__dirname, 'public'); 
 
 if (fs.existsSync(frontendDir)) {
-    console.log("✅ Frontend folder found, serving static files...");
     app.use(express.static(frontendDir));
     app.get('*', (req, res) => {
         res.sendFile(path.join(frontendDir, 'index.html'));
     });
 } else {
-    console.warn("⚠️ Warning: 'public' folder not found! API is running, but no frontend will be served.");
-    app.get('/', (req, res) => res.send("<h1>Server Operational</h1><p>API is active. Frontend files not found in /public.</p>"));
+    app.get('/', (req, res) => res.send("<h1>Server Operational</h1><p>API is active. Frontend folder (/public) not found.</p>"));
 }
 
 const PORT = process.env.PORT || 10000;
